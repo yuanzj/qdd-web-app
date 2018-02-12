@@ -1,30 +1,33 @@
 <template>
   <div class="p-container" @click="showOrderDetail">
     <div class="p-head">
-      <div class="p-head-1">{{ ueSn }}</div>
-      <div class="p-head-2">{{ reportTime }}</div>
+      <div class="p-head-1">{{ productName }}</div>
+      <div class="p-head-2"> {{ days }}天</div>
     </div>
 
     <div class="p-content">
       <div style="text-align: center;flex-grow: 1">
-        <span class="p-desc">剩余电量</span>
+        <span class="p-desc">电池电量</span>
         <div class="p-title" :class="{ 'lm-text-green': isNormal, 'lm-text-orange': isWarning, 'lm-text-red': isError, 'lm-text-hint': isDisable }">{{ soh }}</div>
         <span class="p-desc">%</span>
       </div>
       <div style="text-align: center;flex-grow: 1">
-        <span class="p-desc">剩余里程</span>
-        <div class="p-title" :class="{ 'lm-text-green': isNormal, 'lm-text-orange': isWarning, 'lm-text-red': isError, 'lm-text-hint': isDisable }">--</div>
+        <span class="p-desc">续航里程</span>
+        <div class="p-title" :class="{ 'lm-text-green': isNormal, 'lm-text-orange': isWarning, 'lm-text-red': isError, 'lm-text-hint': isDisable }">{{ mileage }}</div>
         <span class="p-desc">km</span>
       </div>
       <div style="text-align: center;flex-grow: 1">
-        <span class="p-desc">电压</span>
+        <span class="p-desc">电池电压</span>
         <div class="p-title" :class="{ 'lm-text-green': isNormal, 'lm-text-orange': isWarning, 'lm-text-red': isError, 'lm-text-hint': isDisable }">{{ voltage }}</div>
         <span class="p-desc">v</span>
       </div>
     </div>
-    <!--<div class="p-desc1">-->
-      <!--江苏省无锡市江苏省无锡市江苏省无锡市江苏省无锡市江苏省无锡市江苏省无锡市江苏省无锡市-->
-    <!--</div>-->
+    <div class="p-desc1" >
+      {{ address }}
+    </div>
+    <div class="p-desc2" >
+      {{ reportTime }}
+    </div>
     <div style="height: 1rem"></div>
   </div>
 </template>
@@ -41,6 +44,19 @@
       },
       ueSn: {
         type: String
+      },
+      address: {
+        type: String
+      },
+      productName: {
+        type: String
+      },
+      days: {
+        type: Number
+      },
+      defaultMileage: {
+        type: String,
+        default: '-1'
       }
     },
     data () {
@@ -52,6 +68,37 @@
       }
     },
     computed: {
+      mileage: function () {
+        let percentage = -1
+        let perCharge = this.ebikeReportData.remainCapacity
+        let soh = this.ebikeReportData.soh
+        if (perCharge && soh) {
+          let perChargeVal = parseInt(perCharge, 16)
+          let sohVal = parseInt(soh, 16)
+          if (sohVal > 100 && (perChargeVal > 100 || perChargeVal === 0)) {
+            // 显示铅酸电池当前电量格数
+            let batteryCount = 0
+            if (perChargeVal > 100) {
+              batteryCount = perChargeVal - 100
+            }
+            let batteryTotal = sohVal - 100
+
+            let batteryProgress = (batteryCount * 100) / batteryTotal
+            if (batteryProgress > 100) {
+              batteryProgress = 100
+            }
+
+            percentage = batteryProgress
+          } else {
+            percentage = perChargeVal
+          }
+        }
+        if (percentage !== -1 && Number(this.defaultMileage) !== -1) {
+          return percentage * Number(this.defaultMileage) / 100.0
+        } else {
+          return '--'
+        }
+      },
       soh: function () {
         let percentage = -1
         let perCharge = this.ebikeReportData.remainCapacity
@@ -150,8 +197,8 @@
       },
       reportTime: function () {
         if (this.ebikeReportData && this.ebikeReportData.lastReportTime) {
-          let reportDate = Date.parse(this.ebikeReportData.lastReportTime.replace('-', '/'))
-          return this.getDateDiff(reportDate) + '更新'
+          // let reportDate = Date.parse(this.ebikeReportData.lastReportTime.replace('-', '/'))
+          return '更新时间: ' + this.ebikeReportData.lastReportTime
         } else {
           return '未开启服务'
         }
@@ -219,7 +266,6 @@
 
 <style scoped>
   .p-container {
-    height: 11.25rem;
     background: white;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.20), 0 6px 20px 0 rgba(0, 0, 0, 0.10);
     border-radius: 4px;
@@ -254,7 +300,7 @@
   }
 
   .p-head-2  {
-    color: #757575;
+    color: #212121;
     font-size: 0.875rem;
     flex-grow: 1;
     overflow: hidden;
@@ -297,8 +343,20 @@
 
   .p-desc1 {
     width: 100%;
-    margin: 1rem;
-    padding-right: 1rem;
+    margin: 1rem 1rem 0 1rem;
+    padding-right: 2rem;
+    color: #757575;
+    font-size: 0.875rem;
+    flex-grow: 0;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+  }
+
+  .p-desc2 {
+    width: 100%;
+    margin: 0.5rem 1rem 0 1rem;
+    padding-right: 2rem;
     color: #757575;
     font-size: 0.875rem;
     flex-grow: 0;

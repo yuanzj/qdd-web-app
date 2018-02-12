@@ -1,12 +1,14 @@
 <template>
-  <div>
-    <div v-for="(item,index)  in productList" >
+  <mt-loadmore :top-method="loadProductList" ref="loadmore">
+    <div style="min-height: 100vh">
+      <div v-for="(item,index)  in productList" >
 
-      <product-item style="margin: 1rem"  :key="item.id" :id="item.id" :image="item.image" :imageLarge="item.imageLarge" :title="item.name"
-                    :desc="item.desc" :price="item.price" :model="item.model" :outUrl="item.outUrl"></product-item>
+        <product-item style="margin: 1rem"  :key="item.id" :id="item.id" :image="item.image" :imageLarge="item.imageLarge" :title="item.name"
+                      :desc="item.desc" :price="item.price" :model="item.model" :outUrl="item.outUrl"></product-item>
 
+      </div>
     </div>
-  </div>
+  </mt-loadmore>
 </template>
 
 <script>
@@ -34,9 +36,11 @@
             }
           }
         ).then((res) => {
+          this.$refs.loadmore.onTopLoaded()
           this.productList = res.data.list
         })
           .catch(error => {
+            this.$refs.loadmore.onTopLoaded()
             console.log(error)
           })
       }

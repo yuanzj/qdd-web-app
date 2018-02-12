@@ -2,15 +2,22 @@
   <div class="container">
 
     <div style="background: white">
-      <img :src="pImage"/>
-      <span class="p-detail-text">{{ title }}</span>
-      <div class="p-detail-text lm-text-second">{{ description }}</div>
-      <div v-if="orderId > 0" class="p-detail-text lm-text-second">设备SN号: {{ ccuSn }}</div>
+
+      <div class="p-head">
+        <img class="p-image" :src="image"/>
+        <span class="p-title" >{{ title }}</span>
+      </div>
+      <div class="p-desc"  style="margin: 0 1rem 0 1rem">
+        最高续航 80km
+      </div>
+      <div class="p-desc">{{ description }}</div>
+
+      <div v-if="orderId > 0" class="p-detail-text lm-text-second">电池编号 {{ ccuSn }}</div>
       <div style="height: 1rem"></div>
       <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
     </div>
 
-    <div class="table-head-title">VIP租赁套餐</div>
+    <div class="table-head-title">租赁套餐</div>
 
     <mt-radio
       align="right"
@@ -30,7 +37,7 @@
     <div style="height: 4rem"></div>
     <div class="settlement">
       <div>
-        <div class="lm-font-default"><span class="lm-text-red lm-font-head">{{ finalPrice }}</span>元 {{ faceValue }}个月</div>
+        <div class="lm-font-default"><span class="lm-text-red lm-font-head">{{ finalPrice }}</span>元 {{ faceValue }}天</div>
       </div>
 
       <div class="tobuy" @click="createOrder">{{ orderBtnTile }}</div>
@@ -48,10 +55,12 @@
     name: 'product-detail',
     data () {
       return {
+        reTryCount0: 0,
+        reTryCount1: 0,
         orderId: null,
         disabled: false,
         product: null,
-        pImage: '../static/images/p-b.png',
+        image: '../static/images/p-b.png',
         ccuSn: null,
         count: 1,
         price: null,
@@ -75,7 +84,7 @@
       },
       faceValue: function () {
         if (this.options && this.options.length > 0) {
-          return this.options[Number(this.optionValue)].faceValue / 30
+          return this.options[Number(this.optionValue)].faceValue
         } else {
           return ''
         }
@@ -94,19 +103,10 @@
         this.addOrder()
       },
       loadProductDetail () {
-        this.axios.get('/api-order/v3.1/products/' + this.$route.params.id,
-          {
-            params: {
-              page: 1,
-              limit: 20,
-              sidx: 'id',
-              order: 'asc'
-            }
-          }
-        ).then((res) => {
+        this.axios.get('/api-order/v3.1/products/' + this.$route.params.id).then((res) => {
           let product = res.data
           if (product) {
-            this.pImage = product.imageLarge
+            this.image = product.image
             this.title = product.name
             this.description = product.desc
             this.price = product.price
@@ -114,6 +114,10 @@
         })
           .catch(error => {
             console.log(error)
+            if (this.reTryCount0 < 3) {
+              this.reTryCount0 += 1
+              this.loadProductDetail()
+            }
           })
       },
       loadSolutionList () {
@@ -138,11 +142,14 @@
 
               return item
             })
-            this.giveIns()
           }
         })
           .catch(error => {
             console.log(error)
+            if (this.reTryCount1 < 3) {
+              this.reTryCount1 += 1
+              this.loadSolutionList()
+            }
           })
       },
       createOrder () {
@@ -165,7 +172,7 @@
           return false
         }
         Indicator.open('提交中...')
-        this.axios.post('/api-order/v3.1/rent-orders/?' + 'productId=' + this.$route.params.id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn)
+        this.axios.post('/api-order/v3.1/rent-orders/?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn)
           .then((res) => {
             console.log(res)
             Indicator.close()
@@ -195,7 +202,7 @@
           return false
         }
         Indicator.open('提交中...')
-        this.axios.post('/api-order/v3.1/rent-orders/' + this.orderId + '/topup?' + 'productId=' + this.$route.params.id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn)
+        this.axios.post('/api-order/v3.1/rent-orders/' + this.orderId + '/topup?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn)
           .then((res) => {
             console.log(res)
             Indicator.close()
@@ -221,7 +228,7 @@
     },
     mounted () {
       window.productDetail = this
-      document.title = '产品详情'
+      document.title = '电池详情'
       if (!this.$route.query.token) {
         MessageBox.alert('您还没有登录，请先登录').then(action => {
           this.$router.go(-1)
@@ -243,8 +250,8 @@
           this.axios.defaults.headers.common['Authorization'] = this.$route.query.token
         }
       }
-      this.loadProductDetail()
       this.loadSolutionList()
+      this.loadProductDetail()
 
       if (this.orderId || this.$route.query.ccuSn) {
         this.disabled = true
@@ -306,4 +313,37 @@
     font-size: 0.9375rem;
   }
 
+  .p-head {
+    height: 4.5rem;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: flex-start;
+    padding: 1rem;
+  }
+
+  .p-image {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .p-title {
+    margin-left: 1rem;
+    color: #212121;
+    font-size: 1rem;
+    flex-grow: 1;
+  }
+
+  .p-desc {
+    word-wrap: break-word;
+    word-break: break-all;
+    overflow: hidden;
+    max-height: 3.75rem;
+    font-size: 0.875rem;
+    color: #757575;
+    margin: 1rem 1rem 0 1rem;
+  }
 </style>

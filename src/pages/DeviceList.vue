@@ -1,19 +1,26 @@
 <template>
   <div>
-    <div v-for="(item,index)  in deviceList">
-
-      <device-item style="margin: 1rem" :key="item.orderId" :orderId="item.orderId" :ueSn="item.ueSn" :ebikeReportData="item.ebikeReportData"></device-item>
-
-    </div>
-    <div style="height: 1rem"></div>
 
     <div  v-if="isShowHint" class="container">
       <div style="text-align: center">
         <img src="../assets/icons8_car_battery.png" style="width: 3.5rem;height: 3.5rem;"/>
         <div class="lm-text-text lm-font-default" style="margin-top: 1rem">您尚未添加电池</div>
-        <div class="lm-text-second lm-font-second" style="margin-top: 0.5rem">请点击右下角+号按钮添加电池</div>
+        <div class="lm-text-second lm-font-second" style="margin-top: 0.5rem">请点击下方产品标签选择电池</div>
       </div>
     </div>
+
+    <mt-loadmore :top-method="loadDeviceList" ref="loadmore">
+
+      <div style="min-height: 100vh">
+        <div v-for="(item,index)  in deviceList" >
+
+          <device-item style="margin: 1rem" :key="item.orderId" :orderId="item.orderId" :ueSn="item.ueSn" :ebikeReportData="item.ebikeReportData" :address="item.address" :productName="item.productName" :days="item.days" :defaultMileage="item.rentOrderEntity.productEntity
+.remark"></device-item>
+
+        </div>
+        <div style="height: 5rem"></div>
+      </div>
+    </mt-loadmore>
 
   </div>
 </template>
@@ -44,6 +51,7 @@
             }
           }
         ).then((res) => {
+          this.$refs.loadmore.onTopLoaded()
           console.log(res)
           this.deviceList = res.data.data5
           if (this.deviceList && this.deviceList.length === 0) {
@@ -51,6 +59,8 @@
           }
         })
           .catch(error => {
+            this.$refs.loadmore.onTopLoaded()
+            this.isShowHint = true
             console.log(error)
           })
       }

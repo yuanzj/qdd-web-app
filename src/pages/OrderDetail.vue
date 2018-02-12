@@ -19,8 +19,8 @@
       <div>{{ orderStatusDesc }}</div>
     </div>
 
-    <div class="h-container">
-      <mt-button @click.native="finish" class="action-btn">归还电池</mt-button>
+    <div class="h-btn-container">
+      <mt-button @click.native="finish" class="action-btn">归还</mt-button>
       <mt-button @click.native="topUp" type="primary" class="action-btn" >续租</mt-button>
     </div>
 
@@ -113,7 +113,7 @@
           if (order) {
             this.orderStatus = order.status
             this.orderId = order.id
-            this.ccuSn = order.ccuSn
+            this.ccuSn = order.ccuSn.toUpperCase()
             this.productId = order.productId
             this.startTime = order.startTime
             this.endTime = order.endTime
@@ -145,20 +145,30 @@
 <style scoped>
   .container{
     height: 100vh;
-    background-color: #ffffff;
   }
 
   .h-container {
+    background-color: #ffffff;
     width: 100%;
     height: 3rem;
-    padding: 2rem;
+    padding: 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
 
+  .h-btn-container {
+    width: 100%;
+    height: 3rem;
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem 1rem 1rem;
+  }
+
   .action-btn{
-    margin-top: 4rem;
     width: 7rem;
   }
 

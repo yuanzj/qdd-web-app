@@ -7,11 +7,11 @@
       <div class="p-content">
 
         <div class="p-price" >
-          最高续航 <span style="font-size: 1.5rem;color: #E64E42;font-weight: bold">120</span> km
+          最高续航 <span style="font-size: 1.25rem;color: #E64E42;font-weight: bold">80</span> km
         </div>
         <div style="-webkit-flex:1;flex: 1"></div>
         <div class="p-price" style="text-align: right">
-        <span style="font-size: 1.5rem;color: #E64E42;font-weight: bold">{{ price }}</span> 元/月起
+        <span style="font-size: 1.25rem;color: #E64E42;font-weight: bold">{{ price }}</span> 元/日起
       </div>
       </div>
       <div class="p-desc">{{ desc }}</div>
@@ -102,7 +102,6 @@
   .p-container {
     display: -webkit-flex;
     display: flex;
-    height: 11.25rem;
     background: white;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.20), 0 6px 20px 0 rgba(0, 0, 0, 0.10);
     border-radius: 4px;
@@ -148,11 +147,12 @@
     align-content: flex-start;
     margin-left: 1rem;
     padding-right: 2rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
   }
 
   .p-price {
     text-align: left;
-    width: 100%;
     color: #212121;
     font-size: 0.875rem;
   }
