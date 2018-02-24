@@ -115,6 +115,10 @@
     color: #39CB75 !important;
   }
 
+  .lm-text-blue {
+    color: #3B9AD9 !important;
+  }
+
   .lm-text-orange {
     color: #E57F31 !important;
   }

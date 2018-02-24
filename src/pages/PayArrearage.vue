@@ -7,52 +7,31 @@
         <img class="p-image" :src="image"/>
         <span class="p-title" >{{ title }}</span>
       </div>
-      <div class="p-desc"  style="margin: 0 1rem 0 1rem">
-        最高续航 {{ remark }}km
-      </div>
-      <div class="p-desc">{{ description }}</div>
-
       <div v-if="orderId > 0" class="p-detail-text lm-text-second">电池编号 {{ ccuSn }}</div>
       <div style="height: 1rem"></div>
       <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
     </div>
 
-    <div v-if="days < 0">
-      <div class="table-head-title">欠费信息</div>
-      <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
-      <div class="lm-text-text lm-font-second" style="background-color: white;height: 3rem;line-height: 3rem;padding-left: 1rem">
-        欠费 <span class="lm-text-red">{{ Math.abs(days) }}</span> 天
-      </div>
-      <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
-    </div>
-
-    <div class="table-head-title">租赁套餐</div>
+    <div class="table-head-title">欠缴时长</div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
-    <div class="lm-text-text lm-font-second" style="background-color: white" v-for="(option,index) in options">
-
-      <div class="options-container">
-        <label class="mint-radiolist-label">
-            <span
-              :class="{'is-right': false}"
-              class="mint-radio">
-              <input
-                class="mint-radio-input"
-                type="radio"
-                v-model="optionValue"
-                :disabled="option.disabled"
-                :value="option.value || option">
-              <span class="mint-radio-core"></span>
-            </span>
-          <span class="mint-radio-label" v-text="option.label || option"></span>
-        </label>
-        <span  v-text="option.desc || option"></span>
-      </div>
-      <div style="margin-left: 1rem" v-if="index < (options.length - 1)">
-        <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
-      </div>
+    <div class="lm-text-text lm-font-second" style="background-color: white;height: 3rem;line-height: 3rem;padding-left: 1rem">
+      <span class="lm-text-red">{{ Math.abs(days) }}</span> 天
     </div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
 
+    <div class="table-head-title">欠缴金额</div>
+    <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+    <div class="lm-text-text lm-font-second" style="background-color: white;height: 3rem;line-height: 3rem;padding-left: 1rem">
+      {{payArrearage}} 元 {{ topUpDays }} 天
+    </div>
+    <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+
+    <div class="table-head-title">滞纳金</div>
+    <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+    <div class="lm-text-text lm-font-second" style="background-color: white;height: 3rem;line-height: 3rem;padding-left: 1rem">
+      无
+    </div>
+    <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
 
     <div class="table-head-title">支付方式</div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
@@ -80,13 +59,6 @@
     </div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
 
-    <label class="p-detail-container lm-font-sm" v-if="isShowAgreement">
-      <span class="mint-checkbox">
-        <input class="mint-checkbox-input" type="checkbox" v-model="agreement">
-        <span class="mint-checkbox-core"></span>
-      </span>
-      <span style="margin-left: 0.5rem;">已阅读理解并接受<a class="p-link" href="http://cjl3.rokyinfo.net:8200/res/xy/ddd-xy20180212.html">《租赁协议》</a>。</span>
-    </label>
 
     <div style="height: 4rem"></div>
     <div class="settlement">
@@ -106,13 +78,17 @@
 <script>
   import {Indicator, Toast, MessageBox} from 'mint-ui'
   export default {
-    name: 'product-detail',
+    name: 'pay-arrearage',
     data () {
       return {
+        productId: null,
+        payArrearage: null,
+        topUpDays: null,
         isShowAgreement: true,
         agreement: false,
         reTryCount0: 0,
         reTryCount1: 0,
+        reTryCount2: 0,
         orderId: null,
         days: null,
         product: null,
@@ -134,18 +110,10 @@
     },
     computed: {
       finalPrice: function () {
-        if (this.options && this.options.length > 0) {
-          return this.options[Number(this.optionValue)].price
-        } else {
-          return ''
-        }
+        return this.payArrearage
       },
       faceValue: function () {
-        if (this.options && this.options.length > 0) {
-          return this.options[Number(this.optionValue)].faceValue
-        } else {
-          return ''
-        }
+        return this.topUpDays
       },
       orderBtnTile: function () {
         if (this.orderId) {
@@ -155,15 +123,11 @@
             return '补缴欠费'
           }
         } else {
-          return '扫码租赁'
+          return '扫码下单'
         }
       }
     },
     methods: {
-      fillSnFromScan (sn) {
-        this.ccuSn = sn
-        this.addOrder()
-      },
       loadProductDetail () {
         this.axios.get('/api-order/v3.1/products/' + this.$route.params.id).then((res) => {
           let product = res.data
@@ -183,93 +147,31 @@
             }
           })
       },
-      loadSolutionList () {
-        this.axios.get('/api-order/v3.1/products',
-          {
-            params: {
-              page: 1,
-              limit: 20,
-              sidx: 'face_value',
-              order: 'asc',
-              categoryId: '2',
-              parentId: this.$route.params.id
-            }
-          }
-        ).then((res) => {
-          if (res.data.list) {
-            let index = 0
-            this.options = res.data.list.map(function (item) {
-              item.label = item.name
-              item.value = String(index++)
-              item.disabled = false
-
-              return item
-            })
+      loadPayArrearageInfo () {
+        this.axios.get('/api-order/v3.1/rent-orders/' + this.orderId + '/arrearage-info').then((res) => {
+          let arrearage = res.data
+          if (arrearage) {
+            this.payArrearage = arrearage.arrearage
+            this.topUpDays = arrearage.topUpDays
+            this.productId = arrearage.productId
           }
         })
           .catch(error => {
             console.log(error)
-            if (this.reTryCount1 < 3) {
-              this.reTryCount1 += 1
-              this.loadSolutionList()
+            if (this.reTryCount2 < 3) {
+              this.reTryCount2 += 1
+              this.loadPayArrearageInfo()
             }
           })
       },
       createOrder () {
-        if (this.orderId) {
-          this.reChargeOrder()
-        } else {
-          if (!this.agreement) {
-            Toast('请勾选 已阅读理解并接受《租赁协议》')
-            return false
-          }
-          // JS 调用本地方法完成扫码
-          /* eslint-disable no-undef */
-          if (window.hasOwnProperty('nativeObj')) {
-            nativeObj.scan()
-          } else {
-            window.webkit.messageHandlers.scan.postMessage('')
-          }
-        }
-      },
-      addOrder () {
         console.log(this.agreement)
         if (!this.ccuSn) {
           Toast('请输入设备SN号！')
           return false
         }
         Indicator.open('提交中...')
-        this.axios.post('/api-order/v3.1/rent-orders/?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn)
-          .then((res) => {
-            console.log(res)
-            Indicator.close()
-            if (res.data) {
-              if (res.data.error) {
-                Toast(res.data.error.msg)
-              } else {
-                this.alipay = res.data
-                setTimeout(function () {
-                  document.forms['_alipaysubmit_'].submit()
-                }, 0)
-              }
-            } else {
-              Toast(res.data.msg)
-            }
-          }).catch(error => {
-            Indicator.close()
-            if (error.response.data && error.response.data.error) {
-              Toast(error.response.data.error.msg)
-            }
-          })
-      },
-      reChargeOrder () {
-        console.log(this.agreement)
-        if (!this.ccuSn) {
-          Toast('请输入设备SN号！')
-          return false
-        }
-        Indicator.open('提交中...')
-        this.axios.post('/api-order/v3.1/rent-orders/' + this.orderId + '/topup?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn)
+        this.axios.post('/api-order/v3.1/rent-orders/' + this.orderId + '/topup-arrearage?' + 'productId=' + this.productId + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn)
           .then((res) => {
             console.log(res)
             Indicator.close()
@@ -331,8 +233,8 @@
       } else {
         document.title = '电池详情'
       }
-      this.loadSolutionList()
       this.loadProductDetail()
+      this.loadPayArrearageInfo()
     }
   }
 </script>

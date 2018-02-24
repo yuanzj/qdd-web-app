@@ -16,15 +16,18 @@
     </div>
     <div class="h-container">
       <div class="lm-text-second">订单状态</div>
-      <div>{{ orderStatusDesc }}</div>
+      <div :class="{ 'lm-text-red': days < 0 }">{{ orderStatusDesc }}</div>
     </div>
 
-    <div class="h-btn-container">
-      <mt-button @click.native="finish" class="action-btn">归还</mt-button>
-      <mt-button @click.native="topUp" type="primary" class="action-btn" >续租</mt-button>
+    <div class="h-btn-container" v-if="days >= 0">
+      <div @click="finish"  class="action-btn">退租</div>
+      <span style="width: 1px;height: 16px;background-color: #BDBDBD;margin: 1.5rem 0 1.5rem 0"></span>
+      <div @click="topUp"  class="action-btn" >续租</div>
+    </div>
+    <div class="h-btn-container" v-else>
+      <div @click="pay"  class="action-btn lm-text-red">补缴欠费</div>
     </div>
 
-    <div class="hide" v-html="alipay"></div>
   </div>
 </template>
 
@@ -40,27 +43,17 @@
         ccuSn: null,
         startTime: '',
         endTime: '',
+        days: null,
         // ali支付form表单信息
         alipay: ''
       }
     },
     computed: {
       orderStatusDesc () {
-        switch (this.orderStatus) {
-          case -1:
-            return ''
-          case 0:
-            return '待激活'
-          case 1:
-            return '租用中'
-          case 2:
-            return '已提交归还请求，待审核'
-          case 3:
-            return '已归还'
-          case 4:
-            return '已支付，待审核'
-          default:
-            return ''
+        if (this.days < 0) {
+          return '欠费'
+        } else {
+          return '正常'
         }
       }
     },
@@ -69,7 +62,7 @@
         Indicator.open('提交中...')
         this.axios.put('/api-order/v3.1/rent-orders/' + this.$route.params.orderId + '/finish?status=2').then((res) => {
           Indicator.close()
-          Toast('提交成功，待管审核')
+          Toast('提交成功，待管理员审核')
           this.loadOrderDetail()
         })
           .catch(error => {
@@ -90,7 +83,26 @@
                 token: this.$store.state.token,
                 firm: this.$store.state.firm,
                 ccuSn: this.ccuSn,
-                orderId: this.orderId
+                orderId: this.orderId,
+                days: this.days
+              }
+            })
+          } else {
+          }
+        }
+      },
+      pay () {
+        if (this.$store.state.token && this.$store.state.firm) {
+          if (this.orderId) {
+            this.$router.push({
+              name: 'PayArrearage',
+              params: {id: this.productId},
+              query: {
+                token: this.$store.state.token,
+                firm: this.$store.state.firm,
+                ccuSn: this.ccuSn,
+                orderId: this.orderId,
+                days: this.days
               }
             })
           } else {
@@ -98,16 +110,7 @@
         }
       },
       loadOrderDetail () {
-        this.axios.get('/api-order/v3.1/rent-orders/' + this.$route.params.orderId,
-          {
-            params: {
-              page: 1,
-              limit: 20,
-              sidx: 'id',
-              order: 'asc'
-            }
-          }
-        ).then((res) => {
+        this.axios.get('/api-order/v3.1/rent-orders/' + this.$route.params.orderId).then((res) => {
           console.log(res)
           let order = res.data
           if (order) {
@@ -117,6 +120,9 @@
             this.productId = order.productId
             this.startTime = order.startTime
             this.endTime = order.endTime
+            if (order.days) {
+              this.days = order.days
+            }
           }
         })
           .catch(error => {
@@ -162,17 +168,21 @@
     height: 3rem;
     display: flex;
     position: fixed;
+    box-shadow: 0 -1px 15px #888888;
+    background-color: #fff;
     bottom: 0;
     align-items: center;
     justify-content: space-between;
-    padding: 0 1rem 1rem 1rem;
+    line-height: 3rem;
   }
 
   .action-btn{
-    width: 7rem;
+    height: 3rem;
+    flex: 1;
+    font-size: 0.875rem;
+    text-align: center;
+    color: #3B9AD9;
+    font-weight: bold;
   }
 
-  .hide {
-    display: none;
-  }
 </style>

@@ -1,12 +1,10 @@
 <template>
-  <mt-loadmore :top-method="loadProductList" ref="loadmore">
-    <div style="min-height: 100vh">
-      <div v-for="(item,index)  in productList" >
+  <mt-loadmore :top-method="loadProductList" ref="loadmore" :style="{ 'min-height': wrapperHeight + 'px' }">
+    <div v-for="(item,index)  in productList">
 
-        <product-item style="margin: 1rem"  :key="item.id" :id="item.id" :image="item.image" :imageLarge="item.imageLarge" :title="item.name"
-                      :desc="item.desc" :price="item.price" :model="item.model" :outUrl="item.outUrl"></product-item>
+      <product-item style="margin: 1rem"  :key="item.id" :id="item.id" :image="item.image" :imageLarge="item.imageLarge" :title="item.name"
+                    :desc="item.desc" :price="item.price" :model="item.model" :outUrl="item.outUrl"></product-item>
 
-      </div>
     </div>
   </mt-loadmore>
 </template>
@@ -21,6 +19,7 @@
     },
     data () {
       return {
+        wrapperHeight: 0,
         productList: []
       }
     },
@@ -46,6 +45,7 @@
       }
     },
     mounted () {
+      this.wrapperHeight = document.documentElement.clientHeight
       document.title = '产品列表'
       if (this.$route.query) {
         this.$store.commit('setToken', this.$route.query.token)

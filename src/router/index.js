@@ -11,6 +11,8 @@ import ProductDetail from '@/pages/ProductDetail'
 import PayComplete from '@/pages/PayComplete'
 // 订单详情
 import OrderDetail from '@/pages/OrderDetail'
+// 补缴欠款
+import PayArrearage from '@/pages/PayArrearage'
 
 Vue.use(Router)
 
@@ -40,6 +42,11 @@ export default new Router({
       path: '/orders/:orderId',
       name: 'OrderDetail',
       component: OrderDetail
+    },
+    {
+      path: '/pay-arrearage/:orderId',
+      name: 'PayArrearage',
+      component: PayArrearage
     }
   ]
 })

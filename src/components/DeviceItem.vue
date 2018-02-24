@@ -2,7 +2,8 @@
   <div class="p-container" @click="showOrderDetail">
     <div class="p-head">
       <div class="p-head-1">{{ productName }}</div>
-      <div class="p-head-2"> {{ days }}天</div>
+      <div class="p-head-2" v-if="days >= 0"> {{ days }}天</div>
+      <div class="p-head-2 lm-text-red" v-if="days < 0">逾期 {{ Math.abs(days) }}天</div>
     </div>
 
     <div class="p-content">
