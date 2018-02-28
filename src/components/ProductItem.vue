@@ -6,15 +6,17 @@
       </div>
       <div class="p-content">
 
-        <div class="p-price" >
+        <div class="p-price" v-if="categoryId === 1">
           最高续航 <span style="font-size: 1.25rem;color: #E64E42;font-weight: bold">80</span> km
         </div>
+        <div class="p-price lm-text-second" v-else>{{ desc }}</div>
         <div style="-webkit-flex:1;flex: 1"></div>
         <div class="p-price" style="text-align: right">
         <span style="font-size: 1.25rem;color: #E64E42;font-weight: bold">{{ price }}</span> 元/日起
       </div>
       </div>
-      <div class="p-desc">{{ desc }}</div>
+      <div class="p-desc" v-if="categoryId === 1">{{ desc }}</div>
+      <div v-else style="height: 0.5rem"></div>
     </div>
 </template>
 
@@ -22,6 +24,9 @@
   export default {
     name: 'product-item',
     props: {
+      categoryId: {
+        type: Number
+      },
       id: {
         type: Number
       },

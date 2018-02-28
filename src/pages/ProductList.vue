@@ -2,7 +2,7 @@
   <mt-loadmore :top-method="loadProductList" ref="loadmore" :style="{ 'min-height': wrapperHeight + 'px' }">
     <div v-for="(item,index)  in productList">
 
-      <product-item style="margin: 1rem"  :key="item.id" :id="item.id" :image="item.image" :imageLarge="item.imageLarge" :title="item.name"
+      <product-item style="margin: 1rem"  :key="item.id" :categoryId="item.categoryId" :id="item.id" :image="item.image" :imageLarge="item.imageLarge" :title="item.name"
                     :desc="item.desc" :price="item.price" :model="item.model" :outUrl="item.outUrl"></product-item>
 
     </div>
@@ -31,7 +31,8 @@
               page: 1,
               limit: 20,
               sidx: 'id',
-              order: 'asc'
+              order: 'asc',
+              categoryIds: '1,3'
             }
           }
         ).then((res) => {

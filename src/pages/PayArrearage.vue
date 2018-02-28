@@ -226,7 +226,7 @@
       if (this.orderId) {
         this.isShowAgreement = false
         if (this.days && this.days >= 0) {
-          document.title = '续费'
+          document.title = '续租'
         } else {
           document.title = '补缴欠费'
         }

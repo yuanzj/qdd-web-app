@@ -1,12 +1,15 @@
 <template>
   <div class="container lm-font-default lm-text-text">
     <div class="h-container">
-      <div class="lm-text-second">电池编号</div>
+      <div class="lm-text-second" >{{deviceTypeName}}</div>
       <div>{{ ccuSn }}</div>
     </div>
-
     <div class="h-container">
-      <div class="lm-text-second">租赁时间</div>
+      <div class="lm-text-second">租赁状态</div>
+      <div :class="{ 'lm-text-red': days < 0 }">{{ orderStatusDesc }}</div>
+    </div>
+    <div class="h-container">
+      <div class="lm-text-second">开始时间</div>
       <div>{{ startTime }}</div>
     </div>
 
@@ -14,9 +17,35 @@
       <div class="lm-text-second">到期时间</div>
       <div>{{ endTime }}</div>
     </div>
+
+    <div style="height: 1rem"></div>
+
     <div class="h-container">
-      <div class="lm-text-second">订单状态</div>
-      <div :class="{ 'lm-text-red': days < 0 }">{{ orderStatusDesc }}</div>
+      <div class="lm-text-second">网点编号</div>
+      <div>{{ storeID }}</div>
+    </div>
+    <div class="h-container">
+      <div class="lm-text-second">网点名称</div>
+      <div>  {{ storeName }} ({{ storeType }})</div>
+    </div>
+
+    <!--<div class="h-container">-->
+      <!--<div class="lm-text-second">联系人</div>-->
+      <!--<div>{{ storeContact }}</div>-->
+    <!--</div>-->
+
+    <div class="h-container">
+      <div class="lm-text-second">联系电话</div>
+      <div>{{ storePhone }}</div>
+    </div>
+
+    <div class="h-container">
+      <div class="lm-text-second">网点地址</div>
+      <div >{{ province + city + county  }}</div>
+    </div>
+    <div class="h-container-1"  >
+      <div class="lm-text-second"></div>
+      <div >{{ storeAddress  }}</div>
     </div>
 
     <div class="h-btn-container" v-if="days >= 0">
@@ -37,6 +66,16 @@
     name: 'order-detail',
     data () {
       return {
+        deviceTypeName: null,
+        province: null,
+        city: null,
+        county: null,
+        type: null,
+        storeID: null,
+        storeName: null,
+        storeContact: null,
+        storeAddress: null,
+        storePhone: null,
         orderStatus: -1,
         orderId: null,
         productId: null,
@@ -49,6 +88,16 @@
       }
     },
     computed: {
+      storeType () {
+        switch (this.type) {
+          case 2:
+            return '美团'
+          case 3:
+            return '饿了么'
+          default:
+            return '维修网点'
+        }
+      },
       orderStatusDesc () {
         if (this.days < 0) {
           return '欠费'
@@ -123,6 +172,23 @@
             if (order.days) {
               this.days = order.days
             }
+            if (order.ebikeStoreEntity) {
+              this.storeName = order.ebikeStoreEntity.name
+              this.storeContact = order.ebikeStoreEntity.linkman
+              this.storeAddress = order.ebikeStoreEntity.address
+              this.storePhone = order.ebikeStoreEntity.contact
+              this.storeID = order.ebikeStoreEntity.id
+              this.type = order.ebikeStoreEntity.type
+              this.province = order.ebikeStoreEntity.province
+              this.city = order.ebikeStoreEntity.city
+              this.county = order.ebikeStoreEntity.county
+            }
+
+            if (this.ccuSn.slice(0, 1) === 'B') {
+              this.deviceTypeName = '电池编号'
+            } else {
+              this.deviceTypeName = '充电器编号'
+            }
           }
         })
           .catch(error => {
@@ -131,7 +197,7 @@
       }
     },
     mounted () {
-      document.title = '订单详情'
+      document.title = '详情'
       if (this.$route.query) {
         this.$store.commit('setToken', this.$route.query.token)
         this.$store.commit('setFirm', this.$route.query.firm)
@@ -158,6 +224,16 @@
     width: 100%;
     height: 3rem;
     padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .h-container-1 {
+    background-color: #ffffff;
+    width: 100%;
+    height: 2rem;
+    padding: 0 1rem 1rem 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;

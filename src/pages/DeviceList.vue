@@ -5,13 +5,13 @@
       <div style="text-align: center">
         <img src="../assets/icons8_car_battery.png" style="width: 3.5rem;height: 3.5rem;"/>
         <div class="lm-text-text lm-font-default" style="margin-top: 1rem">您尚未添加电池</div>
-        <div class="lm-text-second lm-font-second" style="margin-top: 0.5rem">请点击下方电池标签选择电池</div>
+        <div class="lm-text-second lm-font-second" style="margin-top: 0.5rem">请点击下方产品标签选择电池</div>
       </div>
     </div>
     <mt-loadmore :top-method="loadDeviceList" ref="loadmore" :style="{ 'min-height': wrapperHeight + 'px' }">
         <div v-for="(item,index)  in deviceList" >
 
-          <device-item style="margin: 1rem" :key="item.orderId" :orderId="item.orderId" :ueSn="item.ueSn" :ebikeReportData="item.ebikeReportData" :address="item.address" :productName="item.productName" :days="item.days" :defaultMileage="item.rentOrderEntity.productEntity
+          <device-item style="margin: 1rem" :key="item.orderId" :type="item.type" :orderId="item.orderId" :ueSn="item.ueSn" :ebikeReportData="item.ebikeReportData" :address="item.address" :productName="item.productName" :days="item.days" :defaultMileage="item.rentOrderEntity.productEntity
     .remark"></device-item>
 
         </div>
@@ -30,6 +30,7 @@
     },
     data () {
       return {
+        IntervalId: null,
         wrapperHeight: 0,
         deviceList: [],
         isShowHint: false
@@ -75,6 +76,12 @@
       }
 
       this.loadDeviceList()
+      // auto refresh
+      this.IntervalId = window.setInterval(this.loadDeviceList, 15 * 1000)
+    },
+    destroyed () {
+      window.clearInterval(this.IntervalId)
+      console.log('destroyed')
     }
   }
 </script>

@@ -7,7 +7,7 @@
         <img class="p-image" :src="image"/>
         <span class="p-title" >{{ title }}</span>
       </div>
-      <div class="p-desc"  style="margin: 0 1rem 0 1rem">
+      <div class="p-desc"  style="margin: 0 1rem 0 1rem" v-if="categoryId === 1">
         最高续航 {{ remark }}km
       </div>
       <div class="p-desc">{{ description }}</div>
@@ -85,7 +85,7 @@
         <input class="mint-checkbox-input" type="checkbox" v-model="agreement">
         <span class="mint-checkbox-core"></span>
       </span>
-      <span style="margin-left: 0.5rem;">已阅读理解并接受<a class="p-link" href="http://cjl3.rokyinfo.net:8200/res/xy/ddd-xy20180212.html">《租赁协议》</a>。</span>
+      <span style="margin-left: 0.5rem;">已阅读理解并接受<a class="p-link" href="http://cjl3.rokyinfo.net:8200/res/xy/ddd-xy20180212.html">《用户服务协议》</a>。</span>
     </label>
 
     <div style="height: 4rem"></div>
@@ -109,6 +109,7 @@
     name: 'product-detail',
     data () {
       return {
+        categoryId: 1,
         isShowAgreement: true,
         agreement: false,
         reTryCount0: 0,
@@ -173,6 +174,7 @@
             this.description = product.desc
             this.price = product.price
             this.remark = product.remark
+            this.categoryId = product.categoryId
           }
         })
           .catch(error => {
@@ -191,7 +193,7 @@
               limit: 20,
               sidx: 'face_value',
               order: 'asc',
-              categoryId: '2',
+              categoryIds: '2,4',
               parentId: this.$route.params.id
             }
           }
@@ -324,12 +326,12 @@
       if (this.orderId) {
         this.isShowAgreement = false
         if (this.days && this.days >= 0) {
-          document.title = '续费'
+          document.title = '续租'
         } else {
           document.title = '补缴欠费'
         }
       } else {
-        document.title = '电池详情'
+        document.title = '详情'
       }
       this.loadSolutionList()
       this.loadProductDetail()

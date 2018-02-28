@@ -1,12 +1,12 @@
 <template>
   <div class="p-container" @click="showOrderDetail">
     <div class="p-head">
-      <div class="p-head-1">{{ productName }}</div>
+      <div class="p-head-1">{{ itemName }}</div>
       <div class="p-head-2" v-if="days >= 0"> {{ days }}天</div>
       <div class="p-head-2 lm-text-red" v-if="days < 0">逾期 {{ Math.abs(days) }}天</div>
     </div>
 
-    <div class="p-content">
+    <div class="p-content" v-if="type === 4">
       <div style="text-align: center;flex-grow: 1">
         <span class="p-desc">电池电量</span>
         <div class="p-title" :class="{ 'lm-text-green': isNormal, 'lm-text-orange': isWarning, 'lm-text-red': isError, 'lm-text-hint': isDisable }">{{ soh }}</div>
@@ -23,13 +23,13 @@
         <span class="p-desc">v</span>
       </div>
     </div>
-    <div class="p-desc1" >
+    <div class="p-desc1" v-if="type === 4">
       {{ address }}
     </div>
-    <div class="p-desc2" >
+    <div class="p-desc2" v-if="type === 4">
       {{ reportTime }}
     </div>
-    <div style="height: 1rem"></div>
+    <div style="height: 1rem" v-if="type === 4"></div>
   </div>
 </template>
 
@@ -37,6 +37,9 @@
   export default {
     name: 'device-item',
     props: {
+      type: {
+        type: Number
+      },
       orderId: {
         type: Number
       },
@@ -69,6 +72,9 @@
       }
     },
     computed: {
+      itemName: function () {
+        return this.productName + ' (' + this.ueSn.slice(6) + ')'
+      },
       mileage: function () {
         let percentage = -1
         let perCharge = this.ebikeReportData.remainCapacity
@@ -95,7 +101,13 @@
           }
         }
         if (percentage !== -1 && Number(this.defaultMileage) !== -1) {
-          return percentage * Number(this.defaultMileage) / 100.0
+          if (percentage === 0) {
+            return '请尽快充电'
+          } else if (percentage <= 10) {
+            return '请充电'
+          } else {
+            return percentage * Number(this.defaultMileage) / 100.0
+          }
         } else {
           return '--'
         }
