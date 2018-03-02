@@ -3,7 +3,7 @@
     <div v-for="(item,index)  in productList">
 
       <product-item style="margin: 1rem"  :key="item.id" :categoryId="item.categoryId" :id="item.id" :image="item.image" :imageLarge="item.imageLarge" :title="item.name"
-                    :desc="item.desc" :price="item.price" :model="item.model" :outUrl="item.outUrl"></product-item>
+                    :desc="item.desc" :price="item.price" :model="item.model" :remark="item.remark"></product-item>
 
     </div>
   </mt-loadmore>

@@ -13,6 +13,8 @@ import PayComplete from '@/pages/PayComplete'
 import OrderDetail from '@/pages/OrderDetail'
 // 补缴欠款
 import PayArrearage from '@/pages/PayArrearage'
+// 优惠券列表
+import CouponList from '@/pages/CouponList'
 
 Vue.use(Router)
 
@@ -47,6 +49,11 @@ export default new Router({
       path: '/pay-arrearage/:orderId',
       name: 'PayArrearage',
       component: PayArrearage
+    },
+    {
+      path: '/coupons',
+      name: 'CouponList',
+      component: CouponList
     }
   ]
 })

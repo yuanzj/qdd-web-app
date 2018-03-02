@@ -53,6 +53,13 @@
     </div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
 
+    <div class="table-head-title">优惠券<span class="lm-text-red lm-font-sm" style="margin-left: 1rem">{{ subtractPrice }}</span></div>
+    <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+    <div class="options-container lm-text-text lm-font-second" @click="showCoupon">
+      <div style="margin-left: 0.5rem">{{ couponInfo }}</div><div><img style="width: 25px;height: 25px" src="../assets/icons8-right_4.png"/></div>
+    </div>
+    <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+
 
     <div class="table-head-title">支付方式</div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
@@ -99,7 +106,9 @@
 
     <div class="hide" v-html="alipay"></div>
 
-
+    <mt-popup v-model="popupVisible" position="bottom" class="mint-popup-4">
+      <mt-picker :slots="dateSlots" value-key="name" @change="onDateChange" :visible-item-count="5" :show-toolbar="true"></mt-picker>
+    </mt-popup>
   </div>
 </template>
 
@@ -109,6 +118,8 @@
     name: 'product-detail',
     data () {
       return {
+        couponId: null,
+        popupVisible: false,
         categoryId: 1,
         isShowAgreement: true,
         agreement: false,
@@ -130,13 +141,29 @@
         payOptionValue: '0',
         payOptions: [{label: '支付宝', value: '0', disabled: false}],
         // ali支付form表单信息
-        alipay: ''
+        alipay: '',
+        couponList: [],
+        selectedCouponIndex: -1,
+        subtractPrice: null,
+        dateSlots: [
+          {
+            flex: 1,
+            values: [],
+            className: 'slot1',
+            textAlign: 'center',
+            key: 'name'
+          }
+        ]
       }
     },
     computed: {
       finalPrice: function () {
         if (this.options && this.options.length > 0) {
-          return this.options[Number(this.optionValue)].price
+          if (this.couponList.length > 0 && this.selectedCouponIndex >= 0) {
+            return this.options[Number(this.optionValue)].price - this.couponList[this.selectedCouponIndex].amount
+          } else {
+            return this.options[Number(this.optionValue)].price
+          }
         } else {
           return ''
         }
@@ -158,9 +185,38 @@
         } else {
           return '扫码租赁'
         }
+      },
+      couponInfo: function () {
+        if (this.couponList.length > 0) {
+          if (this.selectedCouponIndex < 0) {
+            this.subtractPrice = ''
+            return (this.couponList.length - 1) + '个优惠券可用'
+          } else {
+            this.subtractPrice = '-' + this.couponList[this.selectedCouponIndex].amount
+            return this.couponList[this.selectedCouponIndex].name
+          }
+        }
+        this.subtractPrice = ''
+        return '无'
       }
     },
     methods: {
+      showCoupon () {
+        if (this.couponList && this.couponList.length > 0) {
+          this.popupVisible = true
+        } else {
+          this.popupVisible = false
+          Toast('暂无可用优惠券')
+        }
+      },
+      onDateChange (picker, values) {
+        console.log(values)
+        if (values && values[0] && values[0].index) {
+          this.selectedCouponIndex = values[0].index
+          this.couponId = values[0].id
+          console.log(values + '-' + this.selectedCouponIndex)
+        }
+      },
       fillSnFromScan (sn) {
         this.ccuSn = sn
         this.addOrder()
@@ -183,6 +239,33 @@
               this.reTryCount0 += 1
               this.loadProductDetail()
             }
+          })
+      },
+      loadCouponList () {
+        this.axios.get('/api-order/v3.1/coupons',
+          {
+            params: {
+              page: 1,
+              limit: 999,
+              sidx: 'id',
+              order: 'asc',
+              status: '1'
+            }
+          }
+        ).then((res) => {
+          this.couponList = res.data.list
+          if (this.couponList && this.couponList.length > 0) {
+            let index = 1
+            this.couponList = this.couponList.map(function (item) {
+              item.index = index++
+              return item
+            })
+            this.dateSlots[0].values = this.couponList
+            this.dateSlots[0].values.unshift({id: null, name: '不使用优惠券', index: -1, amount: 0})
+          }
+        })
+          .catch(error => {
+            console.log(error)
           })
       },
       loadSolutionList () {
@@ -241,7 +324,7 @@
           return false
         }
         Indicator.open('提交中...')
-        this.axios.post('/api-order/v3.1/rent-orders/?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn)
+        this.axios.post('/api-order/v3.1/rent-orders/?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn + (this.couponId ? ('&couponId=' + this.couponId) : ''))
           .then((res) => {
             console.log(res)
             Indicator.close()
@@ -271,7 +354,7 @@
           return false
         }
         Indicator.open('提交中...')
-        this.axios.post('/api-order/v3.1/rent-orders/' + this.orderId + '/topup?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn)
+        this.axios.post('/api-order/v3.1/rent-orders/' + this.orderId + '/topup?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn + (this.couponId ? ('&couponId=' + this.couponId) : ''))
           .then((res) => {
             console.log(res)
             Indicator.close()
@@ -335,6 +418,7 @@
       }
       this.loadSolutionList()
       this.loadProductDetail()
+      this.loadCouponList()
     }
   }
 </script>
@@ -458,5 +542,9 @@
     align-content: flex-start;
     padding: 0 1rem 0 1.1rem;
     margin-top: 1rem;
+  }
+
+  .mint-popup-4 {
+    width: 100%;
   }
 </style>

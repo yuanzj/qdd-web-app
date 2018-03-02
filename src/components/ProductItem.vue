@@ -7,7 +7,7 @@
       <div class="p-content">
 
         <div class="p-price" v-if="categoryId === 1">
-          最高续航 <span style="font-size: 1.25rem;color: #E64E42;font-weight: bold">80</span> km
+          最高续航 <span style="font-size: 1.25rem;color: #E64E42;font-weight: bold">{{remark}}</span> km
         </div>
         <div class="p-price lm-text-second" v-else>{{ desc }}</div>
         <div style="-webkit-flex:1;flex: 1"></div>
@@ -50,6 +50,9 @@
         type: String
       },
       outUrl: {
+        type: String
+      },
+      remark: {
         type: String
       }
     },
