@@ -53,10 +53,13 @@
           this.deviceList = res.data.data5
           if (this.deviceList && this.deviceList.length === 0) {
             this.isShowHint = true
+          } else {
+            this.isShowHint = false
           }
         })
           .catch(error => {
             this.$refs.loadmore.onTopLoaded()
+            this.deviceList = []
             this.isShowHint = true
             console.log(error)
           })

@@ -8,6 +8,12 @@
       <div class="lm-text-second">租赁状态</div>
       <div :class="{ 'lm-text-red': days < 0 }">{{ orderStatusDesc }}</div>
     </div>
+    <div class="h-container" v-if="this.deviceTypeName === '电池编号'">
+      <div class="lm-text-second">保护模式</div>
+      <div style="flex: 1"></div>
+      <div style="margin-right: 1rem">{{ modelSwitch ? '(开启)' : '(关闭)'  }}</div>
+      <mt-switch v-model="modelSwitch" @change="handleChange"></mt-switch>
+    </div>
     <div class="h-container">
       <div class="lm-text-second">开始时间</div>
       <div>{{ startTime }}</div>
@@ -22,17 +28,12 @@
 
     <div class="h-container">
       <div class="lm-text-second">网点编号</div>
-      <div>{{ storeID }}</div>
+      <div>{{ storeCode }}</div>
     </div>
     <div class="h-container">
       <div class="lm-text-second">网点名称</div>
       <div>  {{ storeName }} ({{ storeType }})</div>
     </div>
-
-    <!--<div class="h-container">-->
-      <!--<div class="lm-text-second">联系人</div>-->
-      <!--<div>{{ storeContact }}</div>-->
-    <!--</div>-->
 
     <div class="h-container">
       <div class="lm-text-second">联系电话</div>
@@ -51,6 +52,8 @@
     <div class="h-btn-container" v-if="days >= 0">
       <div @click="finish"  class="action-btn">退租</div>
       <span style="width: 1px;height: 16px;background-color: #BDBDBD;margin: 1.5rem 0 1.5rem 0"></span>
+      <div @click="change"  class="action-btn">更换</div>
+      <span style="width: 1px;height: 16px;background-color: #BDBDBD;margin: 1.5rem 0 1.5rem 0"></span>
       <div @click="topUp"  class="action-btn" >续租</div>
     </div>
     <div class="h-btn-container" v-else>
@@ -66,6 +69,7 @@
     name: 'order-detail',
     data () {
       return {
+        modelSwitch: false,
         deviceTypeName: null,
         province: null,
         city: null,
@@ -76,6 +80,7 @@
         storeContact: null,
         storeAddress: null,
         storePhone: null,
+        storeCode: null,
         orderStatus: -1,
         orderId: null,
         productId: null,
@@ -84,7 +89,8 @@
         endTime: '',
         days: null,
         // ali支付form表单信息
-        alipay: ''
+        alipay: '',
+        opsModel: -1
       }
     },
     computed: {
@@ -99,29 +105,81 @@
         }
       },
       orderStatusDesc () {
-        if (this.days < 0) {
-          return '欠费'
+        if (this.orderStatus === 3) {
+          return '已退租'
         } else {
-          return '正常'
+          if (this.days < 0) {
+            return '欠费'
+          } else {
+            return '正常'
+          }
         }
       }
     },
     methods: {
-      finish () {
-        Indicator.open('提交中...')
-        this.axios.put('/api-order/v3.1/rent-orders/' + this.$route.params.orderId + '/finish?status=2').then((res) => {
-          Indicator.close()
-          Toast('提交成功，待管理员审核')
-          this.loadOrderDetail()
-        })
-          .catch(error => {
+      handleChange (event) {
+        console.log(event)
+        if (event) {
+          Indicator.open('开启保护模式...')
+          this.axios.put('/api-ebike/v3.1/ues/update-use-status?ccuSn=' + this.ccuSn + '&useStatus=0').then((res) => {
+            console.log(res)
             Indicator.close()
-            if (error.response.data && error.response.data.error) {
-              Toast(error.response.data.error.msg)
-            }
           })
+            .catch(error => {
+              console.log(error)
+              Indicator.close()
+              this.modelSwitch = false
+            })
+        } else {
+          Indicator.open('关闭保护模式...')
+          this.axios.put('/api-ebike/v3.1/ues/update-use-status?ccuSn=' + this.ccuSn + '&useStatus=1').then((res) => {
+            console.log(res)
+            Indicator.close()
+          })
+            .catch(error => {
+              console.log(error)
+              Indicator.close()
+              this.modelSwitch = true
+            })
+        }
+      },
+      change () {
+        if (this.orderStatus === 3) {
+          Toast('已退租')
+          return
+        }
+        this.$router.push({
+          name: 'OrderOpsQRCode',
+          query: {
+            token: this.$store.state.token,
+            firm: this.$store.state.firm,
+            ccuSn: this.ccuSn,
+            orderId: this.orderId,
+            title: '更换电池二维码'
+          }
+        })
+      },
+      finish () {
+        if (this.orderStatus === 3) {
+          Toast('已退租')
+          return
+        }
+        this.$router.push({
+          name: 'OrderOpsQRCode',
+          query: {
+            token: this.$store.state.token,
+            firm: this.$store.state.firm,
+            ccuSn: this.ccuSn,
+            orderId: this.orderId,
+            title: '退租二维码'
+          }
+        })
       },
       topUp () {
+        if (this.orderStatus === 3) {
+          Toast('已退租')
+          return
+        }
         console.log(this.$store.state.token + '' + this.$store.state.firm + '' + this.$store.state.orderId)
         if (this.$store.state.token && this.$store.state.firm) {
           if (this.orderId) {
@@ -141,6 +199,10 @@
         }
       },
       pay () {
+        if (this.orderStatus === 3) {
+          Toast('已退租')
+          return
+        }
         if (this.$store.state.token && this.$store.state.firm) {
           if (this.orderId) {
             this.$router.push({
@@ -182,12 +244,35 @@
               this.province = order.ebikeStoreEntity.province
               this.city = order.ebikeStoreEntity.city
               this.county = order.ebikeStoreEntity.county
+              this.storeCode = order.ebikeStoreEntity.code
             }
 
-            if (this.ccuSn.slice(0, 1) === 'B') {
+            if (this.ccuSn.slice(0, 1) === 'B' || this.ccuSn.slice(0, 1) === 'P') {
               this.deviceTypeName = '电池编号'
+              this.loadEbikeDetail()
             } else {
               this.deviceTypeName = '充电器编号'
+            }
+          }
+        })
+          .catch(error => {
+            console.log(error)
+          })
+      },
+      loadEbikeDetail () {
+        this.axios.get('/api-ebike/v3.0/app/get_car_info?ueSn=' + this.ccuSn).then((res) => {
+          console.log(res)
+          let data = res.data
+          if (data) {
+            if (data.data) {
+              if (data.data.gear) {
+                let gear = data.data.gear
+                if (gear === '17') {
+                  this.modelSwitch = true
+                } else {
+                  this.modelSwitch = false
+                }
+              }
             }
           }
         })
@@ -197,6 +282,7 @@
       }
     },
     mounted () {
+      window.productDetail = this
       document.title = '详情'
       if (this.$route.query) {
         this.$store.commit('setToken', this.$route.query.token)

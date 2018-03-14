@@ -12,7 +12,7 @@
       </div>
       <div class="p-desc">{{ description }}</div>
 
-      <div v-if="orderId > 0" class="p-detail-text lm-text-second">电池编号 {{ ccuSn }}</div>
+      <div v-if="ccuSn" class="p-detail-text lm-text-second">电池编号 {{ ccuSn }}</div>
       <div style="height: 1rem"></div>
       <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
     </div>
@@ -107,7 +107,7 @@
     <div class="hide" v-html="alipay"></div>
 
     <mt-popup v-model="popupVisible" position="bottom" class="mint-popup-4">
-      <mt-picker :slots="dateSlots" value-key="name" @change="onDateChange" :visible-item-count="5" :show-toolbar="true"></mt-picker>
+      <mt-picker :slots="dateSlots" value-key="showValue" @change="onDateChange" :visible-item-count="5" :show-toolbar="true"></mt-picker>
     </mt-popup>
   </div>
 </template>
@@ -118,6 +118,7 @@
     name: 'product-detail',
     data () {
       return {
+        fromScanModel: false,
         couponId: null,
         popupVisible: false,
         categoryId: 1,
@@ -160,7 +161,7 @@
       finalPrice: function () {
         if (this.options && this.options.length > 0) {
           if (this.couponList.length > 0 && this.selectedCouponIndex >= 0) {
-            return this.options[Number(this.optionValue)].price - this.couponList[this.selectedCouponIndex].amount
+            return (this.options[Number(this.optionValue)].price - this.couponList[this.selectedCouponIndex].amount).toFixed(2)
           } else {
             return this.options[Number(this.optionValue)].price
           }
@@ -183,7 +184,11 @@
             return '补缴欠费'
           }
         } else {
-          return '扫码租赁'
+          if (this.fromScanModel) {
+            return '租赁'
+          } else {
+            return '扫码租赁'
+          }
         }
       },
       couponInfo: function () {
@@ -249,7 +254,8 @@
               limit: 999,
               sidx: 'id',
               order: 'asc',
-              status: '1'
+              status: '1',
+              ruleLimit: this.$route.params.id
             }
           }
         ).then((res) => {
@@ -258,10 +264,11 @@
             let index = 1
             this.couponList = this.couponList.map(function (item) {
               item.index = index++
+              item.showValue = item.name + '(' + item.amount + '元)'
               return item
             })
             this.dateSlots[0].values = this.couponList
-            this.dateSlots[0].values.unshift({id: null, name: '不使用优惠券', index: -1, amount: 0})
+            this.dateSlots[0].values.unshift({id: null, showValue: '不使用优惠券', index: -1, amount: 0})
           }
         })
           .catch(error => {
@@ -308,12 +315,16 @@
             Toast('请勾选 已阅读理解并接受《租赁协议》')
             return false
           }
-          // JS 调用本地方法完成扫码
-          /* eslint-disable no-undef */
-          if (window.hasOwnProperty('nativeObj')) {
-            nativeObj.scan()
+          if (this.fromScanModel && this.ccuSn) {
+            this.addOrder()
           } else {
-            window.webkit.messageHandlers.scan.postMessage('')
+            // JS 调用本地方法完成扫码
+            /* eslint-disable no-undef */
+            if (window.hasOwnProperty('nativeObj')) {
+              nativeObj.scan()
+            } else {
+              window.webkit.messageHandlers.scan.postMessage('')
+            }
           }
         }
       },
@@ -415,6 +426,9 @@
         }
       } else {
         document.title = '详情'
+        if (this.$route.query.ccuSn) {
+          this.fromScanModel = true
+        }
       }
       this.loadSolutionList()
       this.loadProductDetail()

@@ -15,6 +15,14 @@ import OrderDetail from '@/pages/OrderDetail'
 import PayArrearage from '@/pages/PayArrearage'
 // 优惠券列表
 import CouponList from '@/pages/CouponList'
+// 运维首页
+import OpsMain from '@/pages/OpsMain'
+// 运维订单处理页面
+import OpsOrderOps from '@/pages/OpsOrderOps'
+// 租赁电池入口
+import RentBattery from '@/pages/RentBattery'
+// 订单操作
+import OrderOpsQRCode from '@/pages/OrderOpsQRCode'
 
 Vue.use(Router)
 
@@ -54,6 +62,26 @@ export default new Router({
       path: '/coupons',
       name: 'CouponList',
       component: CouponList
+    },
+    {
+      path: '/ops-main',
+      name: 'OpsMain',
+      component: OpsMain
+    },
+    {
+      path: '/ops-order-ops',
+      name: 'OpsOrderOps',
+      component: OpsOrderOps
+    },
+    {
+      path: '/rent-battery',
+      name: 'RentBattery',
+      component: RentBattery
+    },
+    {
+      path: '/order-ops',
+      name: 'OrderOpsQRCode',
+      component: OrderOpsQRCode
     }
   ]
 })
