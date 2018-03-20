@@ -1,8 +1,8 @@
 <template>
   <div class="p-container" @click="showOrderDetail">
     <div class="p-head">
-      <div class="p-head-1">{{ itemName }} <span class="lm-text-red">{{ protectModel }}</span></div>
-      <div class="p-head-2" v-if="days >= 0"> {{ days }}天</div>
+      <div class="p-head-1">{{ itemName }}</div>
+      <div class="p-head-2" v-if="days >= 0"> {{ days }}天<span class="lm-text-red">{{ protectModel }}</span></div>
       <div class="p-head-2 lm-text-red" v-if="days < 0">逾期 {{ Math.abs(days) }}天</div>
     </div>
 
@@ -76,7 +76,7 @@
         if (this.ebikeReportData) {
           if (this.ebikeReportData.hasOwnProperty('gear')) {
             let gear = this.ebikeReportData.gear
-            return ((gear === '17') ? '(保护模式)' : '')
+            return ((gear === '17') ? '/禁用' : '')
           }
         } else {
           return ''

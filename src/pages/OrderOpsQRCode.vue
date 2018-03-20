@@ -3,8 +3,13 @@
     <div class="container">
       <div style="text-align: center">
         <div id="qrcode"></div>
-        <div style="margin-top: 1rem;font-size: 1.5rem;font-weight: bold;margin-bottom: 48px" class="lm-text-text">{{ ccuSn }}</div>
-        <div class="lm-font-second lm-text-second" style="padding: 0 1rem 0 1rem">电池租赁网点管理员扫描后即可完成相应的操作</div>
+        <div style="margin-top: 1rem;margin-bottom: 48px" class="lm-text-text">
+          <span style="font-size: 1.5rem;font-weight: bold;"> {{ ccuSn }}</span>
+          <br/>
+          <span class="lm-text-text lm-font-second">网点：{{ storeName }}</span>
+        </div>
+
+        <div class="lm-font-second lm-text-second" style="padding: 0 1rem 0 1rem;line-height: 1.5rem">租赁管理员<br/>扫描后即可完成相应的操作</div>
       </div>
     </div>
     <!--<div style="position: fixed;bottom: 1rem;width: 100%;text-align: center">-->
@@ -23,10 +28,12 @@
     name: 'order-ops-q-r-code',
     data () {
       return {
+        storeName: null,
         ccuSn: null,
         orderId: null,
         code: '',
-        myQrcode: null
+        myQrcode: null,
+        type: null
       }
     },
     methods: {
@@ -40,7 +47,7 @@
       },
       genCode () {
         Indicator.open('生成中...')
-        this.axios.get('/api-order/v3.1/rent-orders/voucher', {params: {'ccuSn': this.ccuSn, 'orderId': this.orderId}}).then((res) => {
+        this.axios.get('/api-order/v3.1/rent-orders/voucher-v2', {params: {'ccuSn': this.ccuSn, 'orderId': this.orderId, 'type': this.type}}).then((res) => {
           Indicator.close()
           console.log(res)
           this.code = res.data
@@ -70,6 +77,8 @@
         document.title = this.$route.query.title
         this.ccuSn = this.$route.query.ccuSn
         this.orderId = this.$route.query.orderId
+        this.storeName = this.$route.query.storeName
+        this.type = this.$route.query.type
         this.axios.defaults.headers.common['firm'] = this.$route.query.firm
         if (this.$route.query.token) {
           this.axios.defaults.headers.common['Authorization'] = this.$route.query.token

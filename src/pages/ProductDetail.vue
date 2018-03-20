@@ -10,9 +10,12 @@
       <div class="p-desc"  style="margin: 0 1rem 0 1rem" v-if="categoryId === 1">
         最高续航 {{ remark }}km
       </div>
+      <div class="p-desc"  style="margin: 0 1rem 0 1rem" v-else>
+        充电电流 {{ remark }}A
+      </div>
       <div class="p-desc">{{ description }}</div>
 
-      <div v-if="ccuSn" class="p-detail-text lm-text-second">电池编号 {{ ccuSn }}</div>
+      <div v-if="ccuSn" class="p-detail-text lm-text-second">设备编号 {{ ccuSn }}</div>
       <div style="height: 1rem"></div>
       <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
     </div>

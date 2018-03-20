@@ -1,9 +1,9 @@
 <template>
   <div class="container lm-font-default lm-text-text">
 
-    <div class="h-btn-container"><mt-button type="default" class="action-btn" @click="finish">退租</mt-button></div>
+    <div class="h-btn-container"><mt-button type="default" class="action-btn" @click="finish">设备退租</mt-button></div>
 
-    <div class="h-btn-container"><mt-button type="default" class="action-btn" @click="replace">更换电池、充电器</mt-button></div>
+    <div class="h-btn-container"><mt-button type="default" class="action-btn" @click="replace">设备更换</mt-button></div>
 
   </div>
 </template>
@@ -19,7 +19,7 @@
     methods: {
       finish () {
         this.$router.push({
-          name: 'OpsOrderOps',
+          name: 'OpsOrderOpsStep',
           query: {
             token: this.$store.state.token,
             firm: this.$store.state.firm,
@@ -29,7 +29,7 @@
       },
       replace () {
         this.$router.push({
-          name: 'OpsOrderOps',
+          name: 'OpsOrderOpsStep',
           query: {
             token: this.$store.state.token,
             firm: this.$store.state.firm,

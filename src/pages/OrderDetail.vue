@@ -9,10 +9,9 @@
       <div :class="{ 'lm-text-red': days < 0 }">{{ orderStatusDesc }}</div>
     </div>
     <div class="h-container" v-if="this.deviceTypeName === '电池编号'">
-      <div class="lm-text-second">保护模式</div>
+      <div class="lm-text-second">禁用模式</div>
       <div style="flex: 1"></div>
-      <div style="margin-right: 1rem">{{ modelSwitch ? '(开启)' : '(关闭)'  }}</div>
-      <mt-switch v-model="modelSwitch" @change="handleChange"></mt-switch>
+      <span v-bind:class="{ 'lm-text-text': !modelSwitch,'lm-text-hint': modelSwitch }">关</span><mt-switch style="margin: 0 0.5rem 0 0.5rem;" v-model="modelSwitch" @change="handleChange"></mt-switch><span v-bind:class="{ 'lm-text-text': modelSwitch,'lm-text-hint': !modelSwitch }">开</span>
     </div>
     <div class="h-container">
       <div class="lm-text-second">开始时间</div>
@@ -48,6 +47,8 @@
       <div class="lm-text-second"></div>
       <div >{{ storeAddress  }}</div>
     </div>
+
+    <div style="height: 4rem"></div>
 
     <div class="h-btn-container" v-if="days >= 0">
       <div @click="finish"  class="action-btn">退租</div>
@@ -120,7 +121,7 @@
       handleChange (event) {
         console.log(event)
         if (event) {
-          Indicator.open('开启保护模式...')
+          Indicator.open('开启禁用模式...')
           this.axios.put('/api-ebike/v3.1/ues/update-use-status?ccuSn=' + this.ccuSn + '&useStatus=0').then((res) => {
             console.log(res)
             Indicator.close()
@@ -131,7 +132,7 @@
               this.modelSwitch = false
             })
         } else {
-          Indicator.open('关闭保护模式...')
+          Indicator.open('关闭禁用模式...')
           this.axios.put('/api-ebike/v3.1/ues/update-use-status?ccuSn=' + this.ccuSn + '&useStatus=1').then((res) => {
             console.log(res)
             Indicator.close()
@@ -155,7 +156,9 @@
             firm: this.$store.state.firm,
             ccuSn: this.ccuSn,
             orderId: this.orderId,
-            title: '更换电池二维码'
+            title: '更换二维码',
+            storeName: this.storeName,
+            type: 1
           }
         })
       },
@@ -171,7 +174,9 @@
             firm: this.$store.state.firm,
             ccuSn: this.ccuSn,
             orderId: this.orderId,
-            title: '退租二维码'
+            title: '退租二维码',
+            storeName: this.storeName,
+            type: 0
           }
         })
       },
@@ -265,8 +270,8 @@
           let data = res.data
           if (data) {
             if (data.data) {
-              if (data.data.gear) {
-                let gear = data.data.gear
+              if (data.data.configGear) {
+                let gear = data.data.configGear
                 if (gear === '17') {
                   this.modelSwitch = true
                 } else {

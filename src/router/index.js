@@ -23,6 +23,8 @@ import OpsOrderOps from '@/pages/OpsOrderOps'
 import RentBattery from '@/pages/RentBattery'
 // 订单操作
 import OrderOpsQRCode from '@/pages/OrderOpsQRCode'
+// 运维订单处理步骤页面
+import OpsOrderOpsStep from '@/pages/OpsOrderOpsStep'
 
 Vue.use(Router)
 
@@ -72,6 +74,11 @@ export default new Router({
       path: '/ops-order-ops',
       name: 'OpsOrderOps',
       component: OpsOrderOps
+    },
+    {
+      path: '/ops-order-ops-step',
+      name: 'OpsOrderOpsStep',
+      component: OpsOrderOpsStep
     },
     {
       path: '/rent-battery',
