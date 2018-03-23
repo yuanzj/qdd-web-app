@@ -346,10 +346,16 @@
               if (res.data.error) {
                 Toast(res.data.error.msg)
               } else {
-                this.alipay = res.data
-                setTimeout(function () {
-                  document.forms['_alipaysubmit_'].submit()
-                }, 0)
+                if (res.data === 'success') {
+                  this.$router.push({
+                    name: 'PayComplete'
+                  })
+                } else {
+                  this.alipay = res.data
+                  setTimeout(function () {
+                    document.forms['_alipaysubmit_'].submit()
+                  }, 0)
+                }
               }
             } else {
               Toast(res.data.msg)
@@ -376,10 +382,16 @@
               if (res.data.error) {
                 Toast(res.data.error.msg)
               } else {
-                this.alipay = res.data
-                setTimeout(function () {
-                  document.forms['_alipaysubmit_'].submit()
-                }, 0)
+                if (res.data === 'success') {
+                  this.$router.push({
+                    name: 'PayComplete'
+                  })
+                } else {
+                  this.alipay = res.data
+                  setTimeout(function () {
+                    document.forms['_alipaysubmit_'].submit()
+                  }, 0)
+                }
               }
             } else {
               Toast('系统异常')
