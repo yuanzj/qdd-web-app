@@ -12,8 +12,31 @@
 <script>
   export default {
     name: 'pay-complete',
+    methods: {
+      refreshMainPage () {
+        // JS 调用本地方法
+        /* eslint-disable no-undef */
+        if (window.hasOwnProperty('nativeObj')) {
+          nativeObj.reLoadPage('1')
+        } else {
+          window.webkit.messageHandlers.reLoadPage.postMessage('1')
+        }
+      },
+      finish () {
+        // JS 调用本地方法
+        /* eslint-disable no-undef */
+        if (window.hasOwnProperty('nativeObj')) {
+          nativeObj.closeCurrentPage()
+        } else {
+          window.webkit.messageHandlers.closeCurrentPage.postMessage('')
+        }
+      }
+
+    },
     mounted () {
       document.title = '支付结果'
+      this.refreshMainPage()
+      setTimeout(this.finish, 2000)
     }
   }
 </script>

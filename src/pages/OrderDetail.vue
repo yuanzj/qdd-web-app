@@ -120,28 +120,33 @@
     methods: {
       handleChange (event) {
         console.log(event)
-        if (event) {
-          Indicator.open('开启禁用模式...')
-          this.axios.put('/api-ebike/v3.1/ues/update-use-status?ccuSn=' + this.ccuSn + '&useStatus=0').then((res) => {
-            console.log(res)
-            Indicator.close()
-          })
-            .catch(error => {
-              console.log(error)
+        if (this.days >= 0) {
+          if (event) {
+            Indicator.open('开启禁用模式...')
+            this.axios.put('/api-ebike/v3.1/ues/update-use-status?ccuSn=' + this.ccuSn + '&useStatus=0').then((res) => {
+              console.log(res)
               Indicator.close()
-              this.modelSwitch = false
             })
+              .catch(error => {
+                console.log(error)
+                Indicator.close()
+                this.modelSwitch = false
+              })
+          } else {
+            Indicator.open('关闭禁用模式...')
+            this.axios.put('/api-ebike/v3.1/ues/update-use-status?ccuSn=' + this.ccuSn + '&useStatus=1').then((res) => {
+              console.log(res)
+              Indicator.close()
+            })
+              .catch(error => {
+                console.log(error)
+                Indicator.close()
+                this.modelSwitch = true
+              })
+          }
         } else {
-          Indicator.open('关闭禁用模式...')
-          this.axios.put('/api-ebike/v3.1/ues/update-use-status?ccuSn=' + this.ccuSn + '&useStatus=1').then((res) => {
-            console.log(res)
-            Indicator.close()
-          })
-            .catch(error => {
-              console.log(error)
-              Indicator.close()
-              this.modelSwitch = true
-            })
+          Toast('欠费状态不能修改禁用模式状态')
+          this.loadEbikeDetail()
         }
       },
       change () {
