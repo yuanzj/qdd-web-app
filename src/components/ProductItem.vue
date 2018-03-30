@@ -80,24 +80,25 @@
                     token: this.$store.state.token,
                     firm: this.$store.state.firm,
                     ccuSn: this.$store.state.ccuSn,
-                    orderId: this.$store.state.orderId
+                    orderId: this.$store.state.orderId,
+                    pay2: true
                   }
                 })
               } else {
                 this.$router.push({
                   name: 'ProductDetail',
                   params: {id: this.id},
-                  query: {token: this.$store.state.token, firm: this.$store.state.firm, ccuSn: this.$store.state.ccuSn}
+                  query: {token: this.$store.state.token, firm: this.$store.state.firm, ccuSn: this.$store.state.ccuSn, pay2: true}
                 })
               }
             } else {
-              this.$router.push({name: 'ProductDetail', params: { id: this.id }, query: {token: this.$store.state.token, firm: this.$store.state.firm}})
+              this.$router.push({name: 'ProductDetail', params: { id: this.id }, query: {token: this.$store.state.token, firm: this.$store.state.firm, pay2: true}})
             }
           } else {
             if (this.$store.state.orderId) {
-              this.$router.push({name: 'ProductDetail', params: { id: this.id }, query: {orderId: this.$store.state.orderId}})
+              this.$router.push({name: 'ProductDetail', params: { id: this.id }, query: {orderId: this.$store.state.orderId, pay2: true}})
             } else {
-              this.$router.push({name: 'ProductDetail', params: { id: this.id }})
+              this.$router.push({name: 'ProductDetail', params: { id: this.id }, query: {pay2: true}})
             }
           }
         }

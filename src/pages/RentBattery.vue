@@ -50,7 +50,7 @@
             this.$router.push({
               name: 'ProductDetail',
               params: {id: this.productId},
-              query: {token: this.$store.state.token, firm: this.$store.state.firm, ccuSn: this.ccuSn}
+              query: {token: this.$store.state.token, firm: this.$store.state.firm, ccuSn: this.ccuSn, pay2: true}
             })
           } else {
             Toast(res.data.msg)

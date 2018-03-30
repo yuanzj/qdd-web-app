@@ -142,8 +142,8 @@
         optionValue: '0',
         options: [],
         currentValue: '',
-        payOptionValue: '0',
-        payOptions: [{label: '支付宝', value: '0', disabled: false}],
+        payOptionValue: '2',
+        payOptions: [{label: '支付宝', value: '2', disabled: false}],
         // ali支付form表单信息
         alipay: '',
         couponList: [],
@@ -338,7 +338,7 @@
           return false
         }
         Indicator.open('提交中...')
-        this.axios.post('/api-order/v3.1/rent-orders/?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn + (this.couponId ? ('&couponId=' + this.couponId) : ''))
+        this.axios.post('/api-order/v3.1/rent-orders/?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn + (this.couponId ? ('&couponId=' + this.couponId) : '') + '&payChannelId=' + this.payOptionValue)
           .then((res) => {
             console.log(res)
             Indicator.close()
@@ -350,11 +350,13 @@
                   this.$router.push({
                     name: 'PayComplete'
                   })
-                } else {
+                } else if (res.data.indexOf('_alipaysubmit_') !== -1) {
                   this.alipay = res.data
                   setTimeout(function () {
                     document.forms['_alipaysubmit_'].submit()
                   }, 0)
+                } else {
+                  location.href = res.data
                 }
               }
             } else {
@@ -374,7 +376,7 @@
           return false
         }
         Indicator.open('提交中...')
-        this.axios.post('/api-order/v3.1/rent-orders/' + this.orderId + '/topup?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn + (this.couponId ? ('&couponId=' + this.couponId) : ''))
+        this.axios.post('/api-order/v3.1/rent-orders/' + this.orderId + '/topup?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn + (this.couponId ? ('&couponId=' + this.couponId) : '') + '&payChannelId=' + this.payOptionValue)
           .then((res) => {
             console.log(res)
             Indicator.close()
@@ -386,11 +388,13 @@
                   this.$router.push({
                     name: 'PayComplete'
                   })
-                } else {
+                } else if (res.data.indexOf('_alipaysubmit_') !== -1) {
                   this.alipay = res.data
                   setTimeout(function () {
                     document.forms['_alipaysubmit_'].submit()
                   }, 0)
+                } else {
+                  location.href = res.data
                 }
               }
             } else {
@@ -415,6 +419,10 @@
         })
       }
       if (this.$route.query) {
+        if (this.$route.query.pay2) {
+          this.payOptions = [{label: '支付宝', value: '2', disabled: false}, {label: '微信', value: '3', disabled: false}]
+        }
+
         this.$store.commit('setToken', this.$route.query.token)
         this.$store.commit('setFirm', this.$route.query.firm)
         this.$store.commit('setEnterModel', this.$route.query.model)

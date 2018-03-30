@@ -102,8 +102,8 @@
         optionValue: '0',
         options: [],
         currentValue: '',
-        payOptionValue: '0',
-        payOptions: [{label: '支付宝', value: '0', disabled: false}],
+        payOptionValue: '2',
+        payOptions: [{label: '支付宝', value: '2', disabled: false}],
         // ali支付form表单信息
         alipay: ''
       }
@@ -171,7 +171,7 @@
           return false
         }
         Indicator.open('提交中...')
-        this.axios.post('/api-order/v3.1/rent-orders/' + this.orderId + '/topup-arrearage?' + 'productId=' + this.productId + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn)
+        this.axios.post('/api-order/v3.1/rent-orders/' + this.orderId + '/topup-arrearage?' + 'productId=' + this.productId + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn + '&payChannelId=' + this.payOptionValue)
           .then((res) => {
             console.log(res)
             Indicator.close()
@@ -179,10 +179,18 @@
               if (res.data.error) {
                 Toast(res.data.error.msg)
               } else {
-                this.alipay = res.data
-                setTimeout(function () {
-                  document.forms['_alipaysubmit_'].submit()
-                }, 0)
+                if (res.data === 'success') {
+                  this.$router.push({
+                    name: 'PayComplete'
+                  })
+                } else if (res.data.indexOf('_alipaysubmit_') !== -1) {
+                  this.alipay = res.data
+                  setTimeout(function () {
+                    document.forms['_alipaysubmit_'].submit()
+                  }, 0)
+                } else {
+                  location.href = res.data
+                }
               }
             } else {
               Toast('系统异常')
@@ -206,6 +214,9 @@
         })
       }
       if (this.$route.query) {
+        if (this.$route.query.pay2) {
+          this.payOptions = [{label: '支付宝', value: '2', disabled: false}, {label: '微信', value: '3', disabled: false}]
+        }
         this.$store.commit('setToken', this.$route.query.token)
         this.$store.commit('setFirm', this.$route.query.firm)
         this.$store.commit('setEnterModel', this.$route.query.model)

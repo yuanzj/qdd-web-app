@@ -201,7 +201,8 @@
                 firm: this.$store.state.firm,
                 ccuSn: this.ccuSn,
                 orderId: this.orderId,
-                days: this.days
+                days: this.days,
+                pay2: true
               }
             })
           } else {
@@ -223,7 +224,8 @@
                 firm: this.$store.state.firm,
                 ccuSn: this.ccuSn,
                 orderId: this.orderId,
-                days: this.days
+                days: this.days,
+                pay2: true
               }
             })
           } else {
