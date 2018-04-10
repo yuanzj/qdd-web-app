@@ -53,7 +53,7 @@
     <div class="h-btn-container" v-if="days >= 0">
       <div @click="finish"  class="action-btn">退租</div>
       <span style="width: 1px;height: 16px;background-color: #BDBDBD;margin: 1.5rem 0 1.5rem 0"></span>
-      <div @click="change"  class="action-btn">更换</div>
+      <div @click="change"  class="action-btn">售后</div>
       <span style="width: 1px;height: 16px;background-color: #BDBDBD;margin: 1.5rem 0 1.5rem 0"></span>
       <div @click="topUp"  class="action-btn" >续租</div>
     </div>
@@ -161,7 +161,7 @@
             firm: this.$store.state.firm,
             ccuSn: this.ccuSn,
             orderId: this.orderId,
-            title: '更换二维码',
+            title: '售后二维码',
             storeName: this.storeName,
             type: 1
           }

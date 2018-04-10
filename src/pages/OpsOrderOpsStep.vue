@@ -64,7 +64,7 @@
           },
           {
             num: '2',
-            text: '更换设备二维码'
+            text: '售后设备二维码'
           },
           {
             num: '3',
@@ -303,7 +303,7 @@
             headers: {'Content-Type': 'text/plain'}
           }).then((res) => {
             Indicator.close()
-            Toast('更换成功')
+            Toast('售后成功')
             this.back()
           })
             .catch(error => {
@@ -345,7 +345,7 @@
           ]
         } else if (this.enterModel === 1) {
           // 换设备
-          document.title = '设备更换'
+          document.title = '设备售后'
           this.title1 = '旧设备SN号'
           this.items = [
             {

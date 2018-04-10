@@ -3,7 +3,7 @@
 
     <div class="h-btn-container"><mt-button type="default" class="action-btn" @click="finish">设备退租</mt-button></div>
 
-    <div class="h-btn-container"><mt-button type="default" class="action-btn" @click="replace">设备更换</mt-button></div>
+    <div class="h-btn-container"><mt-button type="default" class="action-btn" @click="replace">设备售后</mt-button></div>
 
   </div>
 </template>
