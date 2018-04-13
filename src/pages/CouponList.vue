@@ -78,7 +78,16 @@
           }
         ).then((res) => {
           this.$refs.loadmore.onTopLoaded()
-          this.productList = res.data.list
+          if (res.data && res.data.list.length > 0) {
+            this.productList = res.data.list.map(function (item) {
+              if (item.couponRuleEntity) {
+                item.desc = item.couponRuleEntity.desc
+              }
+              return item
+            })
+          } else {
+            this.productList = []
+          }
         })
           .catch(error => {
             this.$refs.loadmore.onTopLoaded()

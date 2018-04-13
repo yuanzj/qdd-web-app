@@ -5,6 +5,11 @@
       <div>{{ ccuSn }}</div>
     </div>
     <div class="h-container">
+      <div class="lm-text-second">租赁押金</div>
+      <div class="lm-text-red" v-if="deposit == 0">未交</div>
+      <div v-else>{{ deposit }}元</div>
+    </div>
+    <div class="h-container">
       <div class="lm-text-second">租赁状态</div>
       <div :class="{ 'lm-text-red': days < 0 }">{{ orderStatusDesc }}</div>
     </div>
@@ -82,6 +87,7 @@
         storeAddress: null,
         storePhone: null,
         storeCode: null,
+        deposit: 0,
         orderStatus: -1,
         orderId: null,
         productId: null,
@@ -202,7 +208,8 @@
                 ccuSn: this.ccuSn,
                 orderId: this.orderId,
                 days: this.days,
-                pay2: true
+                pay2: true,
+                noDeposit: (this.deposit > 0 ? null : true)
               }
             })
           } else {
@@ -243,6 +250,7 @@
             this.productId = order.productId
             this.startTime = order.startTime
             this.endTime = order.endTime
+            this.deposit = order.deposit
             if (order.days) {
               this.days = order.days
             }

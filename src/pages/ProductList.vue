@@ -20,7 +20,8 @@
     data () {
       return {
         wrapperHeight: 0,
-        productList: []
+        productList: [],
+        city: '*'
       }
     },
     methods: {
@@ -32,7 +33,8 @@
               limit: 20,
               sidx: 'id',
               order: 'asc',
-              categoryIds: '1,3'
+              categoryIds: '1,3',
+              city: this.city
             }
           }
         ).then((res) => {
@@ -57,6 +59,9 @@
         this.axios.defaults.headers.common['firm'] = this.$route.query.firm
         if (this.$route.query.token) {
           this.axios.defaults.headers.common['Authorization'] = this.$route.query.token
+        }
+        if (this.$route.query.city) {
+          this.city = this.$route.query.city
         }
       }
 

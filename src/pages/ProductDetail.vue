@@ -29,6 +29,15 @@
       <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
     </div>
 
+    <div v-if="depositAmount !== null">
+      <div class="table-head-title">押金</div>
+      <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+      <div class="lm-text-text lm-font-second" style="background-color: white;height: 3rem;line-height: 3rem;padding-left: 1rem">
+        押金 {{ depositAmount }} 元
+      </div>
+      <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+    </div>
+
     <div class="table-head-title">租赁套餐</div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
     <div class="lm-text-text lm-font-second" style="background-color: white" v-for="(option,index) in options">
@@ -101,7 +110,7 @@
     <div style="height: 4rem"></div>
     <div class="settlement">
       <div>
-        <div class="lm-font-default"><span class="lm-text-red lm-font-head">{{ finalPrice }}</span>元 {{ faceValue }}天</div>
+        <div class="lm-font-default"><span class="lm-text-red lm-font-head">{{ finalPrice }}</span>元<span v-if="depositAmount !== null">+押金<span class="lm-text-red lm-font-head">{{ depositAmount }}</span>元</span></div>
       </div>
 
       <div class="tobuy" @click="createOrder">{{ orderBtnTile }}</div>
@@ -110,7 +119,45 @@
     <div class="hide" v-html="alipay"></div>
 
     <mt-popup v-model="popupVisible" position="bottom" class="mint-popup-4">
-      <mt-picker :slots="dateSlots" value-key="showValue" @change="onDateChange" :visible-item-count="5" :show-toolbar="true"></mt-picker>
+      <div style="height: 360px">
+        <div style="height: 48px;text-align: center">
+          <span style="padding-top: 0.5rem;font-size: 1rem;" class="lm-text-text">优惠券</span>
+          <br/>
+          <span class="lm-text-second lm-font-sm">满足条件可使用</span>
+        </div>
+        <div style="height: 264px;overflow: auto">
+          <div class="lm-text-text lm-font-second" style="background-color: white" v-for="(option,index) in couponList">
+
+            <div class="options-container-1">
+              <label class="mint-radiolist-label">
+              <span
+                :class="{'is-right': false}"
+                class="mint-radio">
+                <input
+                  class="mint-radio-input"
+                  type="radio"
+                  v-model="selectedCouponIndex"
+                  :disabled="option.disabled"
+                  :value="option.value || option">
+                <span class="mint-radio-core"></span>
+              </span>
+              </label>
+              <div style="text-align: left;flex: 1" @click="onClickCoupon(option,index)">
+                <div class="lm-text-blue lm-font-default"> {{option.name}}</div>
+                <div class="lm-text-text lm-font-second" style="margin-top: 0.25rem"> {{option.ruleDescription}}</div>
+                <div class="lm-text-text lm-font-second" style="margin-top: 0.25rem"> 有效期至：{{option.endTime}}</div>
+              </div>
+            </div>
+            <div style="margin-left: 1rem" v-if="index < (couponList.length - 1)">
+              <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+            </div>
+          </div>
+        </div>
+        <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+        <div style="height: 48px;width: 100%;text-align: center" @click="notUseCoupon">
+          <span style="padding-top: 0.7rem;font-size: 1rem;color: #757575">不使用优惠券</span>
+        </div>
+      </div>
     </mt-popup>
   </div>
 </template>
@@ -121,6 +168,7 @@
     name: 'product-detail',
     data () {
       return {
+        depositAmount: null,
         fromScanModel: false,
         couponId: null,
         popupVisible: false,
@@ -139,7 +187,7 @@
         title: '产品名称',
         description: '产品描述',
         remark: '',
-        optionValue: '0',
+        optionValue: -1,
         options: [],
         currentValue: '',
         payOptionValue: '2',
@@ -149,22 +197,20 @@
         couponList: [],
         selectedCouponIndex: -1,
         subtractPrice: null,
-        dateSlots: [
-          {
-            flex: 1,
-            values: [],
-            className: 'slot1',
-            textAlign: 'center',
-            key: 'name'
-          }
-        ]
+        specificationCode: null,
+        canUseCouponCount: 0
       }
     },
     computed: {
       finalPrice: function () {
         if (this.options && this.options.length > 0) {
           if (this.couponList.length > 0 && this.selectedCouponIndex >= 0) {
-            return (this.options[Number(this.optionValue)].price - this.couponList[this.selectedCouponIndex].amount).toFixed(2)
+            let lastTotalPrice = (this.options[this.optionValue].price - this.couponList[this.selectedCouponIndex].amount).toFixed(2)
+            if (lastTotalPrice > 0) {
+              return lastTotalPrice
+            } else {
+              return 0
+            }
           } else {
             return this.options[Number(this.optionValue)].price
           }
@@ -198,7 +244,7 @@
         if (this.couponList.length > 0) {
           if (this.selectedCouponIndex < 0) {
             this.subtractPrice = ''
-            return (this.couponList.length - 1) + '个优惠券可用'
+            return this.canUseCouponCount + '个优惠券可用'
           } else {
             this.subtractPrice = '-' + this.couponList[this.selectedCouponIndex].amount
             return this.couponList[this.selectedCouponIndex].name
@@ -208,7 +254,55 @@
         return '无'
       }
     },
+    watch: {
+      optionValue (val, oldval) {
+        if (this.couponList && this.couponList.length > 0) {
+          let index = 0
+          let tempSpecificationCode = this.specificationCode
+          let cpId = null
+          if (this.optionValue >= 0) {
+            cpId = this.options[this.optionValue].id
+          }
+          let temCanUseCouponCount = 0
+          this.couponList = this.couponList.map(function (item) {
+            item.label = item.name
+            item.value = String(index++)
+            item.disabled = false
+            if (item.couponRuleEntity) {
+              item.ruleDescription = item.couponRuleEntity.desc
+
+              if (item.couponRuleEntity.chargeProductId && cpId && cpId !== item.couponRuleEntity.chargeProductId) {
+                item.disabled = true
+              }
+              if (item.couponRuleEntity.specificationCode && tempSpecificationCode && tempSpecificationCode !== item.couponRuleEntity.specificationCode) {
+                item.disabled = true
+              }
+            } else {
+              item.ruleDescription = item.desc
+            }
+            if (!item.disabled) {
+              temCanUseCouponCount++
+            }
+            return item
+          })
+          this.canUseCouponCount = temCanUseCouponCount
+        }
+      }
+    },
     methods: {
+      onClickCoupon (item, index) {
+        if (!item.disabled) {
+          this.selectedCouponIndex = index
+          this.popupVisible = false
+        } else {
+          this.popupVisible = true
+        }
+      },
+      notUseCoupon () {
+        this.couponId = null
+        this.selectedCouponIndex = -1
+        this.popupVisible = false
+      },
       showCoupon () {
         if (this.couponList && this.couponList.length > 0) {
           this.popupVisible = true
@@ -217,17 +311,29 @@
           Toast('暂无可用优惠券')
         }
       },
-      onDateChange (picker, values) {
-        console.log(values)
-        if (values && values[0] && values[0].index) {
-          this.selectedCouponIndex = values[0].index
-          this.couponId = values[0].id
-          console.log(values + '-' + this.selectedCouponIndex)
-        }
-      },
       fillSnFromScan (sn) {
         this.ccuSn = sn
         this.addOrder()
+      },
+      loadDeposit () {
+        console.log('depositconfigs')
+        this.axios.get('/api-order/v3.1/depositconfigs',
+          {
+            params: {
+              productId: this.$route.params.id
+            }
+          }
+        ).then((res) => {
+          let data = res.data
+          console.log(data)
+          if (data && data.list.length > 0) {
+            this.depositAmount = data.list[0].amount
+          }
+          console.log(this.depositAmount)
+        })
+          .catch(error => {
+            console.log(error)
+          })
       },
       loadProductDetail () {
         this.axios.get('/api-order/v3.1/products/' + this.$route.params.id).then((res) => {
@@ -239,6 +345,7 @@
             this.price = product.price
             this.remark = product.remark
             this.categoryId = product.categoryId
+            this.specificationCode = product.specificationCode
           }
         })
           .catch(error => {
@@ -257,21 +364,42 @@
               limit: 999,
               sidx: 'id',
               order: 'asc',
-              status: '1',
-              ruleLimit: this.$route.params.id
+              status: '1'
             }
           }
         ).then((res) => {
           this.couponList = res.data.list
+          console.log(this.couponList)
           if (this.couponList && this.couponList.length > 0) {
-            let index = 1
+            let index = 0
+            let tempSpecificationCode = this.specificationCode
+            let cpId = null
+            if (this.optionValue >= 0) {
+              cpId = this.options[this.optionValue].id
+            }
+            let temCanUseCouponCount = 0
             this.couponList = this.couponList.map(function (item) {
-              item.index = index++
-              item.showValue = item.name + '(' + item.amount + '元)'
+              item.label = item.name
+              item.value = String(index++)
+              item.disabled = false
+              if (item.couponRuleEntity) {
+                item.ruleDescription = item.couponRuleEntity.desc
+
+                if (item.couponRuleEntity.chargeProductId && cpId && cpId !== item.couponRuleEntity.chargeProductId) {
+                  item.disabled = true
+                }
+                if (item.couponRuleEntity.specificationCode && tempSpecificationCode && tempSpecificationCode !== item.couponRuleEntity.specificationCode) {
+                  item.disabled = true
+                }
+              } else {
+                item.ruleDescription = item.desc
+              }
+              if (!item.disabled) {
+                temCanUseCouponCount++
+              }
               return item
             })
-            this.dateSlots[0].values = this.couponList
-            this.dateSlots[0].values.unshift({id: null, showValue: '不使用优惠券', index: -1, amount: 0})
+            this.canUseCouponCount = temCanUseCouponCount
           }
         })
           .catch(error => {
@@ -279,20 +407,20 @@
           })
       },
       loadSolutionList () {
-        this.axios.get('/api-order/v3.1/products',
+        this.axios.get('/api-order/v3.1/chargeproducts',
           {
             params: {
               page: 1,
               limit: 20,
               sidx: 'face_value',
               order: 'asc',
-              categoryIds: '2,4',
               parentId: this.$route.params.id
             }
           }
         ).then((res) => {
           if (res.data.list) {
             let index = 0
+            this.optionValue = 0
             this.options = res.data.list.map(function (item) {
               item.label = item.name
               item.value = String(index++)
@@ -338,6 +466,9 @@
           return false
         }
         Indicator.open('提交中...')
+        if (this.selectedCouponIndex >= 0) {
+          this.couponId = this.couponList[this.selectedCouponIndex].id
+        }
         this.axios.post('/api-order/v3.1/rent-orders/?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn + (this.couponId ? ('&couponId=' + this.couponId) : '') + '&payChannelId=' + this.payOptionValue)
           .then((res) => {
             console.log(res)
@@ -376,6 +507,9 @@
           return false
         }
         Indicator.open('提交中...')
+        if (this.selectedCouponIndex >= 0) {
+          this.couponId = this.couponList[this.selectedCouponIndex].id
+        }
         this.axios.post('/api-order/v3.1/rent-orders/' + this.orderId + '/topup?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn + (this.couponId ? ('&couponId=' + this.couponId) : '') + '&payChannelId=' + this.payOptionValue)
           .then((res) => {
             console.log(res)
@@ -414,8 +548,13 @@
       if (!this.$route.query.token) {
         MessageBox.alert('您还没有登录，请先登录').then(action => {
           this.$router.go(-1)
+          // JS 调用本地方法完成扫码
           /* eslint-disable no-undef */
-          nativeObj.login()
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.refreshToken()
+          } else {
+            window.webkit.messageHandlers.refreshToken.postMessage('')
+          }
         })
       }
       if (this.$route.query) {
@@ -447,11 +586,16 @@
         } else {
           document.title = '补缴欠费'
         }
+        if (this.$route.query.noDeposit) {
+          this.loadDeposit()
+        }
       } else {
         document.title = '详情'
         if (this.$route.query.ccuSn) {
           this.fromScanModel = true
         }
+        // 获取押金
+        this.loadDeposit()
       }
       this.loadSolutionList()
       this.loadProductDetail()
@@ -549,6 +693,19 @@
 
   .options-container {
     height: 3rem;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    background-color: white;
+    padding-right: 1rem;
+    padding-left: 0.5rem;
+  }
+
+  .options-container-1 {
+    height: 5.5rem;
     display: -webkit-flex;
     display: flex;
     flex-direction: row;

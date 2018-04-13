@@ -43,10 +43,10 @@
       },
       loadProductList () {
         Indicator.open('获取产品信息...')
-        this.axios.get('/api-ebike/v3.1/ues/' + this.ccuSn).then((res) => {
+        this.axios.get('/api-order/v3.1/products/detail?ccuSn=' + this.ccuSn).then((res) => {
           Indicator.close()
           if (res.data) {
-            this.productId = res.data.productId
+            this.productId = res.data.id
             this.$router.push({
               name: 'ProductDetail',
               params: {id: this.productId},
