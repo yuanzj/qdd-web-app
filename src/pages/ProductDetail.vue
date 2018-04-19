@@ -590,7 +590,7 @@
           this.loadDeposit()
         }
       } else {
-        document.title = '详情'
+        document.title = '产品详情'
         if (this.$route.query.ccuSn) {
           this.fromScanModel = true
         }

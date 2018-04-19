@@ -11,7 +11,7 @@
 
 <script>
   import StoreItem from '@/components/StoreItem'
-
+  import {Toast} from 'mint-ui'
   export default {
     name: 'product-list',
     components: {
@@ -44,6 +44,9 @@
         ).then((res) => {
           this.$refs.loadmore.onTopLoaded()
           this.productList = res.data.list
+          if (this.productList.length === 0) {
+            Toast('当前城市暂无网点！')
+          }
         })
           .catch(error => {
             this.$refs.loadmore.onTopLoaded()
@@ -57,6 +60,7 @@
       if (this.$route.query) {
         this.$store.commit('setToken', this.$route.query.token)
         this.$store.commit('setFirm', this.$route.query.firm)
+        this.$store.commit('setEnterModel', this.$route.query.model)
         this.axios.defaults.headers.common['firm'] = this.$route.query.firm
         if (this.$route.query.token) {
           this.axios.defaults.headers.common['Authorization'] = this.$route.query.token

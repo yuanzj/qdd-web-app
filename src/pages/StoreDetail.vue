@@ -20,8 +20,8 @@
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
     <div class="lm-text-text lm-font-second" style="background-color: white" v-for="(option,index) in productList">
 
-      <div class="options-container">
-        <div class="p-container" @click="showDetail(option.id)">
+      <div class="options-container" @click="showDetail(option.id)">
+        <div class="p-container">
           <div class="p-title" style="margin-top: 1rem">
             {{ option.name }}
           </div>
@@ -45,11 +45,12 @@
       </div>
     </div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
-
+    <div style="height: 25px"></div>
   </div>
 </template>
 
 <script>
+  import {MessageBox} from 'mint-ui'
   export default {
     name: 'product-detail',
     data () {
@@ -97,7 +98,7 @@
             params: {
               page: 1,
               limit: 20,
-              sidx: 'face_value',
+              sidx: 'price',
               order: 'asc',
               storeId: this.$route.params.id
             }
@@ -125,44 +126,35 @@
       },
       showDetail (id) {
         this.id = id
-        if (this.$store.state.enterModel === 'newPage') {
-          /* eslint-disable no-undef */
-          if (window.hasOwnProperty('nativeObj')) {
-            nativeObj.startNewPage(this.id)
+        if (this.$store.state.token && this.$store.state.firm) {
+          if (this.$store.state.ccuSn) {
+            if (this.$store.state.orderId) {
+              this.$router.push({
+                name: 'ProductDetail',
+                params: {id: this.id},
+                query: {
+                  token: this.$store.state.token,
+                  firm: this.$store.state.firm,
+                  ccuSn: this.$store.state.ccuSn,
+                  orderId: this.$store.state.orderId,
+                  pay2: true
+                }
+              })
+            } else {
+              this.$router.push({
+                name: 'ProductDetail',
+                params: {id: this.id},
+                query: {token: this.$store.state.token, firm: this.$store.state.firm, ccuSn: this.$store.state.ccuSn, pay2: true}
+              })
+            }
           } else {
-            window.webkit.messageHandlers.startNewPage.postMessage(this.id)
+            this.$router.push({name: 'ProductDetail', params: { id: this.id }, query: {token: this.$store.state.token, firm: this.$store.state.firm, pay2: true}})
           }
         } else {
-          if (this.$store.state.token && this.$store.state.firm) {
-            if (this.$store.state.ccuSn) {
-              if (this.$store.state.orderId) {
-                this.$router.push({
-                  name: 'ProductDetail',
-                  params: {id: this.id},
-                  query: {
-                    token: this.$store.state.token,
-                    firm: this.$store.state.firm,
-                    ccuSn: this.$store.state.ccuSn,
-                    orderId: this.$store.state.orderId,
-                    pay2: true
-                  }
-                })
-              } else {
-                this.$router.push({
-                  name: 'ProductDetail',
-                  params: {id: this.id},
-                  query: {token: this.$store.state.token, firm: this.$store.state.firm, ccuSn: this.$store.state.ccuSn, pay2: true}
-                })
-              }
-            } else {
-              this.$router.push({name: 'ProductDetail', params: { id: this.id }, query: {token: this.$store.state.token, firm: this.$store.state.firm, pay2: true}})
-            }
+          if (this.$store.state.orderId) {
+            this.$router.push({name: 'ProductDetail', params: { id: this.id }, query: {orderId: this.$store.state.orderId, pay2: true}})
           } else {
-            if (this.$store.state.orderId) {
-              this.$router.push({name: 'ProductDetail', params: { id: this.id }, query: {orderId: this.$store.state.orderId, pay2: true}})
-            } else {
-              this.$router.push({name: 'ProductDetail', params: { id: this.id }, query: {pay2: true}})
-            }
+            this.$router.push({name: 'ProductDetail', params: { id: this.id }, query: {pay2: true}})
           }
         }
       }
@@ -191,7 +183,7 @@
           this.axios.defaults.headers.common['Authorization'] = this.$route.query.token
         }
       }
-      document.title = '详情'
+      document.title = '站点详情'
       this.loadStoreDetail()
       this.loadProductList()
     }
