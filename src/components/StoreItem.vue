@@ -64,7 +64,7 @@
         if (this.distance === 0) {
           return ''
         } else if (this.distance <= 1000) {
-          return this.distance + 'm'
+          return this.distance.toFixed(0) + 'm'
         } else {
           return (this.distance / 1000).toFixed(2) + 'km'
         }

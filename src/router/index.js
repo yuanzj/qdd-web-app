@@ -23,6 +23,8 @@ import CouponList from '@/pages/CouponList'
 import RentBattery from '@/pages/RentBattery'
 // 订单操作
 import OrderOpsQRCode from '@/pages/OrderOpsQRCode'
+// 退款账户设置
+import UserPayAccount from '@/pages/UserPayAccount'
 // 运维首页
 import OpsMain from '@/pages/OpsMain'
 // 运维订单处理页面
@@ -104,6 +106,11 @@ export default new Router({
       path: '/order-ops',
       name: 'OrderOpsQRCode',
       component: OrderOpsQRCode
+    },
+    {
+      path: '/user-pay-account',
+      name: 'UserPayAccount',
+      component: UserPayAccount
     }
   ]
 })

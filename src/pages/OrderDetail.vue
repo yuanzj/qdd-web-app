@@ -95,6 +95,7 @@
         startTime: '',
         endTime: '',
         days: null,
+        userId: null,
         // ali支付form表单信息
         alipay: '',
         opsModel: -1
@@ -179,15 +180,14 @@
           return
         }
         this.$router.push({
-          name: 'OrderOpsQRCode',
+          name: 'UserPayAccount',
           query: {
             token: this.$store.state.token,
             firm: this.$store.state.firm,
             ccuSn: this.ccuSn,
             orderId: this.orderId,
-            title: '退租二维码',
-            storeName: this.storeName,
-            type: 0
+            userId: this.userId,
+            storeName: this.storeName
           }
         })
       },
@@ -251,6 +251,7 @@
             this.startTime = order.startTime
             this.endTime = order.endTime
             this.deposit = order.deposit
+            this.userId = order.userId
             if (order.days) {
               this.days = order.days
             }
