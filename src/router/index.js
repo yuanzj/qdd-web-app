@@ -25,7 +25,12 @@ import RentBattery from '@/pages/RentBattery'
 import OrderOpsQRCode from '@/pages/OrderOpsQRCode'
 // 运维订单处理步骤页面
 import OpsOrderOpsStep from '@/pages/OpsOrderOpsStep'
-
+// 设备列表查询
+import Equipmentlist from '@/pages/Equipmentlist'
+// 设备详情页面
+import EquipmentDetail from '@/pages/EquipmentDetail'
+// 七天收益列表
+import Incomelist from '@/pages/IncomeList'
 Vue.use(Router)
 
 export default new Router({
@@ -79,6 +84,21 @@ export default new Router({
       path: '/ops-order-ops-step',
       name: 'OpsOrderOpsStep',
       component: OpsOrderOpsStep
+    },
+    {
+      path: '/equipment-list',
+      name: 'Equipmentlist',
+      component: Equipmentlist
+    },
+    {
+      path: '/equipments/:ccusn',
+      name: 'EquipmentDetail',
+      component: EquipmentDetail
+    },
+    {
+      path: '/income-list',
+      name: 'Incomelist',
+      component: Incomelist
     },
     {
       path: '/rent-battery',
