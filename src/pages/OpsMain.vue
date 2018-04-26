@@ -5,6 +5,8 @@
 
     <div class="h-btn-container"><mt-button type="default" class="action-btn" @click="replace">设备售后</mt-button></div>
 
+    <div class="h-btn-container"><mt-button type="default" class="action-btn" @click="search">设备查询</mt-button></div>
+
   </div>
 </template>
 
@@ -34,6 +36,16 @@
             token: this.$store.state.token,
             firm: this.$store.state.firm,
             model: 1
+          }
+        })
+      },
+      search () {
+        this.$router.push({
+          name: 'equiplist',
+          query: {
+            token: this.$store.state.token,
+            firm: this.$store.state.firm,
+            model: 2
           }
         })
       }
