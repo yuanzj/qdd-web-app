@@ -35,7 +35,8 @@
               limit: 999,
               sidx: 'id',
               order: 'asc',
-              types: '6,40',
+              category: '2',
+              showFlag: '0',
               city: this.city,
               userLon: this.userLon,
               userLat: this.userLat

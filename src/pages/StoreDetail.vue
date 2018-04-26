@@ -10,14 +10,14 @@
       </div>
       <div class="p-desc"  style="margin: 0 1rem 0 1rem" >网点编号：{{ code }}
       </div>
-      <div class="p-desc">联系方式：{{ tel }}</div>
-      <div class="p-desc">{{ city }}{{ area }}{{ address }}</div>
+      <div class="p-desc">联系方式：<a :href="'tel:' + tel">{{ tel }}</a></div>
+      <div class="p-desc"><a :href="'http://api.map.baidu.com/marker?location=' + lat +',' + lon + '&title=' + name + '&content=' + address + '&output=html'">{{ city }}{{ area }}{{ address }}</a></div>
       <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
     </div>
 
 
     <div class="table-head-title">产品列表</div>
-    <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+    <div v-if="productList.length > 0" style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
     <div class="lm-text-text lm-font-second" style="background-color: white" v-for="(option,index) in productList">
 
       <div class="options-container" @click="showDetail(option.id)">
@@ -29,7 +29,7 @@
           <div class="p-content">
 
             <div class="p-price">
-              最高续航 <span style="font-size: 1.25rem;color: #E64E42;font-weight: bold">{{option.remark}}</span> km
+              可租赁 <span style="font-size: 1.25rem;color: #E64E42;font-weight: bold">{{ option.inventory >= 5 ? 5 : option.inventory }}</span>
             </div>
             <div style="-webkit-flex:1;flex: 1"></div>
             <div class="p-price" style="text-align: right">
@@ -44,13 +44,14 @@
         <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
       </div>
     </div>
-    <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+    <div v-if="productList.length > 0" style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
     <div style="height: 25px"></div>
   </div>
 </template>
 
 <script>
   import {MessageBox} from 'mint-ui'
+  // import {GPS} from '../components/gps'
   export default {
     name: 'product-detail',
     data () {
@@ -67,7 +68,9 @@
         address: '',
         id: null,
         productValue: -1,
-        productList: []
+        productList: [],
+        lat: null,
+        lon: null
       }
     },
     methods: {
@@ -82,6 +85,9 @@
             this.city = product.city
             this.area = product.county
             this.address = product.address
+            // let gpsValue = GPS.bd_decrypt_gps(product.lat, product.lon)
+            this.lat = product.lat
+            this.lon = product.lon
           }
         })
           .catch(error => {

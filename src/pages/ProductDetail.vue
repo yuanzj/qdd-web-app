@@ -7,12 +7,9 @@
         <img class="p-image" :src="image"/>
         <span class="p-title" >{{ title }}</span>
       </div>
-      <div class="p-desc"  style="margin: 0 1rem 0 1rem" v-if="categoryId === 1">
-        最高续航 {{ remark }}km
-      </div>
-      <div class="p-desc"  style="margin: 0 1rem 0 1rem" v-else>
-        充电电流 {{ remark }}A
-      </div>
+      <!--<div class="p-desc"  style="margin: 0 1rem 0 1rem">-->
+        <!--可租赁 {{ inventory >= 5 ? 5 : inventory }}-->
+      <!--</div>-->
       <div class="p-desc">{{ description }}</div>
 
       <div v-if="ccuSn" class="p-detail-text lm-text-second">设备编号 {{ ccuSn }}</div>
@@ -32,8 +29,27 @@
     <div v-if="depositAmount !== null">
       <div class="table-head-title">押金</div>
       <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
-      <div class="lm-text-text lm-font-second" style="background-color: white;height: 3rem;line-height: 3rem;padding-left: 1rem">
-        押金 {{ depositAmount }} 元
+      <div class="lm-text-text lm-font-second" style="background-color: white" v-for="(option,index) in depositOptions">
+
+        <div class="options-container">
+          <label class="mint-radiolist-label">
+            <span
+              :class="{'is-right': false}"
+              class="mint-radio">
+              <input
+                class="mint-radio-input"
+                type="radio"
+                v-model="depositOptionValue"
+                :disabled="option.disabled"
+                :value="option.value || option">
+              <span class="mint-radio-core"></span>
+            </span>
+            <span class="mint-radio-label" v-text="depositAmount + '元'"></span>
+          </label>
+        </div>
+        <div style="margin-left: 1rem" v-if="index < (options.length - 1)">
+          <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+        </div>
       </div>
       <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
     </div>
@@ -110,7 +126,9 @@
     <div style="height: 4rem"></div>
     <div class="settlement">
       <div>
-        <div class="lm-font-default"><span class="lm-text-red lm-font-head">{{ finalPrice }}</span>元<span v-if="depositAmount !== null">+押金<span class="lm-text-red lm-font-head">{{ depositAmount }}</span>元</span></div>
+        <div class="lm-font-default"><span class="lm-text-red lm-font-head">{{ finalPrice }}</span>元
+          <!--<span v-if="depositAmount !== null">+押金<span class="lm-text-red lm-font-head">{{ depositAmount }}</span>元</span>-->
+        </div>
       </div>
 
       <div class="tobuy" @click="createOrder">{{ orderBtnTile }}</div>
@@ -186,12 +204,14 @@
         price: null,
         title: '产品名称',
         description: '产品描述',
-        remark: '',
+        inventory: '',
         optionValue: -1,
         options: [],
         currentValue: '',
         payOptionValue: '2',
         payOptions: [{label: '支付宝', value: '2', disabled: false}],
+        depositOptionValue: '0',
+        depositOptions: [{label: '押金', value: '0', disabled: false}],
         // ali支付form表单信息
         alipay: '',
         couponList: [],
@@ -207,12 +227,25 @@
           if (this.couponList.length > 0 && this.selectedCouponIndex >= 0) {
             let lastTotalPrice = (this.options[this.optionValue].price - this.couponList[this.selectedCouponIndex].amount).toFixed(2)
             if (lastTotalPrice > 0) {
-              return lastTotalPrice
+              if (this.depositAmount) {
+                return lastTotalPrice + this.depositAmount
+              } else {
+                return lastTotalPrice
+              }
             } else {
-              return 0
+              if (this.depositAmount) {
+                return this.depositAmount
+              } else {
+                return 0
+              }
             }
           } else {
-            return this.options[Number(this.optionValue)].price
+            let tempPrice = this.options[Number(this.optionValue)].price
+            if (this.depositAmount) {
+              return tempPrice + this.depositAmount
+            } else {
+              return tempPrice
+            }
           }
         } else {
           return ''
@@ -343,7 +376,7 @@
             this.title = product.name
             this.description = product.desc
             this.price = product.price
-            this.remark = product.remark
+            this.inventory = product.inventory
             this.categoryId = product.categoryId
             this.specificationCode = product.specificationCode
           }
