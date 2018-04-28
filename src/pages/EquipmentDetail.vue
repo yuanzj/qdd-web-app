@@ -109,6 +109,7 @@
         }
         var x = this.x
         var y = this.y
+        /* eslint-disable no-undef */
         var ggPoint = new BMap.Point(x, y)
         var convertor = new BMap.Convertor()
         var geoc = new BMap.Geocoder()

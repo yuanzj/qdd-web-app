@@ -43,7 +43,6 @@
   export default {
     name: 'coupon-list',
     components: {
-      ProductItem,
       VDistpicker
     },
     data () {

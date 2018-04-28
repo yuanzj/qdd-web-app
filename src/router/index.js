@@ -31,11 +31,19 @@ import OpsMain from '@/pages/OpsMain'
 import OpsOrderOps from '@/pages/OpsOrderOps'
 // 运维订单处理步骤页面
 import OpsOrderOpsStep from '@/pages/OpsOrderOpsStep'
-// 设备列表查询
+// 资产管理-统计
+import BatteryStatistics from '@/pages/BatteryStatistics'
+// 资产管理-设备列表查询
 import Equipmentlist from '@/pages/Equipmentlist'
-// 设备详情页面
+// 资产管理-订货
+import OrderBattery from '@/pages/OrderBattery'
+// 资产管理-设备详情页面
 import EquipmentDetail from '@/pages/EquipmentDetail'
-// 七天收益列表
+// 资产管理-分配
+import BatteryDistribution from '@/pages/BatteryDistribution'
+// 财务管理-统计
+import IncomeStatistics from '@/pages/IncomeStatistics'
+// 财务管理-七天收益列表
 import Incomelist from '@/pages/IncomeList'
 Vue.use(Router)
 
@@ -103,6 +111,21 @@ export default new Router({
       component: OpsOrderOpsStep
     },
     {
+      path: '/battery-statistics',
+      name: 'BatteryStatistics',
+      component: BatteryStatistics
+    },
+    {
+      path: '/battery-distribution',
+      name: 'BatteryDistribution',
+      component: BatteryDistribution
+    },
+    {
+      path: '/income-statistics',
+      name: 'IncomeStatistics',
+      component: IncomeStatistics
+    },
+    {
       path: '/equipment-list',
       name: 'Equipmentlist',
       component: Equipmentlist
@@ -111,6 +134,11 @@ export default new Router({
       path: '/equipments/:ccusn',
       name: 'EquipmentDetail',
       component: EquipmentDetail
+    },
+    {
+      path: '/order-battery',
+      name: 'OrderBattery',
+      component: OrderBattery
     },
     {
       path: '/income-list',
