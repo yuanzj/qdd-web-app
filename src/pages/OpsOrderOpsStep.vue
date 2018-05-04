@@ -15,7 +15,7 @@
           <div class="lm-text-second" >{{title3}}</div>
           <div style="width: 220px;word-wrap:break-word">{{ code }}</div>
         </div>
-        <div style="text-align: right"><mt-button style="width: 100%;margin-top: 1rem" type="default" @click="scanBtnAction">{{ btnTitle }}</mt-button></div>
+        <!--<div style="text-align: right"><mt-button style="width: 100%;margin-top: 1rem" type="default" @click="scanBtnAction">{{ btnTitle }}</mt-button></div>-->
       </div>
     </div>
 
@@ -26,7 +26,7 @@
       <!--</div>-->
       <!--<div style="width: 1rem"></div>-->
       <div style="flex: 1">
-        <mt-button type="primary" @click="btnAction" style="width: 100%">{{ nextBtnTitle }}</mt-button>
+        <mt-button type="primary" @click="scanBtnAction" style="width: 100%">{{ nextBtnTitle }}</mt-button>
       </div>
     </div>
 
@@ -46,11 +46,10 @@
       return {
         showNewSn: false,
         showCode: false,
-        title1: '设备SN号',
-        title2: '新设备SN号',
+        title1: '电池SN号',
+        title2: '新电池SN号',
         title3: '授权码',
-        btnTitle: '扫描设备二维码',
-        nextBtnTitle: '下一步',
+        nextBtnTitle: '扫描电池二维码',
         enterModel: -1,
         scanModel: -1,
         ccuSn: null,
@@ -60,11 +59,11 @@
         items: [
           {
             num: '1',
-            text: '设备二维码'
+            text: '电池二维码'
           },
           {
             num: '2',
-            text: '售后设备二维码'
+            text: '售后电池二维码'
           },
           {
             num: '3',
@@ -81,13 +80,11 @@
           switch (curVal) {
             case 0:
               this.showCode = false
-              this.btnTitle = '扫描设备二维码'
-              this.nextBtnTitle = '下一步'
+              this.nextBtnTitle = '扫描电池二维码'
               break
             case 1:
               this.showCode = true
-              this.btnTitle = '扫描用户出示二维码'
-              this.nextBtnTitle = '提交'
+              this.nextBtnTitle = '扫描用户出示二维码'
               break
             case 2:
               break
@@ -95,25 +92,22 @@
               break
           }
         } else if (this.enterModel === 1) {
-          // 换设备
+          // 换电池
           switch (curVal) {
             case 0:
               this.showNewSn = false
               this.showCode = false
-              this.btnTitle = '扫描旧设备二维码'
-              this.nextBtnTitle = '下一步'
+              this.nextBtnTitle = '扫描旧电池二维码'
               break
             case 1:
               this.showNewSn = true
               this.showCode = false
-              this.btnTitle = '扫描新设备二维码'
-              this.nextBtnTitle = '下一步'
+              this.nextBtnTitle = '扫描新电池二维码'
               break
             case 2:
               this.showNewSn = true
               this.showCode = true
-              this.btnTitle = '扫描用户出示二维码'
-              this.nextBtnTitle = '提交'
+              this.nextBtnTitle = '扫描用户出示二维码'
               break
             default:
               break
@@ -139,7 +133,7 @@
               break
           }
         } else if (this.enterModel === 1) {
-          // 换设备
+          // 换电池
           switch (this.index) {
             case 0:
               this.scanOldSn()
@@ -161,7 +155,7 @@
           switch (this.index) {
             case 0:
               if (!this.ccuSn) {
-                Toast('请扫描设备二维码')
+                Toast('请扫描电池二维码')
                 return
               }
               this.index = 1
@@ -179,18 +173,18 @@
               break
           }
         } else if (this.enterModel === 1) {
-          // 换设备
+          // 换电池
           switch (this.index) {
             case 0:
               if (!this.ccuSn) {
-                Toast('请扫描设备二维码')
+                Toast('请扫描电池二维码')
                 return
               }
               this.index = 1
               break
             case 1:
               if (!this.newSn) {
-                Toast('请扫描新设备二维码')
+                Toast('请扫描新电池二维码')
                 return
               }
               this.index = 2
@@ -240,22 +234,23 @@
       fillSnFromScan (sn) {
         switch (this.scanModel) {
           case 0:
-            this.ccuSn = sn
+            this.ccuSn = sn.split(' ')[0]
             break
           case 1:
             this.code = sn
             break
           case 2:
-            this.newSn = sn
+            this.newSn = sn.split(' ')[0]
             break
           default:
             break
         }
+        this.btnAction()
       },
       submit () {
         if (this.enterModel === 0) {
           if (!this.ccuSn) {
-            Toast('请扫描设备二维码')
+            Toast('请扫描电池二维码')
             return
           }
           if (!this.code) {
@@ -282,9 +277,9 @@
               }
             })
         } else if (this.enterModel === 1) {
-          // 换设备
+          // 换电池
           if (!this.ccuSn) {
-            Toast('请扫描旧设备二维码')
+            Toast('请扫描旧电池二维码')
             return
           }
           if (!this.code) {
@@ -292,7 +287,7 @@
             return
           }
           if (!this.newSn) {
-            Toast('请扫描新设备二维码')
+            Toast('请扫描新电池二维码')
             return
           }
           Indicator.open('提交中...')
@@ -331,36 +326,38 @@
 
         if (this.enterModel === 0) {
           // 退租
-          document.title = '设备退租'
-          this.title1 = '设备SN号'
+          document.title = '电池退租'
+          this.title1 = '电池SN号'
           this.items = [
             {
               num: '1',
-              text: '设备二维码'
+              text: '电池二维码'
             },
             {
               num: '2',
               text: '用户出示二维码'
             }
           ]
+          this.nextBtnTitle = '扫描电池二维码'
         } else if (this.enterModel === 1) {
-          // 换设备
-          document.title = '设备售后'
-          this.title1 = '旧设备SN号'
+          // 换电池
+          document.title = '电池售后'
+          this.title1 = '旧电池SN号'
           this.items = [
             {
               num: '1',
-              text: '旧设备二维码'
+              text: '旧电池二维码'
             },
             {
               num: '2',
-              text: '新设备二维码'
+              text: '新电池二维码'
             },
             {
               num: '3',
               text: '用户出示二维码'
             }
           ]
+          this.nextBtnTitle = '扫描旧电池二维码'
         }
       }
     }

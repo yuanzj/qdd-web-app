@@ -83,7 +83,7 @@
         }
       },
       fillSnFromScan (sn) {
-        this.ccuSn = sn
+        this.ccuSn = sn.split(' ')[0]
         Indicator.open('检查设备信息...')
         this.axios.get('/api-ebike/v3.1/ues/' + this.ccuSn).then((res) => {
           Indicator.close()
