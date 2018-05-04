@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+// 网点列表
+import StoreList from '@/pages/StoreList'
+// 网点详情
+import StoreDetail from '@/pages/StoreDetail'
 // 产品列表
 import ProductList from '@/pages/ProductList'
 // 设备列表
@@ -15,22 +19,37 @@ import OrderDetail from '@/pages/OrderDetail'
 import PayArrearage from '@/pages/PayArrearage'
 // 优惠券列表
 import CouponList from '@/pages/CouponList'
-// 运维首页
-import OpsMain from '@/pages/OpsMain'
-// 运维订单处理页面
-import OpsOrderOps from '@/pages/OpsOrderOps'
 // 租赁电池入口
 import RentBattery from '@/pages/RentBattery'
 // 订单操作
 import OrderOpsQRCode from '@/pages/OrderOpsQRCode'
+// 退款账户设置
+import UserPayAccount from '@/pages/UserPayAccount'
+// 运维首页
+import OpsMain from '@/pages/OpsMain'
+// 运维订单处理页面
+import OpsOrderOps from '@/pages/OpsOrderOps'
 // 运维订单处理步骤页面
 import OpsOrderOpsStep from '@/pages/OpsOrderOpsStep'
-// 设备列表查询
+// 资产管理-统计
+import BatteryStatistics from '@/pages/BatteryStatistics'
+// 资产管理-设备列表查询
 import Equipmentlist from '@/pages/Equipmentlist'
-// 设备详情页面
+// 资产管理-订货
+import OrderBattery from '@/pages/OrderBattery'
+// 资产管理-设备详情页面
 import EquipmentDetail from '@/pages/EquipmentDetail'
-// 七天收益列表
+// 资产管理-分配
+import BatteryDistribution from '@/pages/BatteryDistribution'
+// 财务管理-统计
+import IncomeStatistics from '@/pages/IncomeStatistics'
+// 财务管理-七天收益列表
 import Incomelist from '@/pages/IncomeList'
+// 用户中心-密码设置
+import OpsUserPsw from '@/pages/OpsUserPsw'
+// 用户中心-关于
+import OpsAbout from '@/pages/OpsAbout'
+
 Vue.use(Router)
 
 export default new Router({
@@ -40,15 +59,26 @@ export default new Router({
       name: 'DeviceList',
       component: DeviceList
     },
+    // 为了兼容已经发布的App使用products路径
     {
       path: '/products',
+      name: 'StoreList',
+      component: StoreList
+    },
+    {
+      path: '/products-v0',
       name: 'ProductList',
       component: ProductList
     },
     {
-      path: '/products/:id',
+      path: '/products-v0/:id',
       name: 'ProductDetail',
       component: ProductDetail
+    },
+    {
+      path: '/products/:id',
+      name: 'StoreDetail',
+      component: StoreDetail
     },
     {
       path: '/pay-complete',
@@ -86,6 +116,21 @@ export default new Router({
       component: OpsOrderOpsStep
     },
     {
+      path: '/battery-statistics',
+      name: 'BatteryStatistics',
+      component: BatteryStatistics
+    },
+    {
+      path: '/battery-distribution',
+      name: 'BatteryDistribution',
+      component: BatteryDistribution
+    },
+    {
+      path: '/income-statistics',
+      name: 'IncomeStatistics',
+      component: IncomeStatistics
+    },
+    {
       path: '/equipment-list',
       name: 'Equipmentlist',
       component: Equipmentlist
@@ -96,9 +141,24 @@ export default new Router({
       component: EquipmentDetail
     },
     {
+      path: '/order-battery',
+      name: 'OrderBattery',
+      component: OrderBattery
+    },
+    {
       path: '/income-list',
       name: 'Incomelist',
       component: Incomelist
+    },
+    {
+      path: '/ops-user-psw',
+      name: 'OpsUserPsw',
+      component: OpsUserPsw
+    },
+    {
+      path: '/ops-about',
+      name: 'OpsAbout',
+      component: OpsAbout
     },
     {
       path: '/rent-battery',
@@ -109,6 +169,11 @@ export default new Router({
       path: '/order-ops',
       name: 'OrderOpsQRCode',
       component: OrderOpsQRCode
+    },
+    {
+      path: '/user-pay-account',
+      name: 'UserPayAccount',
+      component: UserPayAccount
     }
   ]
 })

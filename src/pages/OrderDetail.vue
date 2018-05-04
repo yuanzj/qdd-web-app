@@ -5,6 +5,11 @@
       <div>{{ ccuSn }}</div>
     </div>
     <div class="h-container">
+      <div class="lm-text-second">租赁押金</div>
+      <div class="lm-text-red" v-if="deposit == 0">未交</div>
+      <div v-else>{{ deposit }}元</div>
+    </div>
+    <div class="h-container">
       <div class="lm-text-second">租赁状态</div>
       <div :class="{ 'lm-text-red': days < 0 }">{{ orderStatusDesc }}</div>
     </div>
@@ -53,7 +58,7 @@
     <div class="h-btn-container" v-if="days >= 0">
       <div @click="finish"  class="action-btn">退租</div>
       <span style="width: 1px;height: 16px;background-color: #BDBDBD;margin: 1.5rem 0 1.5rem 0"></span>
-      <div @click="change"  class="action-btn">更换</div>
+      <div @click="change"  class="action-btn">售后</div>
       <span style="width: 1px;height: 16px;background-color: #BDBDBD;margin: 1.5rem 0 1.5rem 0"></span>
       <div @click="topUp"  class="action-btn" >续租</div>
     </div>
@@ -82,6 +87,7 @@
         storeAddress: null,
         storePhone: null,
         storeCode: null,
+        deposit: 0,
         orderStatus: -1,
         orderId: null,
         productId: null,
@@ -89,6 +95,7 @@
         startTime: '',
         endTime: '',
         days: null,
+        userId: null,
         // ali支付form表单信息
         alipay: '',
         opsModel: -1
@@ -161,7 +168,7 @@
             firm: this.$store.state.firm,
             ccuSn: this.ccuSn,
             orderId: this.orderId,
-            title: '更换二维码',
+            title: '售后二维码',
             storeName: this.storeName,
             type: 1
           }
@@ -173,15 +180,14 @@
           return
         }
         this.$router.push({
-          name: 'OrderOpsQRCode',
+          name: 'UserPayAccount',
           query: {
             token: this.$store.state.token,
             firm: this.$store.state.firm,
             ccuSn: this.ccuSn,
             orderId: this.orderId,
-            title: '退租二维码',
-            storeName: this.storeName,
-            type: 0
+            userId: this.userId,
+            storeName: this.storeName
           }
         })
       },
@@ -202,7 +208,8 @@
                 ccuSn: this.ccuSn,
                 orderId: this.orderId,
                 days: this.days,
-                pay2: true
+                pay2: true,
+                noDeposit: (this.deposit > 0 ? null : true)
               }
             })
           } else {
@@ -243,6 +250,8 @@
             this.productId = order.productId
             this.startTime = order.startTime
             this.endTime = order.endTime
+            this.deposit = order.deposit
+            this.userId = order.userId
             if (order.days) {
               this.days = order.days
             }
