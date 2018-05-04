@@ -45,6 +45,11 @@ import BatteryDistribution from '@/pages/BatteryDistribution'
 import IncomeStatistics from '@/pages/IncomeStatistics'
 // 财务管理-七天收益列表
 import Incomelist from '@/pages/IncomeList'
+// 用户中心-密码设置
+import OpsUserPsw from '@/pages/OpsUserPsw'
+// 用户中心-关于
+import OpsAbout from '@/pages/OpsAbout'
+
 Vue.use(Router)
 
 export default new Router({
@@ -144,6 +149,16 @@ export default new Router({
       path: '/income-list',
       name: 'Incomelist',
       component: Incomelist
+    },
+    {
+      path: '/ops-user-psw',
+      name: 'OpsUserPsw',
+      component: OpsUserPsw
+    },
+    {
+      path: '/ops-about',
+      name: 'OpsAbout',
+      component: OpsAbout
     },
     {
       path: '/rent-battery',

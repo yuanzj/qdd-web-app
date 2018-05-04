@@ -84,21 +84,28 @@
       },
       fillSnFromScan (sn) {
         this.ccuSn = sn
-        if ((this.dealerId || this.storeId) && this.ueID) {
-          this.submit()
-        }
-      },
-      submit () {
-        // 退租
-        Indicator.open('提交中...')
-        this.axios.put('/api-ebike/v3.1/ues/update_storeId',
-          {
-            params: {
-              storeId: (this.storeId ? this.storeId : this.dealerId),
-              ueId: this.ueID
+        Indicator.open('检查设备信息...')
+        this.axios.get('/api-ebike/v3.1/ues/' + this.ccuSn).then((res) => {
+          Indicator.close()
+          let ue = res.data
+          if (ue) {
+            this.ueID = ue.id
+            if ((this.dealerId || this.storeId) && this.ueID) {
+              this.submit()
             }
           }
-        ).then((res) => {
+        })
+          .catch(error => {
+            Indicator.close()
+            console.log(error)
+            if (error.response.data && error.response.data.error) {
+              Toast(error.response.data.error.msg)
+            }
+          })
+      },
+      submit () {
+        Indicator.open('提交中...')
+        this.axios.put('/api-ebike/v3.1/ues/update_storeId?storeId=' + (this.storeId ? this.storeId : this.dealerId) + '&ueId=' + this.ueID).then((res) => {
           Indicator.close()
           Toast('分配成功')
           this.back()

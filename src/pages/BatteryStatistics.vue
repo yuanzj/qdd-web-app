@@ -16,6 +16,7 @@
     name: 'battery-statistics',
     data () {
       return {
+        storeId: null,
         tableData: [],
         columns: [
           {
@@ -71,7 +72,7 @@
         this.axios.get('/api-ebike/v3.1/ebikes/rent-statistics',
           {
             params: {
-              storeId: 19966
+              storeId: this.storeId
             }
           }
         ).then((res) => {
@@ -92,6 +93,7 @@
         if (this.$route.query.token) {
           this.axios.defaults.headers.common['Authorization'] = this.$route.query.token
         }
+        this.storeId = this.$route.query.storeId
       }
 
       this.loadStatistics()
