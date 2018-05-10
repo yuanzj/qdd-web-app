@@ -1,44 +1,63 @@
 <template>
   <div class="page-field">
-
-    <div class="table-head-title">退还账户</div>
+    <div class="table-head-title"></div>
+    <div class="page-part">
+      <mt-field label="提现金额" type="number" v-model="amount">元 (余额：{{balance}})</mt-field>
+    </div>
+    <div class="table-head-title">提现账户</div>
     <div class="page-part">
       <mt-field label="支付宝账号" placeholder="如：138********" v-model="account"></mt-field>
       <mt-field label="真实姓名" placeholder="如：张三" v-model="realName"></mt-field>
     </div>
     <div class="lm-font-default lm-text-red" style="margin: 1rem">
-      此账户将用于收取电池退租后退还的押金，为了您的财产安全请认真填写确认无误后提交。
+      提现的金额将转账到此支付宝账户，为了您的财产安全请认真填写确认无误后提交。
     </div>
 
     <div class="h-btn-container" >
-      <div @click="postUserPayAccount"  class="action-btn">提交</div>
+      <div @click="submit"  class="action-btn">提交</div>
     </div>
   </div>
 </template>
 
 <script>
-  import {Toast, Indicator} from 'mint-ui'
+  import {Toast, Indicator, MessageBox} from 'mint-ui'
   export default {
     name: 'user-pay-account',
     data () {
       return {
-        userId: null,
+        balance: 0,
         account: null,
         realName: null,
-        ccuSn: null,
-        orderId: null,
-        storeName: null
+        amount: 0
       }
     },
     methods: {
-      getUserPayAccount () {
-        this.axios.get('/api-user/v3.1/userpayaccounts/detail',
-          {
-            params: {
-              userId: this.userId
-            }
+      withdraw () {
+        if (this.amount < 0.1) {
+          Toast('最低提现金额为0.1元！')
+          return false
+        }
+        if (this.amount > this.balance) {
+          Toast('余额不足！')
+          return false
+        }
+        Indicator.open('提交中...')
+        this.axios.get('/api-user/v3.1/users/withdrawal?amount=' + this.amount).then((res) => {
+          Indicator.close()
+          if (res.status === 200) {
+            this.$router.go(-1)
           }
-        ).then((res) => {
+        })
+          .catch(error => {
+            console.log(error)
+            Indicator.close()
+            if (error.response.data && error.response.data.error) {
+              Toast(error.response.data.error.msg)
+            }
+          })
+      },
+      getUserPayAccount () {
+        this.axios.get('/api-user/v3.1/userpayaccounts/user-pay-account-info').then((res) => {
           let data = res.data
           if (data) {
             this.account = data.account
@@ -48,6 +67,11 @@
           .catch(error => {
             console.log(error)
           })
+      },
+      submit () {
+        MessageBox.confirm('确定提交提现?').then(action => {
+          this.postUserPayAccount()
+        })
       },
       postUserPayAccount () {
         if (!this.account) {
@@ -59,28 +83,16 @@
           return false
         }
         Indicator.open('提交中...')
-        this.axios.post('/api-user/v3.1/userpayaccounts/',
+        this.axios.post('/api-user/v3.1/userpayaccounts/add',
           {
             'account': this.account,
-            'realName': this.realName,
-            'userId': this.userId
+            'realName': this.realName
           }
         ).then((res) => {
           console.log(res)
           Indicator.close()
           if (res.status === 201) {
-            this.$router.push({
-              name: 'OrderOpsQRCode',
-              query: {
-                token: this.$store.state.token,
-                firm: this.$store.state.firm,
-                ccuSn: this.ccuSn,
-                orderId: this.orderId,
-                title: '退租二维码',
-                storeName: this.storeName,
-                type: 0
-              }
-            })
+            this.withdraw()
           }
         })
           .catch(error => {
@@ -90,7 +102,7 @@
       }
     },
     mounted () {
-      document.title = '押金退还账户设置'
+      document.title = '提现'
       if (this.$route.query) {
         this.$store.commit('setToken', this.$route.query.token)
         this.$store.commit('setFirm', this.$route.query.firm)
@@ -98,10 +110,7 @@
         if (this.$route.query.token) {
           this.axios.defaults.headers.common['Authorization'] = this.$route.query.token
         }
-        this.userId = this.$route.query.userId
-        this.ccuSn = this.$route.query.ccuSn
-        this.orderId = this.$route.query.orderId
-        this.storeName = this.$route.query.storeName
+        this.balance = this.$route.query.balance
       }
 
       this.getUserPayAccount()

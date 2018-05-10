@@ -10,6 +10,7 @@
         </div>
 
         <div class="lm-font-second lm-text-second" style="padding: 0 1rem 0 1rem;line-height: 1.5rem">租赁管理员<br/>扫描后即可完成相应的操作</div>
+        <div class="lm-font-second lm-text-red" style="margin-top: 1rem" v-if="type === 0">押金将退还到余额，余额可提现</div>
       </div>
     </div>
     <!--<div style="position: fixed;bottom: 1rem;width: 100%;text-align: center">-->

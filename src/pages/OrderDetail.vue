@@ -180,14 +180,15 @@
           return
         }
         this.$router.push({
-          name: 'UserPayAccount',
+          name: 'OrderOpsQRCode',
           query: {
             token: this.$store.state.token,
             firm: this.$store.state.firm,
             ccuSn: this.ccuSn,
             orderId: this.orderId,
-            userId: this.userId,
-            storeName: this.storeName
+            title: '退租二维码',
+            storeName: this.storeName,
+            type: 0
           }
         })
       },

@@ -25,6 +25,8 @@ import RentBattery from '@/pages/RentBattery'
 import OrderOpsQRCode from '@/pages/OrderOpsQRCode'
 // 退款账户设置
 import UserPayAccount from '@/pages/UserPayAccount'
+// 余额
+import Balance from '@/pages/Balance'
 // 运维首页
 import OpsMain from '@/pages/OpsMain'
 // 运维订单处理页面
@@ -174,6 +176,11 @@ export default new Router({
       path: '/user-pay-account',
       name: 'UserPayAccount',
       component: UserPayAccount
+    },
+    {
+      path: '/balance',
+      name: 'Balance',
+      component: Balance
     }
   ]
 })
