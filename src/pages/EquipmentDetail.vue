@@ -136,7 +136,7 @@
     mounted () {
       window.productDetail = this
       this.loadBMapScript()
-      this.wrapperHeight = document.documentElement.clientHeight - 48
+      this.wrapperHeight = document.documentElement.clientHeight
       document.title = '设备详情'
       window['bMapInit'] = () => {
         this.loadEquipmentDetail()
