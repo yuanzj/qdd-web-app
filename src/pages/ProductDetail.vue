@@ -81,6 +81,32 @@
     </div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
 
+    <div class="table-head-title">余额</div>
+    <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+    <div class="lm-text-text lm-font-second" style="background-color: white" v-for="(option,index) in balanceOptions">
+
+      <div class="options-container">
+        <label class="mint-radiolist-label">
+            <span
+              :class="{'is-right': false}"
+              class="mint-radio">
+              <input
+                class="mint-radio-input"
+                type="radio"
+                v-model="balanceOptionValue"
+                :disabled="option.disabled"
+                :value="option.value || option">
+              <span class="mint-radio-core"></span>
+            </span>
+          <span class="mint-radio-label" v-text="balance + '元'"></span>
+        </label>
+      </div>
+      <div style="margin-left: 1rem" v-if="index < (balanceOptions.length - 1)">
+        <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+      </div>
+    </div>
+    <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+
     <div class="table-head-title">优惠券<span class="lm-text-red lm-font-sm" style="margin-left: 1rem">{{ subtractPrice }}</span></div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
     <div class="options-container lm-text-text lm-font-second" @click="showCoupon">
@@ -126,7 +152,7 @@
     <div style="height: 4rem"></div>
     <div class="settlement">
       <div>
-        <div class="lm-font-default"><span class="lm-text-red lm-font-head">{{ finalPrice }}</span>元
+        <div class="lm-font-default"><span class="lm-text-red lm-font-head">{{ finalPrice >=0 ? finalPrice : 0 }}</span>元
           <!--<span v-if="depositAmount !== null">+押金<span class="lm-text-red lm-font-head">{{ depositAmount }}</span>元</span>-->
         </div>
       </div>
@@ -186,6 +212,7 @@
     name: 'product-detail',
     data () {
       return {
+        balance: 0,
         depositAmount: null,
         fromScanModel: false,
         couponId: null,
@@ -212,6 +239,8 @@
         payOptions: [{label: '支付宝', value: '2', disabled: false}],
         depositOptionValue: '0',
         depositOptions: [{label: '押金', value: '0', disabled: false}],
+        balanceOptionValue: '0',
+        balanceOptions: [{label: '0元', value: '0', disabled: false}],
         // ali支付form表单信息
         alipay: '',
         couponList: [],
@@ -228,13 +257,13 @@
             let lastTotalPrice = (this.options[this.optionValue].price - this.couponList[this.selectedCouponIndex].amount).toFixed(2)
             if (lastTotalPrice > 0) {
               if (this.depositAmount) {
-                return lastTotalPrice + this.depositAmount
+                return lastTotalPrice + this.depositAmount - this.balance
               } else {
-                return lastTotalPrice
+                return lastTotalPrice - this.balance
               }
             } else {
               if (this.depositAmount) {
-                return this.depositAmount
+                return this.depositAmount - this.balance
               } else {
                 return 0
               }
@@ -242,9 +271,9 @@
           } else {
             let tempPrice = this.options[Number(this.optionValue)].price
             if (this.depositAmount) {
-              return tempPrice + this.depositAmount
+              return tempPrice + this.depositAmount - this.balance
             } else {
-              return tempPrice
+              return tempPrice - this.balance
             }
           }
         } else {
@@ -323,6 +352,17 @@
       }
     },
     methods: {
+      getPayAccount () {
+        this.axios.get('/api-pay/v3.1/accounts/detail').then((res) => {
+          let data = res.data
+          if (data) {
+            this.balance = data.unlockBalance
+          }
+        })
+          .catch(error => {
+            console.log(error)
+          })
+      },
       onClickCoupon (item, index) {
         if (!item.disabled) {
           this.selectedCouponIndex = index
@@ -633,6 +673,7 @@
       this.loadSolutionList()
       this.loadProductDetail()
       this.loadCouponList()
+      this.getPayAccount()
     }
   }
 </script>

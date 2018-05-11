@@ -29,11 +29,20 @@
     <div class="p-desc2" v-if="type === 4">
       {{ reportTime }}
     </div>
+    <div style="width:100%; padding: 1rem">
+      <div style="width:100%;height:1px;margin:0 ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+    </div>
+    <div class="h-container" @click.stop="stopEvent">
+      <div class="lm-font-second lm-text-second">电池输出</div>
+      <div style="flex: 1"></div>
+      <span v-bind:class="{ 'lm-text-text': !modelSwitch,'lm-text-hint': modelSwitch }">关闭</span><mt-switch style="margin: 0 0.5rem 0 0.5rem;" v-model="modelSwitch" @change="handleChange"></mt-switch><span v-bind:class="{ 'lm-text-text': modelSwitch,'lm-text-hint': !modelSwitch }">开启</span>
+    </div>
     <div style="height: 1rem" v-if="type === 4"></div>
   </div>
 </template>
 
 <script>
+  import {Indicator, Toast} from 'mint-ui'
   export default {
     name: 'device-item',
     props: {
@@ -68,7 +77,8 @@
         isNormal: false,
         isWarning: false,
         isError: false,
-        isDisable: false
+        isDisable: false,
+        modelSwitch: null
       }
     },
     computed: {
@@ -76,6 +86,13 @@
         if (this.ebikeReportData) {
           if (this.ebikeReportData.hasOwnProperty('gear')) {
             let gear = this.ebikeReportData.gear
+            if (this.modelSwitch === null) {
+              if (gear === '17') {
+                this.modelSwitch = false
+              } else {
+                this.modelSwitch = true
+              }
+            }
             return ((gear === '17') ? '/禁用' : '')
           }
         } else {
@@ -228,6 +245,36 @@
       }
     },
     methods: {
+      stopEvent () {
+      },
+      handleChange (event) {
+        console.log(event)
+        if (this.days >= 0) {
+          if (!event) {
+            Indicator.open('电池输出关闭...')
+            this.axios.put('/api-ebike/v3.1/ues/update-use-status?ccuSn=' + this.ueSn + '&useStatus=0').then((res) => {
+              console.log(res)
+              Indicator.close()
+            })
+              .catch(error => {
+                console.log(error)
+                Indicator.close()
+              })
+          } else {
+            Indicator.open('电池输出开启...')
+            this.axios.put('/api-ebike/v3.1/ues/update-use-status?ccuSn=' + this.ueSn + '&useStatus=1').then((res) => {
+              console.log(res)
+              Indicator.close()
+            })
+              .catch(error => {
+                console.log(error)
+                Indicator.close()
+              })
+          }
+        } else {
+          Toast('欠费状态不能修改电池输出状态')
+        }
+      },
       showOrderDetail () {
         if (this.$store.state.enterModel === 'newPage') {
           /* eslint-disable no-undef */
@@ -297,6 +344,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+    margin: 1rem;
   }
 
   .p-head {
@@ -388,5 +436,14 @@
     white-space: nowrap;
   }
 
+  .h-container {
+    background-color: #ffffff;
+    width: 100%;
+    height: 3rem;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
 </style>

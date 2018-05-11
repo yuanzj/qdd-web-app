@@ -20,6 +20,25 @@ Vue.prototype.axios = axios
 Vue.component(VTable.name, VTable)
 Vue.component(VPagination.name, VPagination)
 
+// 添加一个返回拦截器
+axios.interceptors.response.use(function (response) {
+  // 对返回的数据进行一些处理
+  return response
+}, function (err) {
+  if (err.response.status === 401) {
+    console.log(err)
+    // JS 调用本地方法完成扫码
+    /* eslint-disable no-undef */
+    if (window.hasOwnProperty('nativeObj')) {
+      nativeObj.refreshToken()
+    } else {
+      window.webkit.messageHandlers.refreshToken.postMessage('')
+    }
+  } else {
+    return Promise.reject(err)
+  }
+})
+
 // axios.defaults.baseURL = 'http://cjl3.rokyinfo.net:8110'
 // axios.defaults.baseURL = 'http://localhost:10666'
 axios.defaults.baseURL = 'http://cjl3.rokyinfo.net:7200'

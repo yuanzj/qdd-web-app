@@ -13,11 +13,6 @@
       <div class="lm-text-second">租赁状态</div>
       <div :class="{ 'lm-text-red': days < 0 }">{{ orderStatusDesc }}</div>
     </div>
-    <div class="h-container" v-if="this.deviceTypeName === '电池编号'">
-      <div class="lm-text-second">禁用模式</div>
-      <div style="flex: 1"></div>
-      <span v-bind:class="{ 'lm-text-text': !modelSwitch,'lm-text-hint': modelSwitch }">关</span><mt-switch style="margin: 0 0.5rem 0 0.5rem;" v-model="modelSwitch" @change="handleChange"></mt-switch><span v-bind:class="{ 'lm-text-text': modelSwitch,'lm-text-hint': !modelSwitch }">开</span>
-    </div>
     <div class="h-container">
       <div class="lm-text-second">开始时间</div>
       <div>{{ startTime }}</div>
@@ -70,7 +65,7 @@
 </template>
 
 <script>
-  import {Indicator, Toast} from 'mint-ui'
+  import {Toast} from 'mint-ui'
   export default {
     name: 'order-detail',
     data () {
@@ -125,37 +120,6 @@
       }
     },
     methods: {
-      handleChange (event) {
-        console.log(event)
-        if (this.days >= 0) {
-          if (event) {
-            Indicator.open('开启禁用模式...')
-            this.axios.put('/api-ebike/v3.1/ues/update-use-status?ccuSn=' + this.ccuSn + '&useStatus=0').then((res) => {
-              console.log(res)
-              Indicator.close()
-            })
-              .catch(error => {
-                console.log(error)
-                Indicator.close()
-                this.modelSwitch = false
-              })
-          } else {
-            Indicator.open('关闭禁用模式...')
-            this.axios.put('/api-ebike/v3.1/ues/update-use-status?ccuSn=' + this.ccuSn + '&useStatus=1').then((res) => {
-              console.log(res)
-              Indicator.close()
-            })
-              .catch(error => {
-                console.log(error)
-                Indicator.close()
-                this.modelSwitch = true
-              })
-          }
-        } else {
-          Toast('欠费状态不能修改禁用模式状态')
-          this.loadEbikeDetail()
-        }
-      },
       change () {
         if (this.orderStatus === 3) {
           Toast('已退租')
@@ -271,7 +235,7 @@
 
             if (this.ccuSn.slice(0, 1) === 'B' || this.ccuSn.slice(0, 1) === 'P') {
               this.deviceTypeName = '电池编号'
-              this.loadEbikeDetail()
+              // this.loadEbikeDetail()
             } else {
               this.deviceTypeName = '充电器编号'
             }

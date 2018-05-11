@@ -4,8 +4,7 @@
     <div class="completed-box">
       <div class="completed">
         <img src="../assets/ic-money.png"  />
-        <div class="lm-margin-t lm-font-default lm-text-text">账户余额</div>
-        <div class="lm-margin-t lm-font-default lm-text-text"><span class="lm-font-head">{{ unlockBalance }}</span> 元</div>
+        <div class="lm-margin-t lm-font-default lm-text-text"><span style="font-size: 2rem">{{ unlockBalance }}</span> 元</div>
       </div>
     </div>
 
@@ -83,8 +82,8 @@
     width: 80%;
   }
   .completed > img{
-    width:3.5rem;
-    height: 3.5rem;
+    width: 5rem;
+    height: 5rem;
     vertical-align: bottom;
   }
 
