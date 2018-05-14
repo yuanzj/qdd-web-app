@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import {Indicator, Toast} from 'mint-ui'
+  import {Indicator, Toast, MessageBox} from 'mint-ui'
   export default {
     name: 'battery-distribution',
     data () {
@@ -114,7 +114,8 @@
             Indicator.close()
             console.log(error)
             if (error.response.data && error.response.data.error) {
-              Toast(error.response.data.error.msg)
+              MessageBox.alert(error.response.data.error.msg, '分配失败').then(action => {
+              })
             }
           })
       },
