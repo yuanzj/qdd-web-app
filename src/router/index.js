@@ -51,6 +51,11 @@ import Incomelist from '@/pages/IncomeList'
 import OpsUserPsw from '@/pages/OpsUserPsw'
 // 用户中心-关于
 import OpsAbout from '@/pages/OpsAbout'
+import OpsMain2 from '@/pages/OpsMain2'
+// 电池查询-输入
+import SearchMain from '@/pages/SearchMain'
+// 分站电池统计
+import StoreStatistics from '@/pages/StoreStatistics'
 
 Vue.use(Router)
 
@@ -108,6 +113,16 @@ export default new Router({
       component: OpsMain
     },
     {
+      path: '/ops-main2',
+      name: 'OpsMain2',
+      component: OpsMain2
+    },
+    {
+      path: '/search-main',
+      name: 'SearchMain',
+      component: SearchMain
+    },
+    {
       path: '/ops-order-ops',
       name: 'OpsOrderOps',
       component: OpsOrderOps
@@ -116,6 +131,11 @@ export default new Router({
       path: '/ops-order-ops-step',
       name: 'OpsOrderOpsStep',
       component: OpsOrderOpsStep
+    },
+    {
+      path: '/store-statistics',
+      name: 'StoreStatistics',
+      component: StoreStatistics
     },
     {
       path: '/battery-statistics',

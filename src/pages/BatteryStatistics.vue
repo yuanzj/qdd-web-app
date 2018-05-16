@@ -93,7 +93,7 @@
         if (this.$route.query.token) {
           this.axios.defaults.headers.common['Authorization'] = this.$route.query.token
         }
-        this.storeId = this.$route.query.storeId
+        this.storeId = this.$route.params.ccusn
       }
 
       this.loadStatistics()

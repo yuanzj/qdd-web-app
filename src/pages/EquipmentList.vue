@@ -17,20 +17,21 @@
             </v-distpicker>
 
 
-            <mt-button type="primary" @click="searchgg" style="width: 50px;height: 24px;font-size: 12px">查询</mt-button>
+            <mt-button type="primary" @click="searchgg" style="width: 15%;height: 24px;font-size: 12px;min-width: 48px">查询</mt-button>
 
           </div>
           <div data-toggle="distpicker" class="form-inline topinline2">
-            <input v-model='ccsn' type="text" class="form-control searchResult"  style="display: inline-block;width: 120px;height: 25px"
+            <input v-model='ccsn' type="text" class="form-control searchResult"  style="display: inline-block;width: 78%;height: 25px;margin-right: 5px"
                    placeholder="输入序列号" onblur="if(this.placeholder==''){this.placeholder='输入序列号'}"
                    onfocus="if(this.placeholder=='输入序列号'){this.placeholder=''}" >
-            <mt-button type="primary" style="width: 35px;height: 24px;padding:0" @click="searchCcusn"><span class="mintui mintui-search"></span></mt-button>
+            <mt-button type="primary" style="width: 15%;height: 24px;padding:0;min-width: 48px" @click="searchCcusn"><span class="mintui mintui-search"></span></mt-button>
 
           </div>
+      <div>
 
           <v-table
             is-vertical-resize
-            style="width:100%;margin-top: 1rem"
+            style="width:100%;margin-top: .5rem"
             is-horizontal-resize
             columns-width-drag
             :vertical-resize-offset='40'
@@ -41,6 +42,7 @@
             :row-click='showDetails'
             :paging-index="(pageIndex-1)*pageSize"
           ></v-table>
+      </div>
            <div>
           <div class="mb20 bold"></div>
           <v-pagination
@@ -187,10 +189,6 @@
         console.log(pageIndex)
         this.loadmore()
       },
-      pageChange2 (pageIndex) {
-        this.pageIndex = pageIndex
-        console.log(pageIndex)
-      },
       pageSizeChange (pageSize) {
         this.pageIndex = 1
         this.pageSize = pageSize
@@ -263,7 +261,8 @@
         ).then((res) => {
           this.$refs.loadmore.onTopLoaded()
           this.tableData = res.data.list
-          this.allLoaded = true
+          this.pageIndex = 1
+          this.totaltablenum = res.data.totalCount
         })
           .catch(error => {
             this.$refs.loadmore.onTopLoaded()
@@ -363,12 +362,24 @@
 
 <style scoped>
   .sechgg{
-    display: inline-block;
-    width: 20%;
+    padding: 0;
     height: 25px;
-    border-radius: .25rem;
-    border: 1px solid rgba(0, 0, 0, 0.15);
+    width: 20%;
     font-size: 12px;
+    line-height: 1.25;
+    color: black;
+    background-color: #fff;
+    background-image: none;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: .25rem;
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+
   }
  .table-bordered{
    border-bottom: 1px solid #393939;
@@ -400,8 +411,8 @@
   }
   .topinline2{
     margin-top: .25rem;
-    margin-bottom: -.5rem;
     margin-left:2.5%;
+    width: 100%;
   }
  .distpicker-address-wrapper select{
    padding: 0;
