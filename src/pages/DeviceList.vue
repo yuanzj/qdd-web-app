@@ -57,6 +57,11 @@
           } else {
             this.isShowHint = false
           }
+          // auto refresh
+          if (this.IntervalId) {
+            window.clearInterval(this.IntervalId)
+          }
+          this.IntervalId = window.setInterval(this.loadDeviceList, 15 * 1000)
         })
           .catch(error => {
             this.$refs.loadmore.onTopLoaded()
@@ -76,12 +81,12 @@
         this.axios.defaults.headers.common['firm'] = this.$route.query.firm
         if (this.$route.query.token) {
           this.axios.defaults.headers.common['Authorization'] = this.$route.query.token
+          this.loadDeviceList()
+        } else {
+          this.deviceList = []
+          this.isShowHint = true
         }
       }
-
-      this.loadDeviceList()
-      // auto refresh
-      this.IntervalId = window.setInterval(this.loadDeviceList, 15 * 1000)
     },
     destroyed () {
       window.clearInterval(this.IntervalId)

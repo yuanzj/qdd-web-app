@@ -1,13 +1,13 @@
 <template>
   <div class="page-navbar">
- <div class="searchDiv">
-  <select v-model="selected2" type="text" class="sechgg">
-    <option selected = "selected" value="0"  >请选择</option>
-    <option v-for="option in options" v-bind:value="option.id">
-      {{ option.name }}
-    </option>
-  </select>
-   <mt-button class="mintui mintui-search" style="height: 39px;display: inline-block;margin-left: 16px;top:-1px" @click="loadStatistics"></mt-button>
+   <div class="searchDiv">
+    <select v-model="selected2" type="text" class="sechgg">
+      <option selected = "selected" value="0"  >请选择</option>
+      <option v-for="option in options" v-bind:value="option.id">
+        {{ option.name }}
+      </option>
+    </select>
+   <!--<mt-button class="mintui mintui-search" style="width:40px; height: 40px;margin-left: 8px;" @click="loadStatistics"></mt-button>-->
  </div>
 
 
@@ -81,15 +81,17 @@
       }
     },
     watch: {
-      selected (val, oldval) {
-        this.options = []
-        this.loadoPtions()
+      selected2 (val, oldval) {
+        console.log('=====>' + this.selected2)
+        if (this.selected2) {
+          this.loadStatistics()
+        }
       }
     },
     methods: {
       loadStatistics () {
         // http://cjl3.rokyinfo.net:7200/api-ebike/v3.1/ebikes/rent-statistics?storeId=19966&_=1524905367769
-        this.axios.get('/api-user/v3.1/ebikestores?category=2&showFlag=0&sort=code,asc&model=list&limit=100&page=1&showTotalStatistics=true&parentId=' + this.selected2,
+        this.axios.get('/api-user/v3.1/ebikestores/list-4-manager?category=2&showFlag=0&sort=code,asc&model=list&limit=100&page=1&showTotalStatistics=true&parentId=' + this.selected2,
           {
             params: {
             }
@@ -103,7 +105,7 @@
           })
       },
       loadoPtions () {
-        this.axios.get('/api-user/v3.1/ebikestores?category=1&showFlag=0&sort=code,asc&limit=100&page=1',
+        this.axios.get('/api-user/v3.1/ebikestores/list-4-manager?category=1&showFlag=0&sort=code,asc&limit=100&page=1',
           {
             params: {
               page: 1,
@@ -112,6 +114,9 @@
           }
         ).then((res) => {
           this.options = res.data.list
+          if (this.options && this.options.length > 0) {
+            this.selected2 = this.options[0].id
+          }
         })
           .catch(error => {
             console.log(error)
@@ -121,7 +126,11 @@
         console.log(rowData)
         this.$router.push({
           name: 'BatteryStatistics',
-          params: {ccusn: rowData.id}
+          query: {
+            token: this.$store.state.token,
+            firm: this.$store.state.firm,
+            storeId: rowData.id
+          }
         })
 //        alert(`行号：${params.index} 姓名：${params.rowData['id']}`)
       }
@@ -166,15 +175,24 @@
 
 <style scoped>
   .searchDiv{
+    width: 100vw;
     height: 4.5rem;
+    display: -webkit-flex;
+    display: flex;
+
     text-align: center;
     vertical-align: middle;
+    padding: 1rem;
+    -webkit-align-items:center;
+    align-items:center;
+    -webkit-justify-content:center;
+    justify-content:center;
   }
   .sechgg{
-    margin-top: 16px;
+    flex: 1;
+    -webkit-flex: 1;
     padding-left: 8px;
-    height: 41px;
-    width: 75%;
+    height: 40px;
     font-size: 16px;
     color: black;
     background-color: #fff;
@@ -188,7 +206,7 @@
     -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-
   }
+
 </style>
 

@@ -6,6 +6,8 @@
 
     <div class="lm-text-text lm-font-second" style="margin-top: 2rem;text-align: center">{{ ccuSn }}</div>
 
+    <div class="lm-text-text lm-font-second" style="margin-top: 2rem;text-align: center">{{ result }}</div>
+
     <div class="h-container">
       <!--<div style="flex: 1">-->
       <!--<mt-button type="default" @click="back" style="width: 100%">上一步</mt-button>-->
@@ -45,20 +47,23 @@
         ccuSn: '',
         dealerId: null,
         storeId: null,
-        ueID: null
+        ueID: null,
+        result: null
       }
     },
     methods: {
       onValuesChange (picker, values) {
         console.log(values)
-        if (this.selectModel === 0) {
-          this.dealerId = values[0].id
-          this.dealerTitle = values[0].name
-          this.storeId = null
-          this.storeTitle = '请选择门店'
-        } else {
-          this.storeId = values[0].id
-          this.storeTitle = values[0].name
+        if (values[0] !== undefined) {
+          if (this.selectModel === 0) {
+            this.dealerId = values[0].id
+            this.dealerTitle = values[0].name
+            this.storeId = null
+            this.storeTitle = '请选择门店'
+          } else {
+            this.storeId = values[0].id
+            this.storeTitle = values[0].name
+          }
         }
       },
       dealerSelect () {
@@ -84,22 +89,40 @@
       },
       fillSnFromScan (sn) {
         this.ccuSn = sn.split(' ')[0]
+        this.result = ''
         Indicator.open('检查设备信息...')
         this.axios.get('/api-ebike/v3.1/ues/' + this.ccuSn).then((res) => {
           Indicator.close()
           let ue = res.data
           if (ue) {
+            let _storeId = (this.storeId ? this.storeId : this.dealerId)
             this.ueID = ue.id
-            if ((this.dealerId || this.storeId) && this.ueID) {
+            if (_storeId && this.ueID) {
+              if (_storeId === ue.storeId) {
+                this.result = '该设备号已归属当前选择的站点'
+                MessageBox.alert('该设备号已归属当前选择的站点', '提示').then(action => {
+                })
+                return
+              }
               this.submit()
+            } else {
+              this.result = '非法的设备序列号'
+              MessageBox.alert(this.result, '失败').then(action => {
+              })
             }
+          } else {
+            this.result = '非法的设备序列号'
+            MessageBox.alert(this.result, '失败').then(action => {
+            })
           }
         })
           .catch(error => {
             Indicator.close()
             console.log(error)
             if (error.response.data && error.response.data.error) {
-              Toast(error.response.data.error.msg)
+              this.result = error.response.data.error.msg
+              MessageBox.alert(error.response.data.error.msg, '失败').then(action => {
+              })
             }
           })
       },
@@ -108,12 +131,13 @@
         this.axios.put('/api-ebike/v3.1/ues/update_storeId?storeId=' + (this.storeId ? this.storeId : this.dealerId) + '&ueId=' + this.ueID).then((res) => {
           Indicator.close()
           Toast('分配成功')
-          this.back()
+          this.result = '分配成功'
         })
           .catch(error => {
             Indicator.close()
             console.log(error)
             if (error.response.data && error.response.data.error) {
+              this.result = error.response.data.error.msg
               MessageBox.alert(error.response.data.error.msg, '分配失败').then(action => {
               })
             }
@@ -121,7 +145,7 @@
       },
       loadStores (category, parentId) {
         // http://cjl3.rokyinfo.net:7200/api-user/v3.1/ebikestores?category=1&sort=code,asc&limit=100&page=1&_=1524916233075
-        this.axios.get('/api-user/v3.1/ebikestores',
+        this.axios.get('/api-user/v3.1/ebikestores/list-4-manager',
           {
             params: {
               category: category,

@@ -85,7 +85,7 @@
       }
     },
     mounted () {
-      document.title = '统计'
+      document.title = '统计详情'
       if (this.$route.query) {
         this.$store.commit('setToken', this.$route.query.token)
         this.$store.commit('setFirm', this.$route.query.firm)
@@ -93,7 +93,7 @@
         if (this.$route.query.token) {
           this.axios.defaults.headers.common['Authorization'] = this.$route.query.token
         }
-        this.storeId = this.$route.params.ccusn
+        this.storeId = this.$route.query.storeId
       }
 
       this.loadStatistics()

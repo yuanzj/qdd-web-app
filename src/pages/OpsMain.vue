@@ -1,24 +1,22 @@
 <template>
   <div class="container">
 
-    <div class="table-head-title">租赁管理</div>
-    <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
-    <div class="h-buttons-container">
+    <div class="h-buttons-container"  style="background-color: #666f76;height: 50vw">
 
       <div class="v-button"  @click="finish">
         <img src="../assets/icons8-refund.png" class="v-button-icon"/>
-        <p class="v-button-title">退租</p>
+        <p class="v-button-title" style="color: white">退租</p>
       </div>
       <div class="v-button"  @click="replace">
         <img src="../assets/icons8-replace.png" class="v-button-icon"/>
-        <p class="v-button-title">售后</p>
+        <p class="v-button-title" style="color: white">售后</p>
       </div>
-      <div class="v-button"></div>
-      <div class="v-button"></div>
+      <!--<div class="v-button"></div>-->
+      <!--<div class="v-button"></div>-->
     </div>
+    <div style="height: 1rem"></div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
-
-    <div class="table-head-title">资产管理</div>
+    <div class="table-head-title">电池管理</div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
     <div v-if="role === 'ADMIN'">
       <div class="h-buttons-container">
@@ -27,14 +25,17 @@
           <p class="v-button-title">统计</p>
         </div>
 
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  @click="search">
           <img src="../assets/icons8-search.png" class="v-button-icon"/>
           <p class="v-button-title">查询</p>
         </div>
-        <div class="v-button"  @click="orderBattery">
-          <img src="../assets/icons8-shopping_cart_loaded.png" class="v-button-icon"/>
-          <p class="v-button-title">订货</p>
-        </div>
+
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <!--<div class="v-button"  @click="orderBattery">-->
+          <!--<img src="../assets/icons8-shopping_cart_loaded.png" class="v-button-icon"/>-->
+          <!--<p class="v-button-title">订货</p>-->
+        <!--</div>-->
         <div class="v-button"  @click="batteryDistribution">
           <img src="../assets/icons8-scan_stock.png" class="v-button-icon"/>
           <p class="v-button-title">分配</p>
@@ -47,16 +48,16 @@
           <img src="../assets/icons8-positive_dynamic.png" class="v-button-icon"/>
           <p class="v-button-title">统计</p>
         </div>
-
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  @click="batteryDistribution">
           <img src="../assets/icons8-scan_stock.png" class="v-button-icon"/>
           <p class="v-button-title">分配</p>
         </div>
-
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  >
         </div>
-        <div class="v-button"  >
-        </div>
+        <!--<div class="v-button"  >-->
+        <!--</div>-->
       </div>
     </div>
     <div v-else>
@@ -65,53 +66,53 @@
           <img src="../assets/icons8-positive_dynamic.png" class="v-button-icon"/>
           <p class="v-button-title">统计</p>
         </div>
-
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  >
         </div>
-
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  >
         </div>
-        <div class="v-button"  >
-        </div>
+        <!--<div class="v-button"  >-->
+        <!--</div>-->
       </div>
     </div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
 
-    <div v-if="role === 'ADMIN'">
-      <div class="table-head-title">财务管理</div>
-      <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
-      <div class="h-buttons-container">
+    <!--<div v-if="role === 'ADMIN'">-->
+      <!--<div class="table-head-title">财务管理</div>-->
+      <!--<div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>-->
+      <!--<div class="h-buttons-container">-->
 
-        <div class="v-button"  @click="incomeStatistics">
-          <img src="../assets/icons8-money.png" class="v-button-icon"/>
-          <p class="v-button-title">收益</p>
-        </div>
-        <div class="v-button"  >
-        </div>
-        <div class="v-button"  >
-        </div>
-        <div class="v-button"></div>
-      </div>
-      <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
-    </div>
+        <!--<div class="v-button"  @click="incomeStatistics">-->
+          <!--<img src="../assets/icons8-money.png" class="v-button-icon"/>-->
+          <!--<p class="v-button-title">收益</p>-->
+        <!--</div>-->
+        <!--<div class="v-button"  >-->
+        <!--</div>-->
+        <!--<div class="v-button"  >-->
+        <!--</div>-->
+        <!--<div class="v-button"></div>-->
+      <!--</div>-->
+      <!--<div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>-->
+    <!--</div>-->
 
-    <div class="table-head-title">用户中心</div>
-    <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
-    <div class="h-buttons-container">
+    <!--<div class="table-head-title">用户中心</div>-->
+    <!--<div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>-->
+    <!--<div class="h-buttons-container">-->
 
-      <div class="v-button"  @click="setting">
-        <img src="../assets/icons8-settings.png" class="v-button-icon"/>
-        <p class="v-button-title">设置</p>
-      </div>
-      <div class="v-button"  @click="about">
-        <img src="../assets/icons8-info.png" class="v-button-icon"/>
-        <p class="v-button-title">关于</p>
-      </div>
-      <div class="v-button"  >
-      </div>
-      <div class="v-button"></div>
-    </div>
-    <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+      <!--<div class="v-button"  @click="setting">-->
+        <!--<img src="../assets/icons8-settings.png" class="v-button-icon"/>-->
+        <!--<p class="v-button-title">设置</p>-->
+      <!--</div>-->
+      <!--<div class="v-button"  @click="about">-->
+        <!--<img src="../assets/icons8-info.png" class="v-button-icon"/>-->
+        <!--<p class="v-button-title">关于</p>-->
+      <!--</div>-->
+      <!--<div class="v-button"  >-->
+      <!--</div>-->
+      <!--<div class="v-button"></div>-->
+    <!--</div>-->
+    <!--<div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>-->
 
     <div style="height: 48px"></div>
   </div>
@@ -201,7 +202,7 @@
       batteryStatistics () {
         if (this.user) {
           this.$router.push({
-            name: 'BatteryStatistics',
+            name: 'StoreStatistics',
             query: {
               token: this.$store.state.token,
               firm: this.$store.state.firm,
@@ -214,7 +215,7 @@
       },
       search () {
         this.$router.push({
-          name: 'Equipmentlist',
+          name: 'SearchMain',
           query: {
             token: this.$store.state.token,
             firm: this.$store.state.firm
@@ -271,17 +272,22 @@
   }
 
   .table-head-title {
-    margin-left: 1rem;
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
+    padding-left: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    font-size: 0.875rem;
+    background-color: white;
   }
 
   .h-buttons-container {
     display: -webkit-flex;
     display: flex;
-    padding: 1rem 0 1rem 0;
     background-color: white;
+    height: 33.333333vw;
+    -webkit-align-items:center;
+    align-items:center;
+    -webkit-justify-content:center;
+    justify-content:center;
   }
 
   .v-button {
@@ -298,7 +304,7 @@
   .v-button-title {
     margin-top: 0.5rem;
     color: #212121;
-    font-size: 1rem;
+    font-size: 0.875rem;
   }
 
   .p-head {

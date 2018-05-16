@@ -51,7 +51,7 @@
   .completed-box{
     width: 100%;
     position: relative;
-    height: 80vh;
+    height: 100vh;
   }
   .completed{
     text-align: center;
