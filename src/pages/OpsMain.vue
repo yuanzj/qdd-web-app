@@ -126,7 +126,9 @@
       return {
         ccuSn: null,
         role: 'USER',
-        user: null
+        user: null,
+        model: null,
+        host: 'http://cjl3.rokyinfo.net:8200/#/'
       }
     },
     methods: {
@@ -161,93 +163,174 @@
           })
       },
       setting () {
-        this.$router.push({
-          name: 'OpsUserPsw',
-          query: {
-            token: this.$store.state.token,
-            firm: this.$store.state.firm,
-            userName: this.user.username
+        if (this.model === 'newPage') {
+          /* eslint-disable no-undef */
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.startNewPage(this.host + 'ops-user-psw?')
+          } else {
+            window.webkit.messageHandlers.startNewPage.postMessage(this.host + 'ops-user-psw?')
           }
-        })
-      },
-      about () {
-        this.$router.push({
-          name: 'OpsAbout',
-          query: {
-            token: this.$store.state.token,
-            firm: this.$store.state.firm
-          }
-        })
-      },
-      finish () {
-        this.$router.push({
-          name: 'OpsOrderOpsStep',
-          query: {
-            token: this.$store.state.token,
-            firm: this.$store.state.firm,
-            model: 0
-          }
-        })
-      },
-      replace () {
-        this.$router.push({
-          name: 'OpsOrderOpsStep',
-          query: {
-            token: this.$store.state.token,
-            firm: this.$store.state.firm,
-            model: 1
-          }
-        })
-      },
-      batteryStatistics () {
-        if (this.user) {
+        } else {
           this.$router.push({
-            name: 'StoreStatistics',
+            name: 'OpsUserPsw',
             query: {
               token: this.$store.state.token,
               firm: this.$store.state.firm,
-              storeId: this.user.storeId
+              userName: this.user.username
             }
           })
+        }
+      },
+      about () {
+        if (this.model === 'newPage') {
+          /* eslint-disable no-undef */
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.startNewPage(this.host + 'ops-about?')
+          } else {
+            window.webkit.messageHandlers.startNewPage.postMessage(this.host + 'ops-about?')
+          }
         } else {
-          Toast('用户信息未加载成功，请下拉刷新或重新登录！')
+          this.$router.push({
+            name: 'OpsAbout',
+            query: {
+              token: this.$store.state.token,
+              firm: this.$store.state.firm
+            }
+          })
+        }
+      },
+      finish () {
+        if (this.model === 'newPage') {
+          /* eslint-disable no-undef */
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.startNewPage(this.host + 'ops-order-ops-step?model=0&')
+          } else {
+            window.webkit.messageHandlers.startNewPage.postMessage(this.host + 'ops-order-ops-step?model=0&')
+          }
+        } else {
+          this.$router.push({
+            name: 'OpsOrderOpsStep',
+            query: {
+              token: this.$store.state.token,
+              firm: this.$store.state.firm,
+              model: 0
+            }
+          })
+        }
+      },
+      replace () {
+        if (this.model === 'newPage') {
+          /* eslint-disable no-undef */
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.startNewPage(this.host + 'ops-order-ops-step?model=1&')
+          } else {
+            window.webkit.messageHandlers.startNewPage.postMessage(this.host + 'ops-order-ops-step?model=1&')
+          }
+        } else {
+          this.$router.push({
+            name: 'OpsOrderOpsStep',
+            query: {
+              token: this.$store.state.token,
+              firm: this.$store.state.firm,
+              model: 1
+            }
+          })
+        }
+      },
+      batteryStatistics () {
+        if (this.model === 'newPage') {
+          /* eslint-disable no-undef */
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.startNewPage(this.host + 'store-statistics?')
+          } else {
+            window.webkit.messageHandlers.startNewPage.postMessage(this.host + 'store-statistics?')
+          }
+        } else {
+          if (this.user) {
+            this.$router.push({
+              name: 'StoreStatistics',
+              query: {
+                token: this.$store.state.token,
+                firm: this.$store.state.firm,
+                storeId: this.user.storeId
+              }
+            })
+          } else {
+            Toast('用户信息未加载成功，请下拉刷新或重新登录！')
+          }
         }
       },
       search () {
-        this.$router.push({
-          name: 'SearchMain',
-          query: {
-            token: this.$store.state.token,
-            firm: this.$store.state.firm
+        if (this.model === 'newPage') {
+          /* eslint-disable no-undef */
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.startNewPage(this.host + 'search-main?')
+          } else {
+            window.webkit.messageHandlers.startNewPage.postMessage(this.host + 'search-main?')
           }
-        })
+        } else {
+          this.$router.push({
+            name: 'SearchMain',
+            query: {
+              token: this.$store.state.token,
+              firm: this.$store.state.firm
+            }
+          })
+        }
       },
       orderBattery () {
-        this.$router.push({
-          name: 'OrderBattery',
-          query: {
-            token: this.$store.state.token,
-            firm: this.$store.state.firm
+        if (this.model === 'newPage') {
+          /* eslint-disable no-undef */
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.startNewPage(this.host + 'order-battery?')
+          } else {
+            window.webkit.messageHandlers.startNewPage.postMessage(this.host + 'order-battery?')
           }
-        })
+        } else {
+          this.$router.push({
+            name: 'OrderBattery',
+            query: {
+              token: this.$store.state.token,
+              firm: this.$store.state.firm
+            }
+          })
+        }
       },
       batteryDistribution () {
-        this.$router.push({
-          name: 'BatteryDistribution',
-          query: {
-            token: this.$store.state.token,
-            firm: this.$store.state.firm
+        if (this.model === 'newPage') {
+          /* eslint-disable no-undef */
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.startNewPage(this.host + 'battery-distribution?')
+          } else {
+            window.webkit.messageHandlers.startNewPage.postMessage(this.host + 'battery-distribution?')
           }
-        })
+        } else {
+          this.$router.push({
+            name: 'BatteryDistribution',
+            query: {
+              token: this.$store.state.token,
+              firm: this.$store.state.firm
+            }
+          })
+        }
       },
       incomeStatistics () {
-        this.$router.push({
-          name: 'IncomeStatistics',
-          query: {
-            token: this.$store.state.token,
-            firm: this.$store.state.firm
+        if (this.model === 'newPage') {
+          /* eslint-disable no-undef */
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.startNewPage(this.host + 'income-statistics?')
+          } else {
+            window.webkit.messageHandlers.startNewPage.postMessage(this.host + 'income-statistics?')
           }
-        })
+        } else {
+          this.$router.push({
+            name: 'IncomeStatistics',
+            query: {
+              token: this.$store.state.token,
+              firm: this.$store.state.firm
+            }
+          })
+        }
       }
     },
     mounted () {
@@ -256,6 +339,7 @@
       if (this.$route.query) {
         this.$store.commit('setToken', this.$route.query.token)
         this.$store.commit('setFirm', this.$route.query.firm)
+        this.model = this.$route.query.model
         this.axios.defaults.headers.common['firm'] = this.$route.query.firm
         if (this.$route.query.token) {
           this.axios.defaults.headers.common['Authorization'] = this.$route.query.token

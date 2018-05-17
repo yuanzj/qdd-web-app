@@ -219,7 +219,7 @@
         popupVisible: false,
         categoryId: 1,
         isShowAgreement: true,
-        agreement: false,
+        agreement: true,
         reTryCount0: 0,
         reTryCount1: 0,
         orderId: null,

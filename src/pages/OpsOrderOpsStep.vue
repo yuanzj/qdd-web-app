@@ -317,7 +317,7 @@
     mounted () {
       window.productDetail = this
       if (this.$route.query) {
-        this.enterModel = this.$route.query.model
+        this.enterModel = Number(this.$route.query.model)
         this.ccuSn = this.$route.query.ccuSn
         this.axios.defaults.headers.common['firm'] = this.$route.query.firm
         if (this.$route.query.token) {
