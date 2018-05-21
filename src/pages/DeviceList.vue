@@ -5,7 +5,7 @@
       <div style="text-align: center">
         <img src="../assets/icons8_car_battery.png" style="width: 3.5rem;height: 3.5rem;"/>
         <div class="lm-text-text lm-font-default" style="margin-top: 1rem">您尚未添加电池</div>
-        <div class="lm-text-second lm-font-second" style="margin-top: 0.5rem">请点击下方产品标签选择电池</div>
+        <div class="lm-text-second lm-font-second" style="margin-top: 0.5rem">请点击"扫码租赁"按钮添加电池</div>
       </div>
     </div>
     <mt-loadmore :top-method="loadDeviceList" ref="loadmore" :style="{ 'min-height': wrapperHeight + 'px' }">
