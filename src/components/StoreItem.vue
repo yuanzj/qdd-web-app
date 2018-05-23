@@ -21,6 +21,10 @@
       distance: {
         type: Number
       },
+      validDistance: {
+        type: Boolean,
+        default: false
+      },
       id: {
         type: Number
       },
@@ -61,7 +65,7 @@
     },
     computed: {
       formatDistance: function () {
-        if (this.distance === 0) {
+        if (this.distance === 0 || this.validDistance === false) {
           return ''
         } else if (this.distance <= 1000) {
           return this.distance.toFixed(0) + 'm'

@@ -2,7 +2,7 @@
   <mt-loadmore :top-method="loadProductList" ref="loadmore" :style="{ 'min-height': wrapperHeight + 'px' }">
     <div v-for="(item,index)  in productList">
 
-      <store-item style="margin: 1rem"  :key="item.id" :city="item.city" :area="item.county" :distance="item.distance" :id="item.id" :title="item.name"
+      <store-item style="margin: 1rem"  :key="item.id" :city="item.city" :area="item.county" :distance="item.distance" :validDistance="item.validDistance"  :id="item.id" :title="item.name"
                     :desc="item.desc" :code="item.code" :tel="item.contact" :address="item.address"></store-item>
 
     </div>

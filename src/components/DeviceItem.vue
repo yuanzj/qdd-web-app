@@ -6,22 +6,30 @@
       <div class="p-head-2 lm-text-red" v-if="days < 0">逾期 {{ Math.abs(days) }}天</div>
     </div>
 
-    <div class="p-content" v-if="type === 4">
-      <div style="text-align: center;flex-grow: 1">
+    <div class="p-content" >
+      <div style="text-align: center;flex: 1;-webkit-flex: 1">
         <span class="p-desc">电池电量</span>
         <div class="p-title" :class="{ 'lm-text-green': isNormal, 'lm-text-orange': isWarning, 'lm-text-red': isError, 'lm-text-hint': isDisable }">{{ soh }} <span class="p-desc">%</span></div>
 
       </div>
-      <div style="text-align: center;flex-grow: 1">
-        <span class="p-desc">续航里程</span>
-        <div class="p-title" :class="{ 'lm-text-green': isNormal, 'lm-text-orange': isWarning, 'lm-text-red': isError, 'lm-text-hint': isDisable }">{{ mileage }} <span v-if="showKMFlag" class="p-desc">km</span></div>
-
-      </div>
-      <div style="text-align: center;flex-grow: 1">
+      <div style="text-align: center;flex: 1;-webkit-flex: 1">
         <span class="p-desc">电池电压</span>
         <div class="p-title" :class="{ 'lm-text-green': isNormal, 'lm-text-orange': isWarning, 'lm-text-red': isError, 'lm-text-hint': isDisable }">{{ voltage }} <span class="p-desc">v</span></div>
       </div>
     </div>
+
+    <div class="p-content" style="margin-top: 1rem">
+      <div style="text-align: center;flex: 1;-webkit-flex: 1">
+        <span class="p-desc">今日里程</span>
+        <div class="p-title" :class="{ 'lm-text-green': isNormal, 'lm-text-orange': isWarning, 'lm-text-red': isError, 'lm-text-hint': isDisable }">{{ dayOdo }} <span class="p-desc">km</span></div>
+      </div>
+      <div style="text-align: center;flex: 1;-webkit-flex: 1">
+        <span class="p-desc">续航里程</span>
+        <div class="p-title" :class="{ 'lm-text-green': isNormal, 'lm-text-orange': isWarning, 'lm-text-red': isError, 'lm-text-hint': isDisable }">{{ mileage }} <span v-if="showKMFlag" class="p-desc">km</span></div>
+      </div>
+
+    </div>
+
     <div class="p-desc1" v-if="type === 4">
       {{ address }}
     </div>
@@ -72,7 +80,11 @@
       defaultMileage: {
         type: String,
         default: '-1'
+      },
+      dayOdo: {
+        type: Number
       }
+
     },
     data () {
       return {

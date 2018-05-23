@@ -11,7 +11,7 @@
     <mt-loadmore :top-method="loadDeviceList" ref="loadmore" :style="{ 'min-height': wrapperHeight + 'px' }">
       <div v-for="(item,index)  in deviceList" >
 
-        <device-item  :key="item.orderId" :type="item.type" :orderId="item.orderId" :ueSn="item.ueSn" :ebikeReportData="item.ebikeReportData" :address="item.address" :productName="item.productName" :days="item.days" :defaultMileage="item.rentOrderEntity.productEntity
+        <device-item  :key="item.orderId" :dayOdo="item.dayOdo" :type="item.type" :orderId="item.orderId" :ueSn="item.ueSn" :ebikeReportData="item.ebikeReportData" :address="item.address" :productName="item.productName" :days="item.days" :defaultMileage="item.rentOrderEntity.productEntity
   .remark"></device-item>
 
       </div>
