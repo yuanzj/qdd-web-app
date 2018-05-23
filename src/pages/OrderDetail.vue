@@ -58,6 +58,8 @@
       <div @click="topUp"  class="action-btn" >续租</div>
     </div>
     <div class="h-btn-container" v-else>
+      <div @click="finish"  class="action-btn">退租</div>
+      <span style="width: 1px;height: 16px;background-color: #BDBDBD;margin: 1.5rem 0 1.5rem 0"></span>
       <div @click="pay"  class="action-btn lm-text-red">补缴欠费</div>
     </div>
 
