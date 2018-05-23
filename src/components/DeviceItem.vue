@@ -9,25 +9,27 @@
     <div class="p-content" v-if="type === 4">
       <div style="text-align: center;flex-grow: 1">
         <span class="p-desc">电池电量</span>
-        <div class="p-title" :class="{ 'lm-text-green': isNormal, 'lm-text-orange': isWarning, 'lm-text-red': isError, 'lm-text-hint': isDisable }">{{ soh }}</div>
-        <span class="p-desc">%</span>
+        <div class="p-title" :class="{ 'lm-text-green': isNormal, 'lm-text-orange': isWarning, 'lm-text-red': isError, 'lm-text-hint': isDisable }">{{ soh }} <span class="p-desc">%</span></div>
+
       </div>
       <div style="text-align: center;flex-grow: 1">
         <span class="p-desc">续航里程</span>
-        <div class="p-title" :class="{ 'lm-text-green': isNormal, 'lm-text-orange': isWarning, 'lm-text-red': isError, 'lm-text-hint': isDisable }">{{ mileage }}</div>
-        <span class="p-desc">km</span>
+        <div class="p-title" :class="{ 'lm-text-green': isNormal, 'lm-text-orange': isWarning, 'lm-text-red': isError, 'lm-text-hint': isDisable }">{{ mileage }} <span v-if="showKMFlag" class="p-desc">km</span></div>
+
       </div>
       <div style="text-align: center;flex-grow: 1">
         <span class="p-desc">电池电压</span>
-        <div class="p-title" :class="{ 'lm-text-green': isNormal, 'lm-text-orange': isWarning, 'lm-text-red': isError, 'lm-text-hint': isDisable }">{{ voltage }}</div>
-        <span class="p-desc">v</span>
+        <div class="p-title" :class="{ 'lm-text-green': isNormal, 'lm-text-orange': isWarning, 'lm-text-red': isError, 'lm-text-hint': isDisable }">{{ voltage }} <span class="p-desc">v</span></div>
       </div>
     </div>
     <div class="p-desc1" v-if="type === 4">
       {{ address }}
     </div>
-    <div class="p-desc2" v-if="type === 4">
-      {{ reportTime }}
+    <div class="p-desc2" v-if="noDataUpload">
+      未开启服务
+    </div>
+    <div class="p-desc2">
+      更新于 <span class="lm-text-text">{{ reportTime }}</span>
     </div>
     <div style="width:100%; padding: 1rem">
       <div style="width:100%;height:1px;margin:0 ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
@@ -78,7 +80,8 @@
         isWarning: false,
         isError: false,
         isDisable: false,
-        modelSwitch: null
+        modelSwitch: null,
+        showKMFlag: true
       }
     },
     computed: {
@@ -129,13 +132,17 @@
         }
         if (percentage !== -1 && Number(this.defaultMileage) !== -1) {
           if (percentage === 0) {
+            this.showKMFlag = false
             return '请尽快充电'
           } else if (percentage <= 10) {
+            this.showKMFlag = false
             return '请充电'
           } else {
+            this.showKMFlag = true
             return percentage * Number(this.defaultMileage) / 100.0
           }
         } else {
+          this.showKMFlag = false
           return '--'
         }
       },
@@ -235,12 +242,19 @@
           return '--'
         }
       },
+      noDataUpload: function () {
+        if (this.ebikeReportData && this.ebikeReportData.lastReportTime) {
+          return false
+        } else {
+          return true
+        }
+      },
       reportTime: function () {
         if (this.ebikeReportData && this.ebikeReportData.lastReportTime) {
           // let reportDate = Date.parse(this.ebikeReportData.lastReportTime.replace('-', '/'))
-          return '更新时间: ' + this.ebikeReportData.lastReportTime
+          return this.getDateDiff(this.ebikeReportData.lastReportTime)
         } else {
-          return '未开启服务'
+          return null
         }
       }
     },
@@ -298,7 +312,9 @@
           }
         }
       },
-      getDateDiff: function (dateTimeStamp) {
+      getDateDiff: function (dateStr) {
+        let dateTimeStamp = Date.parse(dateStr.replace(/-/g, '/'))
+
         let minute = 1000 * 60
         let hour = minute * 60
         let day = hour * 24

@@ -3,7 +3,6 @@
     is-vertical-resize
     style="width:100%"
     is-horizontal-resize
-    :vertical-resize-offset='5'
     :min-height='200'
     :columns="columns"
     :table-data="tableData"
@@ -12,6 +11,7 @@
 </template>
 
 <script>
+  import {Indicator, Toast} from 'mint-ui'
   export default {
     name: 'battery-statistics',
     data () {
@@ -31,7 +31,7 @@
           {
             field: 'batteryTotalCount',
             title: '总电池数',
-            width: 80,
+            width: 70,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true
@@ -39,7 +39,7 @@
           {
             field: 'batteryRentedCount',
             title: '已租赁数',
-            width: 80,
+            width: 70,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true
@@ -47,28 +47,17 @@
           {
             field: 'batteryUnusedCount',
             title: '待租赁数',
-            width: 80,
+            width: 70,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true
-          },
-          {
-            field: 'rentPercent',
-            title: '租赁率',
-            width: 80,
-            titleAlign: 'center',
-            columnAlign: 'center',
-            isResize: true,
-            formatter: function (rowData, rowIndex, pagingIndex, field) {
-              return rowData.rentPercent + '%'
-            }
           }
         ]
       }
     },
     methods: {
       loadStatistics () {
-        // http://cjl3.rokyinfo.net:7200/api-ebike/v3.1/ebikes/rent-statistics?storeId=19966&_=1524905367769
+        Indicator.open('加载中...')
         this.axios.get('/api-ebike/v3.1/ebikes/rent-statistics',
           {
             params: {
@@ -76,11 +65,14 @@
             }
           }
         ).then((res) => {
-          console.log(res)
+          Indicator.close()
           this.tableData = res.data
         })
           .catch(error => {
-            console.log(error)
+            Indicator.close()
+            if (error.data.error) {
+              Toast(error.data.error.msg)
+            }
           })
       }
     },
@@ -93,7 +85,7 @@
         if (this.$route.query.token) {
           this.axios.defaults.headers.common['Authorization'] = this.$route.query.token
         }
-        this.storeId = this.$route.query.storeId
+        this.storeId = this.$route.query.selectedStoreId
       }
 
       this.loadStatistics()

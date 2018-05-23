@@ -1,40 +1,23 @@
 <template>
-  <div class="page-navbar">
-   <div class="searchDiv">
-    <select v-model="selected2" type="text" class="sechgg">
-      <option selected = "selected" value="0"  >请选择</option>
-      <option v-for="option in options" v-bind:value="option.id">
-        {{ option.name }}
-      </option>
-    </select>
-   <!--<mt-button class="mintui mintui-search" style="width:40px; height: 40px;margin-left: 8px;" @click="loadStatistics"></mt-button>-->
- </div>
-
-
-<div>
   <v-table
     is-vertical-resize
     style="width:100%"
     is-horizontal-resize
-    :vertical-resize-offset='5'
     :min-height='200'
     :columns="columns"
     :table-data="tableData"
     :show-vertical-border="false"
     :row-click='showStatistics'
-  ></v-table>
-</div>
-  </div>
+  >
+  </v-table>
 </template>
 
 <script>
+  import {Indicator, Toast} from 'mint-ui'
   export default {
     name: 'battery-statistics',
     data () {
       return {
-        selected2: 0,
-        options: [],
-        option: '',
         storeId: null,
         tableData: [],
         columns: [
@@ -50,7 +33,7 @@
           {
             field: 'batteryTotalCount',
             title: '总电池数',
-            width: 80,
+            width: 70,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true,
@@ -64,7 +47,7 @@
           {
             field: 'batteryRentedCount',
             title: '已租赁数',
-            width: 80,
+            width: 70,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true
@@ -72,7 +55,7 @@
           {
             field: 'batteryUnusedCount',
             title: '待租赁数',
-            width: 80,
+            width: 70,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true
@@ -80,28 +63,25 @@
         ]
       }
     },
-    watch: {
-      selected2 (val, oldval) {
-        console.log('=====>' + this.selected2)
-        if (this.selected2) {
-          this.loadStatistics()
-        }
-      }
-    },
     methods: {
       loadStatistics () {
-        // http://cjl3.rokyinfo.net:7200/api-ebike/v3.1/ebikes/rent-statistics?storeId=19966&_=1524905367769
-        this.axios.get('/api-user/v3.1/ebikestores/list-4-manager?category=2&showFlag=0&sort=code,asc&model=list&limit=100&page=1&showTotalStatistics=true&parentId=' + this.selected2,
+        Indicator.open('加载中...')
+        this.axios.get('/api-user/v3.1/ebikestores/list-4-manager?category=2&showFlag=0&sort=code,asc&model=list&limit=100&page=1&showTotalStatistics=true&parentId=' + this.storeId,
           {
             params: {
             }
           }
         ).then((res) => {
+          Indicator.close()
           console.log(res.data)
           this.tableData = res.data.list
         })
           .catch(error => {
+            Indicator.close()
             console.log(error)
+            if (error.data.error) {
+              Toast(error.data.error.msg)
+            }
           })
       },
       loadoPtions () {
@@ -115,7 +95,8 @@
         ).then((res) => {
           this.options = res.data.list
           if (this.options && this.options.length > 0) {
-            this.selected2 = this.options[0].id
+            this.storeId = this.options[0].id
+            this.loadStatistics()
           }
         })
           .catch(error => {
@@ -129,14 +110,14 @@
           query: {
             token: this.$store.state.token,
             firm: this.$store.state.firm,
-            storeId: rowData.id
+            selectedStoreId: rowData.id
           }
         })
 //        alert(`行号：${params.index} 姓名：${params.rowData['id']}`)
       }
     },
     mounted () {
-      document.title = '统计'
+      document.title = '电池统计'
       if (this.$route.query) {
         this.$store.commit('setToken', this.$route.query.token)
         this.$store.commit('setFirm', this.$route.query.firm)
@@ -146,7 +127,11 @@
         }
         this.storeId = this.$route.query.storeId
       }
-      this.loadoPtions()
+      if (this.storeId) {
+        this.loadStatistics()
+      } else {
+        this.loadoPtions()
+      }
     }
   }
 //  Vue.component('table-operation', {

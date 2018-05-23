@@ -49,12 +49,14 @@
           <p class="v-button-title">电池统计</p>
         </div>
         <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <div class="v-button"  @click="search">
+          <img src="../assets/icons8-search.png" class="v-button-icon"/>
+          <p class="v-button-title">电池查询</p>
+        </div>
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  @click="batteryDistribution">
           <img src="../assets/icons8-scan_stock.png" class="v-button-icon"/>
           <p class="v-button-title">电池调拨</p>
-        </div>
-        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
-        <div class="v-button"  >
         </div>
         <!--<div class="v-button"  >-->
         <!--</div>-->
@@ -67,7 +69,9 @@
           <p class="v-button-title">电池统计</p>
         </div>
         <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
-        <div class="v-button"  >
+        <div class="v-button"  @click="search">
+          <img src="../assets/icons8-search.png" class="v-button-icon"/>
+          <p class="v-button-title">电池查询</p>
         </div>
         <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  >

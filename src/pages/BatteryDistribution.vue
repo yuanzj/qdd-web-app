@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="h-btn-container"><mt-button type="default" class="action-btn" @click="dealerSelect">{{dealerTitle}}</mt-button></div>
+    <div v-if="showDealerFlag" class="h-btn-container"><mt-button type="default" class="action-btn" @click="dealerSelect">{{dealerTitle}}</mt-button></div>
 
     <div class="h-btn-container"><mt-button type="default" class="action-btn" @click="storeSelect">{{storeTitle}}</mt-button></div>
 
@@ -48,7 +48,8 @@
         dealerId: null,
         storeId: null,
         ueID: null,
-        result: null
+        result: null,
+        showDealerFlag: true
       }
     },
     methods: {
@@ -175,6 +176,10 @@
         this.axios.defaults.headers.common['firm'] = this.$route.query.firm
         if (this.$route.query.token) {
           this.axios.defaults.headers.common['Authorization'] = this.$route.query.token
+        }
+        this.dealerId = this.$route.query.storeId
+        if (this.dealerId) {
+          this.showDealerFlag = false
         }
       }
     }
