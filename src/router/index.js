@@ -27,6 +27,8 @@ import OrderOpsQRCode from '@/pages/OrderOpsQRCode'
 import UserPayAccount from '@/pages/UserPayAccount'
 // 余额
 import Balance from '@/pages/Balance'
+// 二维码名片
+import MyQRCode from '@/pages/MyQRCode'
 // 运维首页
 import OpsMain from '@/pages/OpsMain'
 // 运维订单处理页面
@@ -195,6 +197,11 @@ export default new Router({
       path: '/balance',
       name: 'Balance',
       component: Balance
+    },
+    {
+      path: '/my-qrcode',
+      name: 'MyQRCode',
+      component: MyQRCode
     }
   ]
 })

@@ -39,20 +39,23 @@
               <input
                 class="mint-radio-input"
                 type="radio"
-                v-model="depositOptionValue"
+                v-model="depositAmount"
                 :disabled="option.disabled"
                 :value="option.value || option">
               <span class="mint-radio-core"></span>
             </span>
-            <span class="mint-radio-label" v-text="depositAmount + '元'"></span>
+            <span class="mint-radio-label" v-text="option.amount + '元'"></span>
           </label>
+          <span  v-text="option.description"></span>
         </div>
-        <div style="margin-left: 1rem" v-if="index < (options.length - 1)">
+        <div style="margin-left: 1rem" v-if="index < (depositOptions.length - 1)">
           <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
         </div>
       </div>
       <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+      <div class="p-desc lm-text-text" style="padding-bottom: 1rem" v-if="depositDescription != null">{{ depositDescription }}</div>
     </div>
+
 
     <div class="table-head-title">租赁套餐</div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
@@ -237,7 +240,6 @@
         currentValue: '',
         payOptionValue: '2',
         payOptions: [{label: '支付宝', value: '2', disabled: false}],
-        depositOptionValue: '0',
         depositOptions: [{label: '押金', value: '0', disabled: false}],
         balanceOptionValue: '0',
         balanceOptions: [{label: '0元', value: '0', disabled: false}],
@@ -251,6 +253,14 @@
       }
     },
     computed: {
+      depositDescription: function () {
+        for (let i = 0; i < this.depositOptions.length; i++) {
+          if (this.depositAmount === this.depositOptions[i].amount) {
+            return this.depositOptions[i].remark
+          }
+        }
+        return null
+      },
       finalPrice: function () {
         if (this.options && this.options.length > 0) {
           if (this.couponList.length > 0 && this.selectedCouponIndex >= 0) {
@@ -390,7 +400,7 @@
       },
       loadDeposit () {
         console.log('depositconfigs')
-        this.axios.get('/api-order/v3.1/depositconfigs',
+        this.axios.get('/api-order/v3.1/depositconfigs?sort=amount,asc',
           {
             params: {
               productId: this.$route.params.id
@@ -400,9 +410,18 @@
           let data = res.data
           console.log(data)
           if (data && data.list.length > 0) {
+            // depositOptions: [{label: '押金', value: '0', disabled: false}]
+            data.list.map(function (item) {
+              item.label = '押金'
+              item.value = item.amount
+              item.disabled = false
+              if (item.description === undefined) {
+                item.description = '仅限本区域使用'
+              }
+            })
             this.depositAmount = data.list[0].amount
+            this.depositOptions = data.list
           }
-          console.log(this.depositAmount)
         })
           .catch(error => {
             console.log(error)
@@ -542,7 +561,7 @@
         if (this.selectedCouponIndex >= 0) {
           this.couponId = this.couponList[this.selectedCouponIndex].id
         }
-        this.axios.post('/api-order/v3.1/rent-orders/?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn + (this.couponId ? ('&couponId=' + this.couponId) : '') + '&payChannelId=' + this.payOptionValue)
+        this.axios.post('/api-order/v3.1/rent-orders/?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn + (this.couponId ? ('&couponId=' + this.couponId) : '') + '&payChannelId=' + this.payOptionValue + '&depositAmount=' + this.depositAmount)
           .then((res) => {
             console.log(res)
             Indicator.close()
@@ -583,7 +602,7 @@
         if (this.selectedCouponIndex >= 0) {
           this.couponId = this.couponList[this.selectedCouponIndex].id
         }
-        this.axios.post('/api-order/v3.1/rent-orders/' + this.orderId + '/topup?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn + (this.couponId ? ('&couponId=' + this.couponId) : '') + '&payChannelId=' + this.payOptionValue)
+        this.axios.post('/api-order/v3.1/rent-orders/' + this.orderId + '/topup?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn + (this.couponId ? ('&couponId=' + this.couponId) : '') + '&payChannelId=' + this.payOptionValue + '&depositAmount=' + this.depositAmount)
           .then((res) => {
             console.log(res)
             Indicator.close()

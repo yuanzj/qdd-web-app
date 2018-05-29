@@ -4,19 +4,12 @@
       <div style="text-align: center">
         <div id="qrcode"></div>
         <div style="margin-top: 1rem;margin-bottom: 48px" class="lm-text-text">
-          <span style="font-size: 1.5rem;font-weight: bold;"> {{ ccuSn }}</span>
+          <span style="font-size: 1.5rem;font-weight: bold;"> {{ nikeName }}</span>
           <br/>
-          <span class="lm-text-text lm-font-second">网点：{{ storeName }}</span>
+          <span class="lm-text-text lm-font-second" style="margin-top: 0.5rem">{{ phoneNumber }}</span>
         </div>
-
-        <div class="lm-font-second lm-text-second" style="padding: 0 1rem 0 1rem;line-height: 1.5rem">租赁管理员<br/>扫描后即可完成相应的操作</div>
-        <div class="lm-font-second lm-text-red" style="margin-top: 0.5rem" v-if="type === 0">押金将退还到余额，余额可提现</div>
       </div>
     </div>
-    <!--<div style="position: fixed;bottom: 1rem;width: 100%;text-align: center">-->
-
-      <!--<mt-button type="default" @click="back">返回</mt-button>-->
-    <!--</div>-->
 
   </div>
 </template>
@@ -24,17 +17,16 @@
 <script>
   import {Indicator, Toast} from 'mint-ui'
   import QRCode from 'qrcodejs2'
+  import { Base64 } from 'js-base64'
 
   export default {
-    name: 'order-ops-q-r-code',
+    name: 'my-qrcode',
     data () {
       return {
-        storeName: null,
-        ccuSn: null,
-        orderId: null,
+        phoneNumber: null,
+        nikeName: null,
         code: '',
-        myQrcode: null,
-        type: null
+        myQrcode: null
       }
     },
     methods: {
@@ -48,13 +40,15 @@
       },
       genCode () {
         Indicator.open('生成中...')
-        this.axios.get('/api-order/v3.1/rent-orders/voucher-v2', {params: {'ccuSn': this.ccuSn, 'orderId': this.orderId, 'type': this.type}}).then((res) => {
+        this.axios.get('/api-user/v3.1/users/info').then((res) => {
           Indicator.close()
+          this.nikeName = res.data.nickname
+          this.phoneNumber = res.data.phoneNumber
           console.log(res)
-          this.code = res.data
+          this.code = Base64.encode(this.phoneNumber)
           if (this.myQrcode) {
             this.myQrcode.clear()
-            this.myQrcode.makeCode(res.data)
+            this.myQrcode.makeCode(this.code)
           } else {
             this.myQrcode = this.qrcode()
           }
@@ -67,15 +61,12 @@
             }
             this.$router.back(-1)
           })
-      },
-      back () {
-        this.$router.back(-1)
       }
     },
     mounted () {
       window.productDetail = this
+      document.title = '二维码名片'
       if (this.$route.query) {
-        document.title = this.$route.query.title
         this.ccuSn = this.$route.query.ccuSn
         this.orderId = this.$route.query.orderId
         this.storeName = this.$route.query.storeName
@@ -84,14 +75,8 @@
         if (this.$route.query.token) {
           this.axios.defaults.headers.common['Authorization'] = this.$route.query.token
         }
+        this.genCode()
       }
-      this.genCode()
-      // auto refresh
-      this.IntervalId = window.setInterval(this.genCode, 30 * 1000)
-    },
-    destroyed () {
-      window.clearInterval(this.IntervalId)
-      console.log('destroyed')
     }
   }
 </script>
