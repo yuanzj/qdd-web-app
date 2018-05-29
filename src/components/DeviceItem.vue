@@ -55,8 +55,8 @@
         <img  style="width: 1.5rem;height: 1.5rem" src="../assets/icons8-power-on.png" v-if="modelSwitch"/>
         <img  style="width: 1.5rem;height: 1.5rem" src="../assets/icons8-shutdown.png" v-else/>
 
-        <div class="lm-font-second lm-text-second"  style="margin-top: 0.5rem" v-if="modelSwitch">关闭电池</div>
-        <div class="lm-font-second lm-text-red"  style="margin-top: 0.5rem" v-else>开启电池</div>
+        <div class="lm-font-second lm-text-second"  style="margin-top: 0.5rem" v-if="modelSwitch">禁用电池</div>
+        <div class="lm-font-second lm-text-red"  style="margin-top: 0.5rem" v-else>激活电池</div>
       </div>
 
     </div>
