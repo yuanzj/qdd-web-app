@@ -602,7 +602,7 @@
         if (this.selectedCouponIndex >= 0) {
           this.couponId = this.couponList[this.selectedCouponIndex].id
         }
-        this.axios.post('/api-order/v3.1/rent-orders/' + this.orderId + '/topup?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn + (this.couponId ? ('&couponId=' + this.couponId) : '') + '&payChannelId=' + this.payOptionValue + (this.depositAmount ? '&depositAmount=' + this.depositAmount : '')
+        this.axios.post('/api-order/v3.1/rent-orders/' + this.orderId + '/topup?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn + (this.couponId ? ('&couponId=' + this.couponId) : '') + '&payChannelId=' + this.payOptionValue + (this.depositAmount ? '&depositAmount=' + this.depositAmount : ''))
           .then((res) => {
             console.log(res)
             Indicator.close()
