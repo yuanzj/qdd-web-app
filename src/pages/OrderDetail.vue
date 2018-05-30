@@ -7,7 +7,7 @@
     <div class="h-container">
       <div class="lm-text-second">租赁押金</div>
       <div class="lm-text-red" v-if="deposit == 0">未交</div>
-      <div v-else>{{ deposit }}元</div>
+      <div v-else >{{ deposit }}元<span v-if="showUpgrade" @click="updateDeposit" style="color: #3B9AD9">&nbsp;&nbsp;升级到全国范围</span></div>
     </div>
     <div class="h-container">
       <div class="lm-text-second">租赁状态</div>
@@ -72,6 +72,7 @@
     name: 'order-detail',
     data () {
       return {
+        showUpgrade: false,
         modelSwitch: false,
         deviceTypeName: null,
         province: null,
@@ -122,6 +123,17 @@
       }
     },
     methods: {
+      updateDeposit () {
+        this.$router.push({
+          name: 'UpgradeDeposit',
+          query: {
+            token: this.$store.state.token,
+            firm: this.$store.state.firm,
+            orderId: this.orderId,
+            pay2: true
+          }
+        })
+      },
       change () {
         if (this.orderStatus === 3) {
           Toast('已退租')
@@ -241,8 +253,30 @@
             } else {
               this.deviceTypeName = '充电器编号'
             }
+            this.loadDepositConfig()
           }
         })
+          .catch(error => {
+            console.log(error)
+          })
+      },
+      loadDepositConfig () {
+        this.axios.get('/api-order/v3.1/depositconfigs',
+          {
+            params: {
+              productId: this.productId,
+              type: 1,
+              sort: 'amount,desc'
+            }
+          }).then((res) => {
+            console.log(res)
+            if (res.data.list && res.data.list.length > 0) {
+              let data = res.data.list[0]
+              if (data.amount > this.deposit) {
+                this.showUpgrade = true
+              }
+            }
+          })
           .catch(error => {
             console.log(error)
           })

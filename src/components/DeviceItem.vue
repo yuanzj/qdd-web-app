@@ -51,7 +51,7 @@
 
       <div style="width: 1px; height: 2rem;background-color: #e2e2e2"></div>
 
-      <div style="flex: 1;-webkit-flex: 1;text-align: center" @click="handleChange">
+      <div style="flex: 1;-webkit-flex: 1;text-align: center" @click="onClickSwitchPower">
         <img  style="width: 1.5rem;height: 1.5rem" src="../assets/icons8-power-on.png" v-if="modelSwitch"/>
         <img  style="width: 1.5rem;height: 1.5rem" src="../assets/icons8-shutdown.png" v-else/>
 
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-  import {Indicator, Toast} from 'mint-ui'
+  import {Indicator, Toast, MessageBox} from 'mint-ui'
   export default {
     name: 'device-item',
     props: {
@@ -106,7 +106,9 @@
         isError: false,
         isDisable: false,
         modelSwitch: false,
-        showKMFlag: true
+        showKMFlag: true,
+        expectStatus: null,
+        timeOutTask: null
       }
     },
     computed: {
@@ -118,6 +120,18 @@
               this.modelSwitch = false
             } else {
               this.modelSwitch = true
+            }
+            if (this.expectStatus === null) {
+              this.expectStatus = this.modelSwitch
+            } else {
+              if (this.expectStatus === this.modelSwitch) {
+                if (this.timeOutTask !== null) {
+                  clearTimeout(this.timeOutTask)
+                  Indicator.close()
+                  this.timeOutTask = null
+                  MessageBox('提示', this.expectStatus ? '开启成功' : '关闭成功')
+                }
+              }
             }
             return ((gear === '17') ? '/禁用' : '')
           }
@@ -295,14 +309,32 @@
             Indicator.close()
           })
       },
+      onClickSwitchPower () {
+        if (this.ebikeReportData && this.ebikeReportData.lastReportTime) {
+          if (this.getMinuteDifference(this.ebikeReportData.lastReportTime) > 5) {
+            MessageBox('提示', '电池不在线，请将电池放在室外有移动信号的地方重试！')
+          } else {
+            this.handleChange()
+          }
+        } else {
+          MessageBox('提示', '电池不在线，请将电池放在室外有移动信号的地方重试！')
+        }
+      },
       handleChange () {
         if (this.days >= 0) {
           if (this.modelSwitch) {
             Indicator.open('电池输出关闭...')
             this.axios.put('/api-ebike/v3.1/ues/update-use-status?ccuSn=' + this.ueSn + '&useStatus=1').then((res) => {
               console.log(res)
-              Indicator.close()
-              this.modelSwitch = false
+              this.expectStatus = false
+              this.timeOutTask = setTimeout(() => {
+                Indicator.close()
+                if (this.expectStatus !== this.modelSwitch) {
+                  MessageBox('提示', '关闭失败，请将电池放在室外有移动信号的地方重试！')
+                } else {
+                  MessageBox('提示', '关闭成功')
+                }
+              }, 35000)
             })
               .catch(error => {
                 console.log(error)
@@ -312,8 +344,15 @@
             Indicator.open('电池输出开启...')
             this.axios.put('/api-ebike/v3.1/ues/update-use-status?ccuSn=' + this.ueSn + '&useStatus=0').then((res) => {
               console.log(res)
-              Indicator.close()
-              this.modelSwitch = true
+              this.expectStatus = true
+              this.timeOutTask = setTimeout(() => {
+                Indicator.close()
+                if (this.expectStatus !== this.modelSwitch) {
+                  MessageBox('提示', '开启失败，请将电池放在室外有移动信号的地方重试！')
+                } else {
+                  MessageBox('提示', '开启成功')
+                }
+              }, 35000)
             })
               .catch(error => {
                 console.log(error)
@@ -346,6 +385,17 @@
             // 提示需要登录
           }
         }
+      },
+      getMinuteDifference: function (dateStr) {
+        let dateTimeStamp = Date.parse(dateStr.replace(/-/g, '/'))
+
+        let minute = 1000 * 60
+        let now = new Date().getTime()
+        let diffValue = now - dateTimeStamp
+        if (diffValue < 0) {
+          return ''
+        }
+        return diffValue / minute
       },
       getDateDiff: function (dateStr) {
         let dateTimeStamp = Date.parse(dateStr.replace(/-/g, '/'))

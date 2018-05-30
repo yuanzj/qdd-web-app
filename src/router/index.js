@@ -29,6 +29,8 @@ import UserPayAccount from '@/pages/UserPayAccount'
 import Balance from '@/pages/Balance'
 // 二维码名片
 import MyQRCode from '@/pages/MyQRCode'
+// 升级押金
+import UpgradeDeposit from '@/pages/UpgradeDeposit'
 // 运维首页
 import OpsMain from '@/pages/OpsMain'
 // 运维订单处理页面
@@ -202,6 +204,11 @@ export default new Router({
       path: '/my-qrcode',
       name: 'MyQRCode',
       component: MyQRCode
+    },
+    {
+      path: '/upgrade-deposit',
+      name: 'UpgradeDeposit',
+      component: UpgradeDeposit
     }
   ]
 })
