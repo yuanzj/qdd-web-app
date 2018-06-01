@@ -16,7 +16,7 @@
 
     <div class="h-btn-container" >
       <!--<div @click="withdraw"  class="action-btn">提现</div>-->
-      <span class="bottom-text">总计</span><span class="bottom-text">{{summary.batteryTotalCount}}</span><span class="bottom-text">{{summary.batteryRentedCount}}</span><span class="bottom-text">{{summary.batteryUnusedCount}}</span><span class="bottom-text">{{summary.rentPercent}}%</span>
+      <span class="bottom-text">总计</span><span class="bottom-text">{{summary.batteryTotalCount}}</span><span class="bottom-text">{{summary.batteryRentedCount}}</span><span class="bottom-text">{{summary.batteryUnusedCount}}</span><span class="bottom-text">{{summary.rentPercent ? summary.rentPercent : '0'}}%</span>
     </div>
   </div>
 </template>
@@ -78,7 +78,7 @@
             columnAlign: 'center',
             isResize: true,
             formatter: function (rowData, rowIndex, pagingIndex, field) {
-              return rowData.rentPercent + '%'
+              return (rowData.rentPercent ? rowData.rentPercent : '0') + '%'
             }
           }
         ]
