@@ -1,15 +1,24 @@
 <template>
-  <v-table
-    is-vertical-resize
-    style="width:100%"
-    is-horizontal-resize
-    :min-height='200'
-    :columns="columns"
-    :table-data="tableData"
-    :show-vertical-border="false"
-    :row-click='showStatistics'
-  >
-  </v-table>
+
+
+  <div >
+    <v-table
+      is-vertical-resize
+      style="width:100%"
+      is-horizontal-resize
+      :min-height='200'
+      :columns="columns"
+      :table-data="tableData"
+      :show-vertical-border="false"
+      :row-click='showStatistics'
+    >
+    </v-table>
+
+    <div class="h-btn-container" >
+      <!--<div @click="withdraw"  class="action-btn">提现</div>-->
+      <span class="bottom-text">总计</span><span class="bottom-text">{{summary.batteryTotalCount}}</span><span class="bottom-text">{{summary.batteryRentedCount}}</span><span class="bottom-text">{{summary.batteryUnusedCount}}</span><span class="bottom-text">{{summary.rentPercent}}%</span>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -18,13 +27,14 @@
     name: 'battery-statistics',
     data () {
       return {
+        summary: '',
         storeId: null,
         tableData: [],
         columns: [
           {
             field: 'name',
             title: '驿站',
-            width: 100,
+            width: 60,
             titleAlign: 'center',
             columnAlign: 'center',
             isFrozen: true,
@@ -33,7 +43,7 @@
           {
             field: 'batteryTotalCount',
             title: '总电池数',
-            width: 70,
+            width: 60,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true,
@@ -47,7 +57,7 @@
           {
             field: 'batteryRentedCount',
             title: '已租赁数',
-            width: 70,
+            width: 60,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true
@@ -55,15 +65,48 @@
           {
             field: 'batteryUnusedCount',
             title: '待租赁数',
-            width: 70,
+            width: 60,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true
+          },
+          {
+            field: 'rentPercent',
+            title: '租赁率',
+            width: 60,
+            titleAlign: 'center',
+            columnAlign: 'center',
+            isResize: true,
+            formatter: function (rowData, rowIndex, pagingIndex, field) {
+              return rowData.rentPercent + '%'
+            }
           }
         ]
       }
     },
     methods: {
+      loadTotalStatistics () {
+        Indicator.open('加载中...')
+        this.axios.get('/api-user/v3.1/ebikestores/list-4-manager?category=1&showFlag=0&sort=code,asc&model=list&limit=100&page=1&showTotalStatistics=true&id=' + this.storeId,
+          {
+            params: {
+            }
+          }
+        ).then((res) => {
+          Indicator.close()
+          console.log(res.data)
+          if (res.data.list && res.data.list.length > 0) {
+            this.summary = res.data.list[0]
+          }
+        })
+          .catch(error => {
+            Indicator.close()
+            console.log(error)
+            if (error.data.error) {
+              Toast(error.data.error.msg)
+            }
+          })
+      },
       loadStatistics () {
         Indicator.open('加载中...')
         this.axios.get('/api-user/v3.1/ebikestores/list-4-manager?category=2&showFlag=0&sort=code,asc&model=list&limit=100&page=1&showTotalStatistics=true&parentId=' + this.storeId,
@@ -74,7 +117,17 @@
         ).then((res) => {
           Indicator.close()
           console.log(res.data)
-          this.tableData = res.data.list
+          if (res.data.list && res.data.list.length > 0) {
+            this.tableData = res.data.list.sort(function (x, y) {
+              if (x.batteryRentedCount < y.batteryRentedCount) {
+                return 1
+              }
+              if (x.batteryRentedCount > y.batteryRentedCount) {
+                return -1
+              }
+              return 0
+            })
+          }
         })
           .catch(error => {
             Indicator.close()
@@ -129,6 +182,7 @@
       }
       if (this.storeId) {
         this.loadStatistics()
+        this.loadTotalStatistics()
       } else {
         this.loadoPtions()
       }
@@ -159,39 +213,34 @@
 </script>
 
 <style scoped>
-  .searchDiv{
-    width: 100vw;
-    height: 4.5rem;
-    display: -webkit-flex;
-    display: flex;
 
-    text-align: center;
-    vertical-align: middle;
-    padding: 1rem;
-    -webkit-align-items:center;
-    align-items:center;
-    -webkit-justify-content:center;
-    justify-content:center;
-  }
-  .sechgg{
+  .bottom-text{
     flex: 1;
     -webkit-flex: 1;
-    padding-left: 8px;
-    height: 40px;
-    font-size: 16px;
-    color: black;
-    background-color: #fff;
-    background-image: none;
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: .25rem;
-    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-    transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    text-align: center
   }
+
+  .h-btn-container {
+    width: 100%;
+    height: 3rem;
+    display: flex;
+    position: fixed;
+    box-shadow: 0 -1px 15px #888888;
+    background-color: #fff;
+    bottom: 0;
+    align-items: center;
+    justify-content: space-between;
+    line-height: 3rem;
+
+
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items:center;
+    -webkit-justify-content:center;
+
+  }
+
+
 
 </style>
 

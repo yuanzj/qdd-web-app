@@ -110,6 +110,15 @@
     </div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
 
+    <div v-if="showInviteLayout">
+      <div class="table-head-title">邀请码<span class="lm-text-red lm-font-sm" style="margin-left: 1rem">{{ inviteSubtractPrice }}</span></div>
+      <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+      <div class="options-container lm-text-text lm-font-second" @click="scanInviteCode">
+        <div style="margin-left: 0.5rem">{{ inviteInfo }}</div><div><img style="width: 25px;height: 25px" src="../assets/icons8-right_4.png"/></div>
+      </div>
+      <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+    </div>
+
     <div class="table-head-title">优惠券<span class="lm-text-red lm-font-sm" style="margin-left: 1rem">{{ subtractPrice }}</span></div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
     <div class="options-container lm-text-text lm-font-second" @click="showCoupon">
@@ -211,6 +220,7 @@
 
 <script>
   import {Indicator, Toast, MessageBox} from 'mint-ui'
+  import { Base64 } from 'js-base64'
   export default {
     name: 'product-detail',
     data () {
@@ -249,7 +259,14 @@
         selectedCouponIndex: -1,
         subtractPrice: null,
         specificationCode: null,
-        canUseCouponCount: 0
+        canUseCouponCount: 0,
+        showInviteLayout: false,
+        inviteSubtractPrice: null,
+        scanModel: 0,
+        inviterPhoneNumber: null,
+        userFee: null,
+        practicalUserFee: 0,
+        inviteInfo: '扫描推荐人二维码名片获取优惠'
       }
     },
     computed: {
@@ -264,12 +281,12 @@
       finalPrice: function () {
         if (this.options && this.options.length > 0) {
           if (this.couponList.length > 0 && this.selectedCouponIndex >= 0) {
-            let lastTotalPrice = (this.options[this.optionValue].price - this.couponList[this.selectedCouponIndex].amount).toFixed(2)
+            let lastTotalPrice = Number((this.options[this.optionValue].price - this.couponList[this.selectedCouponIndex].amount).toFixed(2))
             if (lastTotalPrice > 0) {
               if (this.depositAmount) {
-                return lastTotalPrice + this.depositAmount - this.balance
+                return lastTotalPrice + this.depositAmount - this.balance - this.practicalUserFee
               } else {
-                return lastTotalPrice - this.balance
+                return lastTotalPrice - this.balance - this.practicalUserFee
               }
             } else {
               if (this.depositAmount) {
@@ -281,9 +298,9 @@
           } else {
             let tempPrice = this.options[Number(this.optionValue)].price
             if (this.depositAmount) {
-              return tempPrice + this.depositAmount - this.balance
+              return tempPrice + this.depositAmount - this.balance - this.practicalUserFee
             } else {
-              return tempPrice - this.balance
+              return tempPrice - this.balance - this.practicalUserFee
             }
           }
         } else {
@@ -394,9 +411,29 @@
           Toast('暂无可用优惠券')
         }
       },
+      scanInviteCode () {
+        this.scanModel = 1
+        // JS 调用本地方法完成扫码
+        /* eslint-disable no-undef */
+        if (window.hasOwnProperty('nativeObj')) {
+          nativeObj.scan()
+        } else {
+          window.webkit.messageHandlers.scan.postMessage('')
+        }
+      },
       fillSnFromScan (sn) {
-        this.ccuSn = sn
-        this.addOrder()
+        if (this.scanModel === 0) {
+          this.ccuSn = sn.split(' ')[0]
+          this.addOrder()
+        } else {
+          let temp = Base64.decode(sn.split(' ')[0])
+          if (temp && temp.length === 11) {
+            this.inviterPhoneNumber = temp
+            this.inviteInfo = '优惠' + this.userFee + '元,推荐人：' + this.inviterPhoneNumber
+            this.practicalUserFee = this.userFee
+            this.inviteSubtractPrice = '-' + this.practicalUserFee
+          }
+        }
       },
       loadDeposit () {
         console.log('depositconfigs')
@@ -427,6 +464,18 @@
             console.log(error)
           })
       },
+      loadUserRentStatus () {
+        console.log('depositconfigs')
+        this.axios.get('/api-order/v3.1/rent-orders/rent-status-4-current-user').then((res) => {
+          let data = res.data
+          if (data !== '租赁中' && data !== '租赁过') {
+            this.showInviteLayout = true
+          }
+        })
+          .catch(error => {
+            console.log(error)
+          })
+      },
       loadProductDetail () {
         this.axios.get('/api-order/v3.1/products/' + this.$route.params.id).then((res) => {
           let product = res.data
@@ -438,6 +487,10 @@
             this.inventory = product.inventory
             this.categoryId = product.categoryId
             this.specificationCode = product.specificationCode
+            this.userFee = product.userFee
+            if (this.userFee && this.userFee > 0) {
+              this.loadUserRentStatus()
+            }
           }
         })
           .catch(error => {
@@ -541,6 +594,7 @@
           if (this.fromScanModel && this.ccuSn) {
             this.addOrder()
           } else {
+            this.scanModel = 0
             // JS 调用本地方法完成扫码
             /* eslint-disable no-undef */
             if (window.hasOwnProperty('nativeObj')) {
@@ -561,7 +615,7 @@
         if (this.selectedCouponIndex >= 0) {
           this.couponId = this.couponList[this.selectedCouponIndex].id
         }
-        this.axios.post('/api-order/v3.1/rent-orders/?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn + (this.couponId ? ('&couponId=' + this.couponId) : '') + '&payChannelId=' + this.payOptionValue + '&depositAmount=' + this.depositAmount)
+        this.axios.post('/api-order/v3.1/rent-orders/?' + 'productId=' + this.options[Number(this.optionValue)].id + '&count=' + String(this.count) + '&ccuSn=' + this.ccuSn + (this.couponId ? ('&couponId=' + this.couponId) : '') + '&payChannelId=' + this.payOptionValue + '&depositAmount=' + this.depositAmount + (this.inviterPhoneNumber ? ('&inviterPhoneNumber=' + this.inviterPhoneNumber) : ''))
           .then((res) => {
             console.log(res)
             Indicator.close()
