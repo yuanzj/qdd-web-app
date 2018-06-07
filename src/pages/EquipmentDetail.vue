@@ -74,7 +74,7 @@
           '17': '禁用',
           '34': '启用'
         },
-        guige: this.$route.query.reportTime,
+        guige: this.$route.query.guige,
         storeName: this.$route.query.storeName,
         usedDays: '',
         surplusTime: this.$route.query.surplusTime,

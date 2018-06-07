@@ -558,7 +558,7 @@
               page: 1,
               limit: 20,
               sidx: 'face_value',
-              order: 'asc',
+              order: 'desc',
               parentId: this.$route.params.id
             }
           }

@@ -11,8 +11,6 @@
         <img src="../assets/icons8-replace.png" class="v-button-icon"/>
         <p class="v-button-title" style="color: white">售后换电</p>
       </div>
-      <!--<div class="v-button"></div>-->
-      <!--<div class="v-button"></div>-->
     </div>
     <div style="height: 1rem"></div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
@@ -30,15 +28,27 @@
           <img src="../assets/icons8-search.png" class="v-button-icon"/>
           <p class="v-button-title">电池查询</p>
         </div>
-
         <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
-        <!--<div class="v-button"  @click="orderBattery">-->
-          <!--<img src="../assets/icons8-shopping_cart_loaded.png" class="v-button-icon"/>-->
-          <!--<p class="v-button-title">订货</p>-->
-        <!--</div>-->
         <div class="v-button"  @click="batteryDistribution">
           <img src="../assets/icons8-scan_stock.png" class="v-button-icon"/>
           <p class="v-button-title">电池调拨</p>
+        </div>
+      </div>
+      <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+      <div class="h-buttons-container">
+        <div class="v-button"  @click="overdueOrderList">
+          <img src="../assets/icons8-expired.png" class="v-button-icon"/>
+          <p class="v-button-title">逾期查询</p>
+        </div>
+
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <div class="v-button"  @click="repairList">
+          <img src="../assets/icons8-maintenance.png" class="v-button-icon"/>
+          <p class="v-button-title">售后查询</p>
+        </div>
+
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <div class="v-button" >
         </div>
       </div>
     </div>
@@ -48,6 +58,7 @@
           <img src="../assets/icons8-positive_dynamic.png" class="v-button-icon"/>
           <p class="v-button-title">电池统计</p>
         </div>
+
         <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  @click="search">
           <img src="../assets/icons8-search.png" class="v-button-icon"/>
@@ -58,8 +69,23 @@
           <img src="../assets/icons8-scan_stock.png" class="v-button-icon"/>
           <p class="v-button-title">电池调拨</p>
         </div>
-        <!--<div class="v-button"  >-->
-        <!--</div>-->
+      </div>
+      <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+      <div class="h-buttons-container">
+        <div class="v-button"  @click="overdueOrderList">
+          <img src="../assets/icons8-expired.png" class="v-button-icon"/>
+          <p class="v-button-title">逾期查询</p>
+        </div>
+
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <div class="v-button"  @click="repairList">
+          <img src="../assets/icons8-maintenance.png" class="v-button-icon"/>
+          <p class="v-button-title">售后查询</p>
+        </div>
+
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <div class="v-button" >
+        </div>
       </div>
     </div>
     <div v-else>
@@ -68,37 +94,58 @@
           <img src="../assets/icons8-positive_dynamic.png" class="v-button-icon"/>
           <p class="v-button-title">电池统计</p>
         </div>
+
         <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  @click="search">
           <img src="../assets/icons8-search.png" class="v-button-icon"/>
           <p class="v-button-title">电池查询</p>
         </div>
         <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
-        <div class="v-button"  >
+        <div class="v-button"  @click="batteryDistribution">
+          <img src="../assets/icons8-scan_stock.png" class="v-button-icon"/>
+          <p class="v-button-title">电池调拨</p>
         </div>
-        <!--<div class="v-button"  >-->
-        <!--</div>-->
+      </div>
+      <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+      <div class="h-buttons-container">
+        <div class="v-button"  @click="overdueOrderList">
+          <img src="../assets/icons8-expired.png" class="v-button-icon"/>
+          <p class="v-button-title">逾期查询</p>
+        </div>
+
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <div class="v-button"  @click="repairList">
+          <img src="../assets/icons8-maintenance.png" class="v-button-icon"/>
+          <p class="v-button-title">售后查询</p>
+        </div>
+
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <div class="v-button" >
+        </div>
       </div>
     </div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
 
-    <!--<div v-if="role === 'ADMIN'">-->
-      <!--<div class="table-head-title">财务管理</div>-->
-      <!--<div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>-->
-      <!--<div class="h-buttons-container">-->
+    <div style="height: 1rem"></div>
+    <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+    <div class="table-head-title">财务管理</div>
+    <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+    <div >
+      <div class="h-buttons-container">
 
-        <!--<div class="v-button"  @click="incomeStatistics">-->
-          <!--<img src="../assets/icons8-money.png" class="v-button-icon"/>-->
-          <!--<p class="v-button-title">收益</p>-->
-        <!--</div>-->
-        <!--<div class="v-button"  >-->
-        <!--</div>-->
-        <!--<div class="v-button"  >-->
-        <!--</div>-->
-        <!--<div class="v-button"></div>-->
-      <!--</div>-->
-      <!--<div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>-->
-    <!--</div>-->
+        <div class="v-button"  @click="payOrderList">
+          <img src="../assets/icons8-purchase_order.png" class="v-button-icon"/>
+          <p class="v-button-title">订单查询</p>
+        </div>
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <div class="v-button"  >
+        </div>
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <div class="v-button"  >
+        </div>
+      </div>
+      <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+    </div>
 
     <!--<div class="table-head-title">用户中心</div>-->
     <!--<div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>-->
@@ -253,6 +300,75 @@
           if (this.user) {
             this.$router.push({
               name: 'StoreStatistics',
+              query: {
+                token: this.$store.state.token,
+                firm: this.$store.state.firm,
+                storeId: this.user.storeId
+              }
+            })
+          } else {
+            Toast('用户信息未加载成功，请下拉刷新或重新登录！')
+          }
+        }
+      },
+      overdueOrderList () {
+        if (this.model === 'newPage') {
+          /* eslint-disable no-undef */
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.startNewPage(this.host + 'overdue-order-list?')
+          } else {
+            window.webkit.messageHandlers.startNewPage.postMessage(this.host + 'overdue-order-list?')
+          }
+        } else {
+          if (this.user) {
+            this.$router.push({
+              name: 'OverdueOrderList',
+              query: {
+                token: this.$store.state.token,
+                firm: this.$store.state.firm,
+                storeId: this.user.storeId
+              }
+            })
+          } else {
+            Toast('用户信息未加载成功，请下拉刷新或重新登录！')
+          }
+        }
+      },
+      repairList () {
+        if (this.model === 'newPage') {
+          /* eslint-disable no-undef */
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.startNewPage(this.host + 'repair-list?')
+          } else {
+            window.webkit.messageHandlers.startNewPage.postMessage(this.host + 'repair-list?')
+          }
+        } else {
+          if (this.user) {
+            this.$router.push({
+              name: 'RepairList',
+              query: {
+                token: this.$store.state.token,
+                firm: this.$store.state.firm,
+                storeId: this.user.storeId
+              }
+            })
+          } else {
+            Toast('用户信息未加载成功，请下拉刷新或重新登录！')
+          }
+        }
+      },
+      payOrderList () {
+        if (this.model === 'newPage') {
+          /* eslint-disable no-undef */
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.startNewPage(this.host + 'pay-order-list?')
+          } else {
+            window.webkit.messageHandlers.startNewPage.postMessage(this.host + 'pay-order-list?')
+          }
+        } else {
+          if (this.user) {
+            this.$router.push({
+              name: 'PayOrderList',
               query: {
                 token: this.$store.state.token,
                 firm: this.$store.state.firm,

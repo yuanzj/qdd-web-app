@@ -47,10 +47,16 @@ import OrderBattery from '@/pages/OrderBattery'
 import EquipmentDetail from '@/pages/EquipmentDetail'
 // 资产管理-分配
 import BatteryDistribution from '@/pages/BatteryDistribution'
+// 资产管理-逾期列表
+import OverdueOrderList from '@/pages/OverdueOrderList'
+// 资产管理-售后列表
+import RepairList from '@/pages/RepairList'
 // 财务管理-统计
 import IncomeStatistics from '@/pages/IncomeStatistics'
 // 财务管理-七天收益列表
 import Incomelist from '@/pages/IncomeList'
+// 财务管理-订单查询
+import PayOrderList from '@/pages/PayOrderList'
 // 用户中心-密码设置
 import OpsUserPsw from '@/pages/OpsUserPsw'
 // 用户中心-关于
@@ -179,6 +185,21 @@ export default new Router({
       path: '/ops-about',
       name: 'OpsAbout',
       component: OpsAbout
+    },
+    {
+      path: '/overdue-order-list',
+      name: 'OverdueOrderList',
+      component: OverdueOrderList
+    },
+    {
+      path: '/repair-list',
+      name: 'RepairList',
+      component: RepairList
+    },
+    {
+      path: '/pay-order-list',
+      name: 'PayOrderList',
+      component: PayOrderList
     },
     {
       path: '/rent-battery',
