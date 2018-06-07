@@ -17,6 +17,7 @@
     name: 'overdue-order-list',
     data () {
       return {
+        dealerId: null,
         storeId: null,
         tableData: [],
         columns: [
@@ -71,11 +72,32 @@
       }
     },
     methods: {
+      loadStoreInfo () {
+        Indicator.open('加载中...')
+        this.axios.get('/api-user/v3.1/ebikestores/' + this.storeId).then((res) => {
+          Indicator.close()
+          let data = res.data
+          if (data) {
+            if (data.category === 0 || data.category === 1) {
+              this.dealerId = data.id
+              this.storeId = null
+            }
+            this.loadStatistics()
+          }
+        })
+          .catch(error => {
+            Indicator.close()
+            if (error.data.error) {
+              Toast(error.data.error.msg)
+            }
+          })
+      },
       loadStatistics () {
         Indicator.open('加载中...')
         this.axios.get('/api-ebike/v3.1/ebikes/list?type=4&filterType=2&sort=ue.end_time,desc&limit=999&page=1',
           {
             params: {
+              dealerId: this.dealerId,
               storeId: this.storeId
             }
           }
@@ -124,7 +146,7 @@
         this.storeId = this.$route.query.storeId
       }
 
-      this.loadStatistics()
+      this.loadStoreInfo()
     }
   }
 </script>

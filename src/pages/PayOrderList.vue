@@ -16,6 +16,7 @@
     name: 'pay-order-list',
     data () {
       return {
+        dealerId: null,
         storeId: null,
         tableData: [],
         columns: [
@@ -63,11 +64,32 @@
       }
     },
     methods: {
+      loadStoreInfo () {
+        Indicator.open('加载中...')
+        this.axios.get('/api-user/v3.1/ebikestores/' + this.storeId).then((res) => {
+          Indicator.close()
+          let data = res.data
+          if (data) {
+            if (data.category === 0 || data.category === 1) {
+              this.dealerId = data.id
+              this.storeId = null
+            }
+            this.loadStatistics()
+          }
+        })
+          .catch(error => {
+            Indicator.close()
+            if (error.data.error) {
+              Toast(error.data.error.msg)
+            }
+          })
+      },
       loadStatistics () {
         Indicator.open('加载中...')
         this.axios.get('/api-order/v3.1/product-orders/list?sort=p_o.create_time,desc&status=1&limit=500&page=1',
           {
             params: {
+              dealerId: this.dealerId,
               storeId: this.storeId
             }
           }
@@ -95,7 +117,7 @@
         this.storeId = this.$route.query.storeId
       }
 
-      this.loadStatistics()
+      this.loadStoreInfo()
     }
   }
 </script>
