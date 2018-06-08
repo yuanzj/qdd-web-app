@@ -23,23 +23,29 @@
           {
             field: 'createTime',
             title: '时间',
-            width: 160,
+            width: 90,
             titleAlign: 'center',
             columnAlign: 'center',
-            isResize: true
+            isResize: true,
+            formatter: function (rowData, rowIndex, pagingIndex, field) {
+              return rowData.createTime.substring(5, 16)
+            }
           },
           {
             field: 'ccuSn',
             title: '序列号',
-            width: 100,
+            width: 60,
             titleAlign: 'center',
             columnAlign: 'center',
-            isResize: true
+            isResize: true,
+            formatter: function (rowData, rowIndex, pagingIndex, field) {
+              return '*' + rowData.ccuSn.substring(6, 10)
+            }
           },
           {
             field: 'storeName',
             title: '驿站',
-            width: 80,
+            width: 55,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true
@@ -47,7 +53,7 @@
           {
             field: 'realName',
             title: '用户姓名',
-            width: 70,
+            width: 55,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true
@@ -55,7 +61,7 @@
           {
             field: 'rentAmount',
             title: '金额',
-            width: 60,
+            width: 40,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true

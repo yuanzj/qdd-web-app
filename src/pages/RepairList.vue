@@ -30,7 +30,6 @@
             width: 100,
             titleAlign: 'center',
             columnAlign: 'center',
-            isFrozen: true,
             isResize: true
           },
           {

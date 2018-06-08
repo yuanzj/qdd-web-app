@@ -24,24 +24,26 @@
           {
             field: 'ccuSn',
             title: '序列号',
-            width: 100,
+            width: 50,
             titleAlign: 'center',
             columnAlign: 'center',
-            isFrozen: true,
-            isResize: true
+            isResize: true,
+            formatter: function (rowData, rowIndex, pagingIndex, field) {
+              return '*' + rowData.ccuSn.substring(6, 10)
+            }
           },
-          {
-            field: 'storeName',
-            title: '驿站',
-            width: 70,
-            titleAlign: 'center',
-            columnAlign: 'center',
-            isResize: true
-          },
+          // {
+          //   field: 'storeName',
+          //   title: '驿站',
+          //   width: 60,
+          //   titleAlign: 'center',
+          //   columnAlign: 'center',
+          //   isResize: true
+          // },
           {
             field: 'realname',
-            title: '用户姓名',
-            width: 70,
+            title: '姓名',
+            width: 50,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true,
@@ -52,7 +54,7 @@
           {
             field: 'phoneNumber',
             title: '联系方式',
-            width: 100,
+            width: 95,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true,
@@ -63,10 +65,13 @@
           {
             field: 'surplusTime',
             title: '有效期',
-            width: 150,
+            width: 130,
             titleAlign: 'center',
             columnAlign: 'center',
-            isResize: true
+            isResize: true,
+            formatter: function (rowData, rowIndex, pagingIndex, field) {
+              return rowData.surplusTime.substring(1, rowData.surplusTime.length)
+            }
           }
         ]
       }
