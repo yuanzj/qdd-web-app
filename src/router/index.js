@@ -65,6 +65,12 @@ import OpsAbout from '@/pages/OpsAbout'
 import SearchMain from '@/pages/SearchMain'
 // 分站电池统计
 import StoreStatistics from '@/pages/StoreStatistics'
+// 电量统计
+import VoltageChart from '@/pages/VoltageChart'
+// 里程统计
+import MileageChart from '@/pages/MileageChart'
+// 位置详情
+import LocationMap from '@/pages/LocationMap'
 
 Vue.use(Router)
 
@@ -230,6 +236,21 @@ export default new Router({
       path: '/upgrade-deposit',
       name: 'UpgradeDeposit',
       component: UpgradeDeposit
+    },
+    {
+      path: '/voltage-chart/:ccuSn',
+      name: 'VoltageChart',
+      component: VoltageChart
+    },
+    {
+      path: '/mileage-chart/:ccuSn',
+      name: 'MileageChart',
+      component: MileageChart
+    },
+    {
+      path: '/location-map/:ccuSn',
+      name: 'LocationMap',
+      component: LocationMap
     }
   ]
 })

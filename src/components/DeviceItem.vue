@@ -39,9 +39,34 @@
     <div class="p-desc2">
       更新于 <span class="lm-text-text">{{ reportTime }}</span>
     </div>
-    <div style="width:100%; padding: 1rem">
+    <div style="width:100%; padding: 1rem 1rem 0 1rem">
       <div style="width:100%;height:1px;margin:0 ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
     </div>
+
+    <div class="h-container" style="height: 3.5rem" @click.stop="stopEvent">
+
+      <div style="flex: 1;-webkit-flex: 1;text-align: center" @click="voltageChart">
+        <div class="lm-font-second lm-text-second" >电量统计</div>
+      </div>
+
+      <div style="width: 1px; height: 2rem;background-color: #e2e2e2"></div>
+
+      <div style="flex: 1;-webkit-flex: 1;text-align: center" @click="mileageChart">
+        <div class="lm-font-second lm-text-second">里程统计</div>
+      </div>
+
+      <div style="width: 1px; height: 2rem;background-color: #e2e2e2"></div>
+
+      <div style="flex: 1;-webkit-flex: 1;text-align: center" @click="locationMap">
+        <div class="lm-font-second lm-text-second">位置详情</div>
+      </div>
+
+    </div>
+
+    <div style="width:100%; padding:0 1rem 1rem 1rem">
+      <div style="width:100%;height:1px;margin:0 ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+    </div>
+
     <div class="h-container" @click.stop="stopEvent">
 
       <div style="flex: 1;-webkit-flex: 1;text-align: center" @click="findBattery">
@@ -297,6 +322,75 @@
     },
     methods: {
       stopEvent () {
+      },
+      voltageChart () {
+        if (this.$store.state.enterModel === 'newPage') {
+          /* eslint-disable no-undef */
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.startNewPage('voltage-chart/' + this.ueSn)
+          } else {
+            window.webkit.messageHandlers.startNewPage.postMessage('voltage-chart/' + this.ueSn)
+          }
+        } else {
+          if (this.$store.state.token && this.$store.state.firm) {
+            this.$router.push({
+              name: 'VoltageChart',
+              params: {ccuSn: this.ueSn},
+              query: {
+                token: this.$store.state.token,
+                firm: this.$store.state.firm
+              }
+            })
+          } else {
+            // 提示需要登录
+          }
+        }
+      },
+      mileageChart () {
+        if (this.$store.state.enterModel === 'newPage') {
+          /* eslint-disable no-undef */
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.startNewPage('mileage-chart/' + this.ueSn)
+          } else {
+            window.webkit.messageHandlers.startNewPage.postMessage('mileage-chart/' + this.ueSn)
+          }
+        } else {
+          if (this.$store.state.token && this.$store.state.firm) {
+            this.$router.push({
+              name: 'MileageChart',
+              params: {ccuSn: this.ueSn},
+              query: {
+                token: this.$store.state.token,
+                firm: this.$store.state.firm
+              }
+            })
+          } else {
+            // 提示需要登录
+          }
+        }
+      },
+      locationMap () {
+        if (this.$store.state.enterModel === 'newPage') {
+          /* eslint-disable no-undef */
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.startNewPage('location-map/' + this.ueSn)
+          } else {
+            window.webkit.messageHandlers.startNewPage.postMessage('location-map/' + this.ueSn)
+          }
+        } else {
+          if (this.$store.state.token && this.$store.state.firm) {
+            this.$router.push({
+              name: 'LocationMap',
+              params: {ccuSn: this.ueSn},
+              query: {
+                token: this.$store.state.token,
+                firm: this.$store.state.firm
+              }
+            })
+          } else {
+            // 提示需要登录
+          }
+        }
       },
       findBattery () {
         Indicator.open('寻找电池...')
