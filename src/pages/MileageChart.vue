@@ -22,7 +22,7 @@
         colors: ['#3B9AD9'],
         chartSettings: {
           labelMap: {
-            'miles': '里程'
+            'miles': '里程 (km)'
           }
         },
         chartData: {

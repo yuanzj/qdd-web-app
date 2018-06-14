@@ -238,17 +238,17 @@ export default new Router({
       component: UpgradeDeposit
     },
     {
-      path: '/voltage-chart/:ccuSn',
+      path: '/orders/voltage-chart/:ccuSn',
       name: 'VoltageChart',
       component: VoltageChart
     },
     {
-      path: '/mileage-chart/:ccuSn',
+      path: '/orders/mileage-chart/:ccuSn',
       name: 'MileageChart',
       component: MileageChart
     },
     {
-      path: '/location-map/:ccuSn',
+      path: '/orders/location-map/:ccuSn',
       name: 'LocationMap',
       component: LocationMap
     }

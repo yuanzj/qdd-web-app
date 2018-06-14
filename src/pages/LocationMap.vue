@@ -1,7 +1,7 @@
 <template>
   <div class="container" >
     <div style="width: 100%;flex: 1" id="allmap" ref="allmap"></div>
-    <div class="container-1">
+    <div class="h-btn-container">
       <div class="p-head">
         <div class="p-head-1 lm-text-second">上报时间</div>
         <div class="p-head-2 lm-text-text">{{ reportTime }}</div>
@@ -142,6 +142,15 @@
     width: 100%;
     height: 90px;
     background-color: #fff;
+  }
+
+  .h-btn-container {
+    width: 100%;
+    height: 90px;
+    position: fixed;
+    box-shadow: 0 -1px 15px #888888;
+    background-color: #fff;
+    bottom: 0;
   }
 
 </style>
