@@ -65,12 +65,17 @@
           {
             field: 'surplusTime',
             title: '有效期',
-            width: 130,
+            width: 110,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true,
             formatter: function (rowData, rowIndex, pagingIndex, field) {
-              return rowData.surplusTime.substring(1, rowData.surplusTime.length)
+              let tempIndex = rowData.surplusTime.indexOf('小时')
+              let length = rowData.surplusTime.length
+              if (tempIndex > 0) {
+                length = tempIndex + 2
+              }
+              return rowData.surplusTime.substring(1, length)
             }
           }
         ]

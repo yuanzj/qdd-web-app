@@ -1,8 +1,6 @@
 <template>
   <div class="container">
-    <div class="completed-box">
-      <ve-histogram class="completed" :data="chartData" :settings="chartSettings" :colors="colors"></ve-histogram>
-    </div>
+    <ve-histogram class="completed" :data="chartData" :settings="chartSettings" :colors="colors"></ve-histogram>
   </div>
 </template>
 
@@ -88,10 +86,6 @@
     height: 100vh;
   }
   .completed{
-    text-align: center;
-    top:50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    position: absolute;
+    margin: 1rem 0 0 0;
   }
 </style>

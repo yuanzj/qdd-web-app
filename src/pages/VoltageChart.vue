@@ -1,8 +1,6 @@
 <template>
   <div class="container">
-    <div class="completed-box">
-      <ve-line class="completed" :data="chartData" :data-empty="dataEmpty" :settings="chartSettings" :colors="colors"></ve-line>
-    </div>
+    <ve-line class="completed" :data="chartData" :data-empty="dataEmpty" :settings="chartSettings" :colors="colors"></ve-line>
     <div class="h-btn-container" style="padding: 1rem">
       <div @click="openPicker"  class="action-btn">{{ selectedDate }}</div>
     </div>
@@ -131,11 +129,7 @@
     height: 100vh;
   }
   .completed{
-    text-align: center;
-    top:50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    position: absolute;
+    margin: 1rem 0 0 0;
   }
 
   .h-btn-container {
