@@ -37,19 +37,21 @@ import OpsMain from '@/pages/OpsMain'
 import OpsOrderOps from '@/pages/OpsOrderOps'
 // 运维订单处理步骤页面
 import OpsOrderOpsStep from '@/pages/OpsOrderOpsStep'
-// 资产管理-统计
+// 电池管理-统计
 import BatteryStatistics from '@/pages/BatteryStatistics'
-// 资产管理-设备列表查询
+// 电池管理-设备列表查询
 import Equipmentlist from '@/pages/Equipmentlist'
-// 资产管理-订货
+// 电池管理-订货
 import OrderBattery from '@/pages/OrderBattery'
-// 资产管理-设备详情页面
+// 电池管理-设备详情页面
 import EquipmentDetail from '@/pages/EquipmentDetail'
-// 资产管理-分配
+// 电池管理-分配
 import BatteryDistribution from '@/pages/BatteryDistribution'
-// 资产管理-逾期列表
+// 电池管理-在租查询
+import RentedList from '@/pages/RentedList'
+// 电池管理-逾期列表
 import OverdueOrderList from '@/pages/OverdueOrderList'
-// 资产管理-售后列表
+// 电池管理-售后列表
 import RepairList from '@/pages/RepairList'
 // 财务管理-统计
 import IncomeStatistics from '@/pages/IncomeStatistics'
@@ -57,6 +59,12 @@ import IncomeStatistics from '@/pages/IncomeStatistics'
 import Incomelist from '@/pages/IncomeList'
 // 财务管理-订单查询
 import PayOrderList from '@/pages/PayOrderList'
+// 财务管理-账户余额
+import OpsBalance from '@/pages/OpsBalance'
+// 财务管理-企业账户
+import EnterprisePayAccount from '@/pages/EnterprisePayAccount'
+// 财务管理-收益列表
+import EarningsList from '@/pages/EarningsList'
 // 用户中心-密码设置
 import OpsUserPsw from '@/pages/OpsUserPsw'
 // 用户中心-关于
@@ -193,6 +201,11 @@ export default new Router({
       component: OpsAbout
     },
     {
+      path: '/rented-list',
+      name: 'RentedList',
+      component: RentedList
+    },
+    {
       path: '/overdue-order-list',
       name: 'OverdueOrderList',
       component: OverdueOrderList
@@ -218,9 +231,24 @@ export default new Router({
       component: OrderOpsQRCode
     },
     {
+      path: '/earnings-list',
+      name: 'EarningsList',
+      component: EarningsList
+    },
+    {
+      path: '/enterprise-pay-account',
+      name: 'EnterprisePayAccount',
+      component: EnterprisePayAccount
+    },
+    {
       path: '/user-pay-account',
       name: 'UserPayAccount',
       component: UserPayAccount
+    },
+    {
+      path: '/ops-balance',
+      name: 'OpsBalance',
+      component: OpsBalance
     },
     {
       path: '/balance',

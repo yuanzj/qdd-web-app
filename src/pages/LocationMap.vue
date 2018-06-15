@@ -19,6 +19,7 @@
     name: 'location-map',
     data () {
       return {
+        loadFirst: true,
         IntervalId: null,
         ccuSn: null,
         curMap: null,
@@ -54,10 +55,12 @@
             this.reportTime = this.getDateDiff(data.lastReportTime)
             /* eslint-disable no-undef */
             let ggPoint = new BMap.Point(Number(data.lon), Number(data.lat))
-            let map = new BMap.Map(this.$refs.allmap)
-            map.centerAndZoom(ggPoint, 16)
-            map.enableScrollWheelZoom(true)
-            this.curMap = map
+            if (this.curMap === null) {
+              let map = new BMap.Map(this.$refs.allmap)
+              map.centerAndZoom(ggPoint, 16)
+              map.enableScrollWheelZoom(true)
+              this.curMap = map
+            }
             let convertor = new BMap.Convertor()
             let pointArr = []
             pointArr.push(ggPoint)
