@@ -32,14 +32,14 @@
               return '*' + rowData.ccuSn.substring(6, 10)
             }
           },
-          // {
-          //   field: 'storeName',
-          //   title: '驿站',
-          //   width: 60,
-          //   titleAlign: 'center',
-          //   columnAlign: 'center',
-          //   isResize: true
-          // },
+          {
+            field: 'storeName',
+            title: '驿站',
+            width: 60,
+            titleAlign: 'center',
+            columnAlign: 'center',
+            isResize: true
+          },
           {
             field: 'realname',
             title: '姓名',
@@ -51,21 +51,21 @@
               return rowData.owner.realname
             }
           },
-          {
-            field: 'phoneNumber',
-            title: '联系方式',
-            width: 95,
-            titleAlign: 'center',
-            columnAlign: 'center',
-            isResize: true,
-            formatter: function (rowData, rowIndex, pagingIndex, field) {
-              return rowData.owner.phoneNumber
-            }
-          },
+          // {
+          //   field: 'phoneNumber',
+          //   title: '联系方式',
+          //   width: 95,
+          //   titleAlign: 'center',
+          //   columnAlign: 'center',
+          //   isResize: true,
+          //   formatter: function (rowData, rowIndex, pagingIndex, field) {
+          //     return rowData.owner.phoneNumber
+          //   }
+          // },
           {
             field: 'surplusTime',
             title: '有效期',
-            width: 110,
+            width: 60,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true,

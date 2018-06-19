@@ -404,14 +404,18 @@
           })
       },
       onClickSwitchPower () {
-        if (this.ebikeReportData && this.ebikeReportData.lastReportTime) {
-          if (this.getMinuteDifference(this.ebikeReportData.lastReportTime) > 5) {
-            MessageBox('提示', '电池不在线，请将电池放在室外有移动信号的地方重试！')
-          } else {
-            this.handleChange()
-          }
+        if (this.days < 0) {
+          MessageBox('提示', '您租赁的电池已逾期，请续租后重试！')
         } else {
-          MessageBox('提示', '电池不在线，请将电池放在室外有移动信号的地方重试！')
+          if (this.ebikeReportData && this.ebikeReportData.lastReportTime) {
+            if (this.getMinuteDifference(this.ebikeReportData.lastReportTime) > 5) {
+              MessageBox('提示', '电池不在线，请将电池放在室外有移动信号的地方重试！')
+            } else {
+              this.handleChange()
+            }
+          } else {
+            MessageBox('提示', '电池不在线，请将电池放在室外有移动信号的地方重试！')
+          }
         }
       },
       handleChange () {

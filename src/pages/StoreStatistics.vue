@@ -16,7 +16,7 @@
 
     <div class="h-btn-container" >
       <!--<div @click="withdraw"  class="action-btn">提现</div>-->
-      <span class="bottom-text">总计</span><span class="bottom-text">{{summary.batteryTotalCount}}</span><span class="bottom-text">{{summary.batteryRentedCount}}</span><span class="bottom-text">{{summary.batteryUnusedCount}}</span><span class="bottom-text">{{summary.rentPercent ? summary.rentPercent : '0'}}%</span>
+      <span class="bottom-text-1">总计</span><span class="bottom-text">{{summary.batteryTotalCount}}</span><span class="bottom-text">{{summary.batteryRentedCount}}</span><span class="bottom-text">{{summary.batteryUnusedCount}}</span><span class="bottom-text">{{summary.rentPercent ? summary.rentPercent : '0'}}%</span>
     </div>
   </div>
 </template>
@@ -34,7 +34,7 @@
           {
             field: 'name',
             title: '驿站',
-            width: 60,
+            width: 80,
             titleAlign: 'center',
             columnAlign: 'center',
             isFrozen: true,
@@ -43,7 +43,7 @@
           {
             field: 'batteryTotalCount',
             title: '总电池数',
-            width: 60,
+            width: 50,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true,
@@ -57,7 +57,7 @@
           {
             field: 'batteryRentedCount',
             title: '已租赁数',
-            width: 60,
+            width: 50,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true
@@ -65,7 +65,7 @@
           {
             field: 'batteryUnusedCount',
             title: '待租赁数',
-            width: 60,
+            width: 50,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true
@@ -73,7 +73,7 @@
           {
             field: 'rentPercent',
             title: '租赁率',
-            width: 60,
+            width: 50,
             titleAlign: 'center',
             columnAlign: 'center',
             isResize: true,
@@ -213,6 +213,12 @@
 </script>
 
 <style scoped>
+
+  .bottom-text-1{
+    flex: 1.6;
+    -webkit-flex: 1.6;
+    text-align: center
+  }
 
   .bottom-text{
     flex: 1;

@@ -51,17 +51,17 @@
               return rowData.owner.realname
             }
           },
-          {
-            field: 'phoneNumber',
-            title: '联系方式',
-            width: 95,
-            titleAlign: 'center',
-            columnAlign: 'center',
-            isResize: true,
-            formatter: function (rowData, rowIndex, pagingIndex, field) {
-              return rowData.owner.phoneNumber
-            }
-          },
+          // {
+          //   field: 'phoneNumber',
+          //   title: '联系方式',
+          //   width: 95,
+          //   titleAlign: 'center',
+          //   columnAlign: 'center',
+          //   isResize: true,
+          //   formatter: function (rowData, rowIndex, pagingIndex, field) {
+          //     return rowData.owner.phoneNumber
+          //   }
+          // },
           {
             field: 'surplusTime',
             title: '有效期',
@@ -75,7 +75,7 @@
               if (tempIndex > 0) {
                 length = tempIndex + 2
               }
-              return rowData.surplusTime.substring(1, length)
+              return rowData.surplusTime.substring(0, length)
             }
           }
         ]

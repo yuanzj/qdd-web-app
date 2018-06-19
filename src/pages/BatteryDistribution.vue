@@ -46,7 +46,7 @@
         storeTitle: '请选择门店',
         ccuSn: '',
         dealerId: null,
-        storeId: null,
+        storeId: -1,
         ueID: null,
         result: null,
         showDealerFlag: true
@@ -80,6 +80,11 @@
         }
       },
       scanCode () {
+        if (this.storeId === -1) {
+          MessageBox.alert('请选择门店后重试！', '提示').then(action => {
+          })
+          return
+        }
         // JS 调用本地方法完成扫码
         /* eslint-disable no-undef */
         if (window.hasOwnProperty('nativeObj')) {
@@ -128,8 +133,13 @@
           })
       },
       submit () {
+        if (this.storeId === -1) {
+          MessageBox.alert('请选择门店后重试！', '提示').then(action => {
+          })
+          return
+        }
         Indicator.open('提交中...')
-        this.axios.put('/api-ebike/v3.1/ues/update_storeId?storeId=' + (this.storeId ? this.storeId : this.dealerId) + '&ueId=' + this.ueID).then((res) => {
+        this.axios.put('/api-ebike/v3.1/ues/update_storeId?storeId=' + (this.storeId === 0 ? this.dealerId : this.storeId) + '&ueId=' + this.ueID).then((res) => {
           Indicator.close()
           Toast('分配成功')
           this.result = '分配成功'
@@ -160,6 +170,12 @@
           console.log(res)
           if (res.data) {
             this.slots[0].values = res.data.list
+            if (this.slots[0].values.length > 0) {
+              this.slots[0].values.push({id: 0, name: '无'})
+            } else {
+              this.slots[0].values = []
+              this.slots[0].values.push({id: 0, name: '无'})
+            }
           }
         })
           .catch(error => {

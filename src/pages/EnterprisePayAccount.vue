@@ -10,7 +10,7 @@
       <mt-field label="真实姓名" placeholder="如：张三" v-model="realName"></mt-field>
     </div>
     <div class="lm-font-default lm-text-red" style="margin: 1rem">
-      提现的金额将转账到此支付宝账户，为了您的财产安全请认真填写确认无误后提交。（提现需扣除0.006的支付宝交易手续费）
+      提现的金额将转账到此支付宝账户，为了您的财产安全请认真填写确认无误后提交。
     </div>
 
     <div class="h-btn-container" >
@@ -110,8 +110,7 @@
         if (this.$route.query.token) {
           this.axios.defaults.headers.common['Authorization'] = this.$route.query.token
         }
-        let value = Number(this.$route.query.balance)
-        this.balance = (value - value * 0.006).toFixed(2)
+        this.balance = Number(this.$route.query.balance)
       }
 
       this.getUserPayAccount()
