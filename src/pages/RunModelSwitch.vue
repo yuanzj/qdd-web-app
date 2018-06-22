@@ -1,19 +1,30 @@
 <template>
   <div class="container">
     <div class="completed-box">
+      <!--<div class="completed">-->
+        <!--<input v-model='ccusn' type="text" class="form-control searchResult"-->
+               <!--placeholder="输入序列号" onblur="if(this.placeholder==''){this.placeholder='输入序列号'}"-->
+               <!--onfocus="if(this.placeholder=='输入序列号'){this.placeholder=''}" >-->
+        <!--<mt-button class="mintui mintui-search" style="margin-left: 8px;width: 40px;height: 40px" @click="searchequipment"></mt-button>-->
+      <!--</div>-->
+
     </div>
 
     <div class="h-container">
+      <!--<div style="flex: 1">-->
+      <!--<mt-button type="default" @click="back" style="width: 100%">上一步</mt-button>-->
+      <!--</div>-->
+      <!--<div style="width: 1rem"></div>-->
       <div style="flex: 1">
-        <mt-button type="primary" @click="scanCode" style="width: 100%">扫码查询</mt-button>
+        <mt-button type="primary" @click="scanCode" style="width: 100%">扫码进入充电模式</mt-button>
       </div>
     </div>
   </div>
 </template>
 <script>
-  import {Indicator, Toast} from 'mint-ui'
+  import {Indicator, Toast, MessageBox} from 'mint-ui'
   export default {
-    name: 'search-main',
+    name: 'run-model-switch',
     components: {
     },
     data () {
@@ -33,44 +44,15 @@
       },
       fillSnFromScan (sn) {
         this.ccuSn = sn.split(' ')[0]
-        this.searchEquipment()
+        this.updateRunModel()
       },
-      searchEquipment () {
-        Indicator.open('查询中...')
-        this.axios.get('/api-ebike/v3.1/ebikes/list?sort=ue.status,desc&adminFlag=ss&type=4&storeTypes=0,40&sort=ue.end_time,asc&ccuSn=' + this.ccuSn,
-          {
-            params: {
-              page: 1,
-              limit: 999
-            }
-          }
-        ).then((res) => {
-          Indicator.close()
+      updateRunModel () {
+        Indicator.open('提交中...')
+        this.axios.put('/api-ebike/v3.1/ues/update-run-model-flag?ccuSn=' + this.ccuSn + '&runModel=1&duration=12').then((res) => {
           console.log(res)
-          if (res.data && res.data.list.length > 0) {
-            this.$router.push({
-              name: 'EquipmentDetail',
-              params: {ccusn: res.data.list[0].ccuSn},
-              query: {
-                reportTime: res.data.list[0].reportTime,
-                voltageString: res.data.list[0].voltageString,
-                storeName: res.data.list[0].storeName,
-                usedDays: res.data.list[0].usedDays,
-                surplusTime: res.data.list[0].surplusTime,
-                owner: res.data.list[0].owner,
-                bmsSoc: res.data.list[0].bmsSoc,
-                odo: res.data.list[0].odo,
-                dayOdo: res.data.list[0].dayOdo,
-                guige: res.data.list[0].productEntity.name,
-                gear: res.data.list[0].gear,
-                status: res.data.list[0].status,
-                lon: res.data.list[0].lon,
-                lat: res.data.list[0].lat
-              }
-            })
-          } else {
-            Toast('设备号不存在！')
-          }
+          Indicator.close()
+          MessageBox.alert('操作成功', '提示').then(action => {
+          })
         })
           .catch(error => {
             Indicator.close()
@@ -83,7 +65,7 @@
     },
     mounted () {
       window.productDetail = this
-      document.title = '查询'
+      document.title = '充电模式'
       if (this.$route.query) {
         this.$store.commit('setToken', this.$route.query.token)
         this.$store.commit('setFirm', this.$route.query.firm)
@@ -145,10 +127,10 @@
 
   .h-container {
     width: 100%;
-    background: none;
     height: 3rem;
     padding: 1rem;
     position: fixed;
+    background: none;
     bottom: 1rem;
     display: flex;
     align-items: center;

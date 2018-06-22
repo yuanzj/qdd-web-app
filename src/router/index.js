@@ -53,6 +53,8 @@ import RentedList from '@/pages/RentedList'
 import OverdueOrderList from '@/pages/OverdueOrderList'
 // 电池管理-售后列表
 import RepairList from '@/pages/RepairList'
+// 电池管理-充电模式
+import RunModelSwitch from '@/pages/RunModelSwitch'
 // 财务管理-统计
 import IncomeStatistics from '@/pages/IncomeStatistics'
 // 财务管理-七天收益列表
@@ -214,6 +216,11 @@ export default new Router({
       path: '/repair-list',
       name: 'RepairList',
       component: RepairList
+    },
+    {
+      path: '/run-model-switch',
+      name: 'RunModelSwitch',
+      component: RunModelSwitch
     },
     {
       path: '/pay-order-list',

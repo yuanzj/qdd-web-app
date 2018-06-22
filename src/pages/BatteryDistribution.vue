@@ -139,7 +139,7 @@
           return
         }
         Indicator.open('提交中...')
-        this.axios.put('/api-ebike/v3.1/ues/update_storeId?storeId=' + (this.storeId === 0 ? this.dealerId : this.storeId) + '&ueId=' + this.ueID).then((res) => {
+        this.axios.put('/api-ebike/v3.1/ues/update_storeId?storeId=' + (this.storeId === 0 ? this.dealerId : this.storeId) + '&ueId=' + this.ueID + '&checkPermission=true').then((res) => {
           Indicator.close()
           Toast('分配成功')
           this.result = '分配成功'
@@ -223,6 +223,7 @@
 
   .h-container {
     width: 100%;
+    background: none;
     height: 3rem;
     padding: 1rem;
     position: fixed;

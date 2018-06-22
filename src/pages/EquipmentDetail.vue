@@ -1,63 +1,66 @@
 <template>
-  <div class="container details">
+  <div class="lm-font-default lm-text-text">
 
-    <div>
-
-      <div>
-        序列号：{{ ccuSn }}
-      </div>
-      <div>
-        规格：{{ guige }}
-      </div>
-      <div>
-        网点：{{ storeName }}
-      </div>
-      <div>
-        租期：{{ usedDays }}
-      </div>
-      <div>
-        有效期：{{ surplusTime }}
-      </div>
-      <div>
-        用户姓名：{{ xingming }}
-      </div>
-      <div>
-        联系方式：{{ phoneNumber }}
-      </div>
-      <div>
-        禁用状态：{{gearzt[gear]}}
-      </div>
-      <div v-if="status===3">
-        状态：移动
-      </div>
-      <div v-else>
-        状态：静止
-      </div>
-      <div>
-        电压：{{ voltageString }}V
-      </div>
-      <div>
-        电量：{{ bmsSoc }}%
-      </div>
-      <div>
-        里程：{{ odo }}km
-      </div>
-      <div>
-        今日里程：{{ dayOdo }}km
-      </div>
-      <div>
-        更新时间：{{ reportTime }}
-      </div>
-      <div id="dizhi">
-      </div>
-
-
-
-
-
-
+    <div class="h-container">
+      <div class="lm-text-second" >电池编号</div>
+      <div>{{ ccuSn }}</div>
+    </div>
+    <div class="h-container">
+      <div class="lm-text-second">电池规格</div>
+      <div>{{ guige }}</div>
+    </div>
+    <div class="h-container">
+      <div class="lm-text-second">电池输出</div>
+      <div>{{ gearzt[gear] }}</div>
+    </div>
+    <div class="h-container">
+      <div class="lm-text-second">电池状态</div>
+      <div>{{ status === 3 ? '移动' : '静止' }}</div>
+    </div>
+    <div class="h-container">
+      <div class="lm-text-second">电池电压</div>
+      <div>{{ voltageString }} v</div>
+    </div>
+    <div class="h-container">
+      <div class="lm-text-second">电池电量</div>
+      <div>{{ bmsSoc }} %</div>
+    </div>
+    <div class="h-container">
+      <div class="lm-text-second">总里程</div>
+      <div>{{ odo }} km</div>
+    </div>
+    <div class="h-container">
+      <div class="lm-text-second">今日里程</div>
+      <div>{{ dayOdo }} km</div>
+    </div>
+    <div class="h-container">
+      <div class="lm-text-second">电池位置</div>
+      <div>{{ address }} </div>
+    </div>
+    <div class="h-container">
+      <div class="lm-text-second">更新时间</div>
+      <div>{{ reportTime }} </div>
     </div>
 
+    <div style="height: 1rem"></div>
+
+    <div class="h-container">
+      <div class="lm-text-second">用户姓名</div>
+      <div>{{ xingming }}</div>
+    </div>
+    <div class="h-container">
+      <div class="lm-text-second">联系方式</div>
+      <div>{{ phoneNumber }}</div>
+    </div>
+    <div class="h-container">
+      <div class="lm-text-second">租期</div>
+      <div>{{ usedDays }}</div>
+    </div>
+    <div class="h-container">
+      <div class="lm-text-second">有效期</div>
+      <div >{{ surplusTime  }}</div>
+    </div>
+    <div style="height: 1rem"></div>
 
   </div>
 </template>
@@ -71,8 +74,8 @@
         voltageString: this.$route.query.voltageString,
         gear: this.$route.query.gear,
         gearzt: {
-          '17': '禁用',
-          '34': '启用'
+          '17': '关闭',
+          '34': '开启'
         },
         guige: this.$route.query.guige,
         storeName: this.$route.query.storeName,
@@ -107,22 +110,21 @@
           this.xingming = this.owner.realname
           this.phoneNumber = this.owner.phoneNumber
         }
-        var x = this.x
-        var y = this.y
+        let x = this.x
+        let y = this.y
         /* eslint-disable no-undef */
-        var ggPoint = new BMap.Point(x, y)
-        var convertor = new BMap.Convertor()
-        var geoc = new BMap.Geocoder()
-        var translateCallback = function (data) {
+        let ggPoint = new BMap.Point(x, y)
+        let convertor = new BMap.Convertor()
+        let geoc = new BMap.Geocoder()
+        let translateCallback = (data) => {
           if (data.status === 0) {
-            geoc.getLocation(data.points[0], function (rs) {
-              var addComp = rs.addressComponents
-              var addre = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber
-              document.getElementById('dizhi').innerHTML = '地址：' + addre
+            geoc.getLocation(data.points[0], (rs) => {
+              let addComp = rs.addressComponents
+              this.address = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber
             })
           }
         }
-        var pointArr = []
+        let pointArr = []
         pointArr.push(ggPoint)
         convertor.translate(pointArr, 1, 5, translateCallback)
       },
@@ -145,10 +147,14 @@
   }
 </script>
 <style>
-  .details{
-    font-size: 1rem;
-    line-height: 2.2rem;
+  .h-container {
+    background-color: #ffffff;
+    width: 100%;
+    height: 3rem;
     padding: 1rem;
-
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
+
 </style>

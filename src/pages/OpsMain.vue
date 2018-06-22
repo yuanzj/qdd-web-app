@@ -51,6 +51,19 @@
           <p class="v-button-title">售后查询</p>
         </div>
       </div>
+      <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+      <div class="h-buttons-container">
+        <div class="v-button"  @click="runModelSwitch">
+          <img src="../assets/icons8-charge_battery.png" class="v-button-icon"/>
+          <p class="v-button-title">充电模式</p>
+        </div>
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <div class="v-button"  >
+        </div>
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <div class="v-button"  >
+        </div>
+      </div>
     </div>
     <div v-else-if="role === 'DEALER'">
       <div class="h-buttons-container">
@@ -87,6 +100,19 @@
           <p class="v-button-title">售后查询</p>
         </div>
       </div>
+      <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+      <div class="h-buttons-container">
+        <div class="v-button"  @click="runModelSwitch">
+          <img src="../assets/icons8-charge_battery.png" class="v-button-icon"/>
+          <p class="v-button-title">充电模式</p>
+        </div>
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <div class="v-button"  >
+        </div>
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <div class="v-button"  >
+        </div>
+      </div>
     </div>
     <div v-else>
       <div class="h-buttons-container">
@@ -121,6 +147,19 @@
         <div class="v-button"  @click="repairList">
           <img src="../assets/icons8-maintenance.png" class="v-button-icon"/>
           <p class="v-button-title">售后查询</p>
+        </div>
+      </div>
+      <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
+      <div class="h-buttons-container">
+        <div class="v-button"  @click="runModelSwitch">
+          <img src="../assets/icons8-charge_battery.png" class="v-button-icon"/>
+          <p class="v-button-title">充电模式</p>
+        </div>
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <div class="v-button"  >
+        </div>
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <div class="v-button"  >
         </div>
       </div>
     </div>
@@ -304,6 +343,29 @@
           if (this.user) {
             this.$router.push({
               name: 'StoreStatistics',
+              query: {
+                token: this.$store.state.token,
+                firm: this.$store.state.firm,
+                storeId: this.user.storeId
+              }
+            })
+          } else {
+            Toast('用户信息未加载成功，请下拉刷新或重新登录！')
+          }
+        }
+      },
+      runModelSwitch () {
+        if (this.model === 'newPage') {
+          /* eslint-disable no-undef */
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.startNewPage(this.host + 'run-model-switch?')
+          } else {
+            window.webkit.messageHandlers.startNewPage.postMessage(this.host + 'run-model-switch?')
+          }
+        } else {
+          if (this.user) {
+            this.$router.push({
+              name: 'RunModelSwitch',
               query: {
                 token: this.$store.state.token,
                 firm: this.$store.state.firm,
