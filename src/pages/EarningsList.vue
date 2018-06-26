@@ -56,8 +56,29 @@
       }
     },
     methods: {
-      getPayAccount () {
-        this.axios.get('/api-pay/v3.1/accounts/detail').then((res) => {
+      getUserInfo () {
+        this.axios.get('/api-user/v3.1/users/manager-user-info',
+          {
+            params: {
+              storeId: this.storeId
+            }
+          }).then((res) => {
+            console.log(res)
+            let data = res.data
+            if (data) {
+              this.getPayAccount(data.id)
+            }
+          })
+          .catch(error => {
+            console.log(error)
+          })
+      },
+      getPayAccount (userId) {
+        this.axios.get('/api-pay/v3.1/accounts/info', {
+          params: {
+            userId: userId
+          }
+        }).then((res) => {
           console.log(res)
           let data = res.data
           if (data) {
@@ -104,8 +125,7 @@
         }
         this.storeId = this.$route.query.storeId
       }
-
-      this.getPayAccount()
+      this.getUserInfo()
     }
   }
 </script>

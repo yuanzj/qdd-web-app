@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <div class="h-btn-container" >
+    <div v-if="showWithdraw" class="h-btn-container" >
       <div @click="withdraw"  class="action-btn">提现</div>
     </div>
   </div>
@@ -20,12 +20,50 @@
     name: 'ops-balance',
     data () {
       return {
+        showWithdraw: false,
+        storeId: null,
         unlockBalance: null
       }
     },
     methods: {
-      getPayAccount () {
-        this.axios.get('/api-pay/v3.1/accounts/detail').then((res) => {
+      getCurrentUserInfo () {
+        this.axios.get('/api-user/v3.1/users/detail').then((res) => {
+          console.log(res)
+          let data = res.data
+          if (data) {
+            if (data.storeId != null && Number(data.storeId) === Number(this.storeId)) {
+              this.showWithdraw = true
+            } else {
+              this.showWithdraw = false
+            }
+          }
+        })
+          .catch(error => {
+            console.log(error)
+          })
+      },
+      getUserInfo () {
+        this.axios.get('/api-user/v3.1/users/manager-user-info', {
+          params: {
+            storeId: this.storeId
+          }
+        }).then((res) => {
+          console.log(res)
+          let data = res.data
+          if (data) {
+            this.getPayAccount(data.id)
+          }
+        })
+          .catch(error => {
+            console.log(error)
+          })
+      },
+      getPayAccount (userId) {
+        this.axios.get('/api-pay/v3.1/accounts/info', {
+          params: {
+            userId: userId
+          }
+        }).then((res) => {
           let data = res.data
           if (data) {
             this.unlockBalance = data.unlockBalance
@@ -55,8 +93,9 @@
         if (this.$route.query.token) {
           this.axios.defaults.headers.common['Authorization'] = this.$route.query.token
         }
+        this.storeId = this.$route.query.storeId
       }
-
+      this.getCurrentUserInfo()
       this.getPayAccount()
     }
   }
