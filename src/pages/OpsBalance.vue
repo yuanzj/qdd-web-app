@@ -96,7 +96,7 @@
         this.storeId = this.$route.query.storeId
       }
       this.getCurrentUserInfo()
-      this.getPayAccount()
+      this.getUserInfo()
     }
   }
 </script>
