@@ -75,6 +75,8 @@ import OpsAbout from '@/pages/OpsAbout'
 import SearchMain from '@/pages/SearchMain'
 // 分站电池统计
 import StoreStatistics from '@/pages/StoreStatistics'
+// 帮助
+import OpsHelp from '@/pages/OpsHelp'
 // 电量统计
 import VoltageChart from '@/pages/VoltageChart'
 // 里程统计
@@ -201,6 +203,11 @@ export default new Router({
       path: '/ops-about',
       name: 'OpsAbout',
       component: OpsAbout
+    },
+    {
+      path: '/ops-help',
+      name: 'OpsHelp',
+      component: OpsHelp
     },
     {
       path: '/rented-list',
