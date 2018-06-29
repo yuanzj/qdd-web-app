@@ -23,6 +23,8 @@
         totalIncome: 0,
         dealerId: null,
         storeId: null,
+        loginUserId: null,
+        loginUserStoreId: null,
         tableData: [],
         columns: [
           {
@@ -56,6 +58,54 @@
       }
     },
     methods: {
+      loadStoreInfo () {
+        this.axios.get('/api-user/v3.1/ebikestores/' + this.loginUserStoreId).then((res) => {
+          let data = res.data
+          if (data) {
+            if (data.category === 2 && data.parentId === Number(this.storeId)) {
+              this.getPayAccount(this.loginUserId)
+            } else {
+              this.getUserInfo()
+            }
+          } else {
+            Indicator.close()
+          }
+        })
+          .catch(error => {
+            Indicator.close()
+            if (error.data.error) {
+              Toast(error.data.error.msg)
+            }
+          })
+      },
+      getCurrentUserInfo () {
+        Indicator.open('加载中...')
+        this.axios.get('/api-user/v3.1/users/detail').then((res) => {
+          console.log(res)
+          let data = res.data
+          if (data) {
+            this.loginUserId = data.id
+            this.loginUserStoreId = data.storeId
+            if (data.storeId != null && Number(data.storeId) === Number(this.storeId)) {
+              this.getPayAccount(this.loginUserId)
+            } else {
+              if (this.loginUserStoreId === null) {
+                this.getUserInfo()
+              } else {
+                this.loadStoreInfo()
+              }
+            }
+          } else {
+            Indicator.close()
+          }
+        })
+          .catch(error => {
+            Indicator.close()
+            if (error.data.error) {
+              Toast(error.data.error.msg)
+            }
+          })
+      },
       getUserInfo () {
         this.axios.get('/api-user/v3.1/users/manager-user-info',
           {
@@ -67,10 +117,15 @@
             let data = res.data
             if (data) {
               this.getPayAccount(data.id)
+            } else {
+              Indicator.close()
             }
           })
           .catch(error => {
-            console.log(error)
+            Indicator.close()
+            if (error.data.error) {
+              Toast(error.data.error.msg)
+            }
           })
       },
       getPayAccount (userId) {
@@ -86,14 +141,18 @@
             this.totalIncome = data.totalIncome
             this.accountNo = data.accountNo
             this.accounthistorys()
+          } else {
+            Indicator.close()
           }
         })
           .catch(error => {
-            console.log(error)
+            Indicator.close()
+            if (error.data.error) {
+              Toast(error.data.error.msg)
+            }
           })
       },
       accounthistorys () {
-        Indicator.open('加载中...')
         this.axios.get('/api-pay/v3.1/accounthistorys',
           {
             params: {
@@ -125,7 +184,7 @@
         }
         this.storeId = this.$route.query.storeId
       }
-      this.getUserInfo()
+      this.getCurrentUserInfo()
     }
   }
 </script>

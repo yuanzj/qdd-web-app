@@ -16,30 +16,69 @@
 </template>
 
 <script>
+  import {Indicator, Toast} from 'mint-ui'
   export default {
     name: 'ops-balance',
     data () {
       return {
         showWithdraw: false,
+        loginUserId: null,
+        loginUserStoreId: null,
         storeId: null,
         unlockBalance: null
       }
     },
     methods: {
+      loadStoreInfo () {
+        this.axios.get('/api-user/v3.1/ebikestores/' + this.loginUserStoreId).then((res) => {
+          let data = res.data
+          if (data) {
+            if (data.category === 2 && data.parentId === Number(this.storeId)) {
+              this.showWithdraw = true
+              this.getPayAccount(this.loginUserId)
+            } else {
+              this.showWithdraw = false
+              this.getUserInfo()
+            }
+          } else {
+            Indicator.close()
+          }
+        })
+          .catch(error => {
+            Indicator.close()
+            if (error.data.error) {
+              Toast(error.data.error.msg)
+            }
+          })
+      },
       getCurrentUserInfo () {
+        Indicator.open('加载中...')
         this.axios.get('/api-user/v3.1/users/detail').then((res) => {
           console.log(res)
           let data = res.data
           if (data) {
+            this.loginUserId = data.id
+            this.loginUserStoreId = data.storeId
             if (data.storeId != null && Number(data.storeId) === Number(this.storeId)) {
               this.showWithdraw = true
+              this.getPayAccount(this.loginUserId)
             } else {
-              this.showWithdraw = false
+              if (this.loginUserStoreId === null) {
+                this.showWithdraw = false
+                this.getUserInfo()
+              } else {
+                this.loadStoreInfo()
+              }
             }
+          } else {
+            Indicator.close()
           }
         })
           .catch(error => {
-            console.log(error)
+            Indicator.close()
+            if (error.data.error) {
+              Toast(error.data.error.msg)
+            }
           })
       },
       getUserInfo () {
@@ -52,10 +91,14 @@
           let data = res.data
           if (data) {
             this.getPayAccount(data.id)
+          } else {
+            Indicator.close()
           }
         })
           .catch(error => {
-            console.log(error)
+            if (error.data.error) {
+              Toast(error.data.error.msg)
+            }
           })
       },
       getPayAccount (userId) {
@@ -64,13 +107,17 @@
             userId: userId
           }
         }).then((res) => {
+          Indicator.close()
           let data = res.data
           if (data) {
             this.unlockBalance = data.unlockBalance
           }
         })
           .catch(error => {
-            console.log(error)
+            Indicator.close()
+            if (error.data.error) {
+              Toast(error.data.error.msg)
+            }
           })
       },
       withdraw () {
@@ -96,7 +143,6 @@
         this.storeId = this.$route.query.storeId
       }
       this.getCurrentUserInfo()
-      this.getUserInfo()
     }
   }
 </script>
