@@ -76,7 +76,10 @@
 
 <script>
   export default {
-    name: 'OpsHelp'
+    name: 'OpsHelp',
+    mounted () {
+      document.title = '帮助'
+    }
   }
 </script>
 

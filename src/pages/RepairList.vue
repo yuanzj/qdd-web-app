@@ -1,25 +1,50 @@
 <template>
-  <v-table
-    is-vertical-resize
-    style="width:100%"
-    is-horizontal-resize
-    :min-height='200'
-    :columns="columns"
-    :table-data="tableData"
-    :show-vertical-border="false"
-    :row-click='showDetails'
-    @on-custom-comp="customCompFunc"
-  ></v-table>
+  <div>
+    <v-table
+      is-vertical-resize
+      style="width:100%"
+      is-horizontal-resize
+      :min-height='200'
+      :columns="columns"
+      :table-data="tableData"
+      :show-vertical-border="false"
+      :row-click='showDetails'
+      @on-custom-comp="customCompFunc"
+    ></v-table>
+    <mt-popup
+      v-model="popupVisible"
+      popup-transition="popup-fade">
+      <div  style="width: 300px;background-color: white">
+        <div class="mint-msgbox-header">
+          <div class="mint-msgbox-title">编辑</div>
+        </div>
+        <div class="mint-msgbox-content">
+          <div class="mint-msgbox-input">
+            <input v-model="inputValue" :placeholder="inputPlaceholder" style="height: 33px">
+          </div>
+        </div>
+        <div class="mint-msgbox-btns" style="padding: 1rem;height: 65px">
+          <mt-button type="primary" size="small" style="flex: 1" @click.native="opsAffirm">确认</mt-button>
+          <mt-button type="default" size="small" style="flex: 1;margin-left: 1rem" @click.native="opsCancel">取消</mt-button>
+          <mt-button type="danger" size="small" style="flex: 1;margin-left: 1rem" @click.native="opsDelete">删除</mt-button>
+        </div>
+      </div>
+    </mt-popup>
+  </div>
+
 </template>
 
 <script>
   import Vue from 'vue'
-  import {Indicator, Toast, MessageBox} from 'mint-ui'
-
+  import {Indicator, Toast} from 'mint-ui'
   export default {
     name: 'overdue-order-list',
     data () {
       return {
+        inputValue: null,
+        params: null,
+        inputPlaceholder: '请填写售后原因',
+        popupVisible: false,
         dealerId: null,
         storeId: null,
         tableData: [],
@@ -64,6 +89,15 @@
       }
     },
     methods: {
+      opsAffirm () {
+        this.updateAfterSaleFlag(this.params)
+      },
+      opsCancel () {
+        this.popupVisible = false
+      },
+      opsDelete () {
+        this.deleteAfterSaleFlag(this.params)
+      },
       loadStoreInfo () {
         Indicator.open('加载中...')
         this.axios.get('/api-user/v3.1/ebikestores/' + this.storeId).then((res) => {
@@ -130,9 +164,13 @@
         console.log(params)
         if (params.type === 'edit') {
           // do edit operation
-          MessageBox.confirm('确定取消' + params.rowData.ccuSn + '售后标识?').then(action => {
-            this.deleteAfterSaleFlag(params)
-          })
+          this.params = params
+          this.popupVisible = true
+          if (this.params.rowData.afterSaleReason) {
+            this.inputValue = this.params.rowData.afterSaleReason
+          } else {
+            this.inputValue = null
+          }
         }
       },
       deleteAfterSaleFlag (params) {
@@ -140,12 +178,34 @@
         this.axios.put('/api-ebike/v3.1/ues/update-after-sale-flag?ccuSn=' + params.rowData.ccuSn + '&afterSaleFlag=0').then((res) => {
           Indicator.close()
           this.loadStatistics()
+          this.popupVisible = false
         })
           .catch(error => {
             Indicator.close()
             if (error.data.error) {
               Toast(error.data.error.msg)
             }
+            this.popupVisible = false
+          })
+      },
+      updateAfterSaleFlag (params) {
+        if (this.inputValue === null || this.inputValue === '') {
+          this.popupVisible = false
+          Toast('请输入售后原因')
+          return
+        }
+        Indicator.open('更新中...')
+        this.axios.put('/api-ebike/v3.1/ues/update-after-sale-flag?ccuSn=' + params.rowData.ccuSn + '&afterSaleFlag=1&afterSaleReason=' + this.inputValue).then((res) => {
+          Indicator.close()
+          this.loadStatistics()
+          this.popupVisible = false
+        })
+          .catch(error => {
+            Indicator.close()
+            if (error.data.error) {
+              Toast(error.data.error.msg)
+            }
+            this.popupVisible = false
           })
       }
     },
@@ -192,5 +252,6 @@
 </script>
 
 <style scoped>
+
 
 </style>
