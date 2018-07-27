@@ -41,7 +41,7 @@
                 type="radio"
                 v-model="depositAmount"
                 :disabled="option.disabled"
-                :value="option.value || option">
+                :value="option.value">
               <span class="mint-radio-core"></span>
             </span>
             <span class="mint-radio-label" v-text="option.amount + '元'"></span>
