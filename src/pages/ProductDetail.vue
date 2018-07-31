@@ -376,6 +376,14 @@
           })
           this.canUseCouponCount = temCanUseCouponCount
         }
+        if (this.orderId) {
+          if (this.$route.query.noDeposit) {
+            this.loadDeposit(this.options[this.optionValue].configId)
+          }
+        } else {
+          // 获取押金
+          this.loadDeposit(this.options[this.optionValue].configId)
+        }
       }
     },
     methods: {
@@ -435,12 +443,13 @@
           }
         }
       },
-      loadDeposit () {
+      loadDeposit (configId) {
         console.log('depositconfigs')
         this.axios.get('/api-order/v3.1/depositconfigs?sort=amount,asc',
           {
             params: {
-              productId: this.$route.params.id
+              productId: this.$route.params.id,
+              configId: configId
             }
           }
         ).then((res) => {
@@ -733,7 +742,7 @@
           document.title = '补缴欠费'
         }
         if (this.$route.query.noDeposit) {
-          this.loadDeposit()
+          // this.loadDeposit()
         }
       } else {
         document.title = '产品详情'
@@ -741,7 +750,7 @@
           this.fromScanModel = true
         }
         // 获取押金
-        this.loadDeposit()
+        // this.loadDeposit()
       }
       this.loadSolutionList()
       this.loadProductDetail()
