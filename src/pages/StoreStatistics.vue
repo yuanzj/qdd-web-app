@@ -86,7 +86,6 @@
     },
     methods: {
       loadTotalStatistics () {
-        Indicator.open('加载中...')
         this.axios.get('/api-user/v3.1/ebikestores/list-4-manager?category=1&showFlag=0&sort=code,asc&model=list&limit=100&page=1&showTotalStatistics=true&id=' + this.storeId,
           {
             params: {
@@ -115,8 +114,6 @@
             }
           }
         ).then((res) => {
-          Indicator.close()
-          console.log(res.data)
           if (res.data.list && res.data.list.length > 0) {
             this.tableData = res.data.list.sort(function (x, y) {
               if (x.batteryRentedCount < y.batteryRentedCount) {
@@ -127,6 +124,9 @@
               }
               return 0
             })
+            this.loadTotalStatistics()
+          } else {
+            Indicator.close()
           }
         })
           .catch(error => {
@@ -182,7 +182,6 @@
       }
       if (this.storeId) {
         this.loadStatistics()
-        this.loadTotalStatistics()
       } else {
         this.loadoPtions()
       }
