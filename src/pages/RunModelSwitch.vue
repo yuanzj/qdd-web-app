@@ -16,7 +16,7 @@
       <!--</div>-->
       <!--<div style="width: 1rem"></div>-->
       <div style="flex: 1">
-        <mt-button type="primary" @click="scanCode" style="width: 100%">扫码进入充电模式</mt-button>
+        <mt-button type="primary" @click="scanCode" style="width: 100%">扫码进入租前充电</mt-button>
       </div>
     </div>
   </div>
@@ -65,7 +65,7 @@
     },
     mounted () {
       window.productDetail = this
-      document.title = '充电模式'
+      document.title = '租前充电'
       if (this.$route.query) {
         this.$store.commit('setToken', this.$route.query.token)
         this.$store.commit('setFirm', this.$route.query.firm)

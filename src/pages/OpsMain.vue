@@ -14,24 +14,24 @@
     </div>
     <div style="height: 1rem"></div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
-    <div class="table-head-title">电池管理</div>
+    <div class="table-head-title">设备管理</div>
     <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
     <div v-if="role === 'ADMIN'">
       <div class="h-buttons-container">
         <div class="v-button"  @click="batteryStatistics">
           <img src="../assets/icons8-positive_dynamic.png" class="v-button-icon"/>
-          <p class="v-button-title">电池统计</p>
+          <p class="v-button-title">设备统计</p>
         </div>
 
         <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  @click="search">
           <img src="../assets/icons8-search.png" class="v-button-icon"/>
-          <p class="v-button-title">电池查询</p>
+          <p class="v-button-title">设备查询</p>
         </div>
         <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  @click="batteryDistribution">
           <img src="../assets/icons8-scan_stock.png" class="v-button-icon"/>
-          <p class="v-button-title">电池调拨</p>
+          <p class="v-button-title">设备调拨</p>
         </div>
       </div>
       <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
@@ -55,7 +55,7 @@
       <div class="h-buttons-container">
         <div class="v-button"  @click="runModelSwitch">
           <img src="../assets/icons8-charge_battery.png" class="v-button-icon"/>
-          <p class="v-button-title">充电模式</p>
+          <p class="v-button-title">租前充电</p>
         </div>
         <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  >
@@ -69,18 +69,18 @@
       <div class="h-buttons-container">
         <div class="v-button"  @click="batteryStatistics">
           <img src="../assets/icons8-positive_dynamic.png" class="v-button-icon"/>
-          <p class="v-button-title">电池统计</p>
+          <p class="v-button-title">设备统计</p>
         </div>
 
         <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  @click="search">
           <img src="../assets/icons8-search.png" class="v-button-icon"/>
-          <p class="v-button-title">电池查询</p>
+          <p class="v-button-title">设备查询</p>
         </div>
         <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  @click="batteryDistribution">
           <img src="../assets/icons8-scan_stock.png" class="v-button-icon"/>
-          <p class="v-button-title">电池调拨</p>
+          <p class="v-button-title">设备调拨</p>
         </div>
       </div>
       <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
@@ -104,7 +104,7 @@
       <div class="h-buttons-container">
         <div class="v-button"  @click="runModelSwitch">
           <img src="../assets/icons8-charge_battery.png" class="v-button-icon"/>
-          <p class="v-button-title">充电模式</p>
+          <p class="v-button-title">租前充电</p>
         </div>
         <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  >
@@ -118,18 +118,18 @@
       <div class="h-buttons-container">
         <div class="v-button"  @click="batteryStatistics">
           <img src="../assets/icons8-positive_dynamic.png" class="v-button-icon"/>
-          <p class="v-button-title">电池统计</p>
+          <p class="v-button-title">设备统计</p>
         </div>
 
         <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  @click="search">
           <img src="../assets/icons8-search.png" class="v-button-icon"/>
-          <p class="v-button-title">电池查询</p>
+          <p class="v-button-title">设备查询</p>
         </div>
         <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  @click="batteryDistribution">
           <img src="../assets/icons8-scan_stock.png" class="v-button-icon"/>
-          <p class="v-button-title">电池调拨</p>
+          <p class="v-button-title">设备调拨</p>
         </div>
       </div>
       <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
@@ -153,7 +153,7 @@
       <div class="h-buttons-container">
         <div class="v-button"  @click="runModelSwitch">
           <img src="../assets/icons8-charge_battery.png" class="v-button-icon"/>
-          <p class="v-button-title">充电模式</p>
+          <p class="v-button-title">租前充电</p>
         </div>
         <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  >

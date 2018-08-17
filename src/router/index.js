@@ -53,7 +53,7 @@ import RentedList from '@/pages/RentedList'
 import OverdueOrderList from '@/pages/OverdueOrderList'
 // 电池管理-售后列表
 import RepairList from '@/pages/RepairList'
-// 电池管理-充电模式
+// 电池管理-租前充电
 import RunModelSwitch from '@/pages/RunModelSwitch'
 // 财务管理-统计
 import IncomeStatistics from '@/pages/IncomeStatistics'
