@@ -8,6 +8,11 @@
         <!--<mt-button class="mintui mintui-search" style="margin-left: 8px;width: 40px;height: 40px" @click="searchequipment"></mt-button>-->
       <!--</div>-->
 
+    <div v-if="showTips" class="lm-font-default" style="padding: 1rem; word-break: break-all;word-wrap: break-word;">
+     每台电池<span class="lm-text-text lm-font-head">30天内</span>只能进入充电模式<span class="lm-text-text lm-font-head">一次</span>，充电模式只有<span class="lm-text-text lm-font-head">两个小时</span>的持续时间开启后请及时充电。<br><br>
+      如需多次进入充电模式请联系雷小电管理员。
+    </div>
+
     </div>
 
     <div class="h-container">
@@ -29,10 +34,32 @@
     },
     data () {
       return {
+        storeId: null,
+        showTips: false,
         ccuSn: ''
       }
     },
     methods: {
+      loadStoreInfo () {
+        Indicator.open('加载中...')
+        this.axios.get('/api-user/v3.1/ebikestores/' + this.storeId).then((res) => {
+          Indicator.close()
+          let data = res.data
+          if (data) {
+            if (data.type === 70) {
+              this.showTips = false
+            } else {
+              this.showTips = true
+            }
+          }
+        })
+          .catch(error => {
+            Indicator.close()
+            if (error.data.error) {
+              Toast(error.data.error.msg)
+            }
+          })
+      },
       scanCode () {
         // JS 调用本地方法完成扫码
         /* eslint-disable no-undef */
@@ -48,7 +75,7 @@
       },
       updateRunModel () {
         Indicator.open('提交中...')
-        this.axios.put('/api-ebike/v3.1/ues/update-run-model-flag?ccuSn=' + this.ccuSn + '&runModel=1&duration=12').then((res) => {
+        this.axios.put('/api-ebike/v3.1/ues/update-run-model-flag?ccuSn=' + this.ccuSn + '&runModel=1&duration=2').then((res) => {
           console.log(res)
           Indicator.close()
           MessageBox.alert('操作成功', '提示').then(action => {
@@ -71,6 +98,11 @@
         this.$store.commit('setFirm', this.$route.query.firm)
         this.axios.defaults.headers.common['firm'] = this.$route.query.firm
         this.axios.defaults.headers.common['Authorization'] = this.$route.query.token
+        this.storeId = this.$route.query.storeId
+      }
+
+      if (this.storeId) {
+        this.loadStoreInfo()
       }
     }
   }
@@ -78,8 +110,11 @@
 <style scoped>
   .completed-box{
     width: 100%;
-    position: relative;
+    display: flex;
+    display: -webkit-flex;
     height: 100vh;
+    justify-content:center;
+    align-items: center;
   }
   .completed{
     text-align: center;
