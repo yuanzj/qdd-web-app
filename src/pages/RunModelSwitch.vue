@@ -9,7 +9,7 @@
       <!--</div>-->
 
     <div v-if="showTips" class="lm-font-default" style="padding: 1rem; word-break: break-all;word-wrap: break-word;">
-     每台电池<span class="lm-text-text lm-font-head">30天内</span>只能进入充电模式<span class="lm-text-text lm-font-head">一次</span>，充电模式只有<span class="lm-text-text lm-font-head">两个小时</span>的持续时间开启后请及时充电。<br><br>
+     每台电池<span class="lm-text-text lm-font-head">15天内</span>只能进入充电模式<span class="lm-text-text lm-font-head">一次</span>，充电模式只有<span class="lm-text-text lm-font-head">4个小时</span>的持续时间开启后请及时充电。<br><br>
       如需多次进入充电模式请联系雷小电管理员。
     </div>
 
@@ -75,7 +75,7 @@
       },
       updateRunModel () {
         Indicator.open('提交中...')
-        this.axios.put('/api-ebike/v3.1/ues/update-run-model-flag?ccuSn=' + this.ccuSn + '&runModel=1&duration=2').then((res) => {
+        this.axios.put('/api-ebike/v3.1/ues/update-run-model-flag?ccuSn=' + this.ccuSn + '&runModel=1&duration=4').then((res) => {
           console.log(res)
           Indicator.close()
           MessageBox.alert('操作成功', '提示').then(action => {

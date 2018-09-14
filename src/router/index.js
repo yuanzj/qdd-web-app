@@ -51,6 +51,10 @@ import BatteryDistribution from '@/pages/BatteryDistribution'
 import RentedList from '@/pages/RentedList'
 // 电池管理-逾期列表
 import OverdueOrderList from '@/pages/OverdueOrderList'
+// 电池管理-欠压列表
+import UndervoltageList from '@/pages/UndervoltageList'
+// 电池管理-离线列表
+import OfflineList from '@/pages/OfflineList'
 // 电池管理-售后列表
 import RepairList from '@/pages/RepairList'
 // 电池管理-租前充电
@@ -218,6 +222,16 @@ export default new Router({
       path: '/overdue-order-list',
       name: 'OverdueOrderList',
       component: OverdueOrderList
+    },
+    {
+      path: '/undervoltage-list',
+      name: 'UndervoltageList',
+      component: UndervoltageList
+    },
+    {
+      path: '/offline-list',
+      name: 'OfflineList',
+      component: OfflineList
     },
     {
       path: '/repair-list',

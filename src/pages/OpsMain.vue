@@ -53,15 +53,19 @@
       </div>
       <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
       <div class="h-buttons-container">
+        <div class="v-button"  @click="undervoltageList">
+          <img src="../assets/icons8-electrical_threshold.png" class="v-button-icon"/>
+          <p class="v-button-title">欠压查询</p>
+        </div>
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <div class="v-button"  @click="offlineList">
+          <img src="../assets/icons8-offline.png" class="v-button-icon"/>
+          <p class="v-button-title">离线查询</p>
+        </div>
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  @click="runModelSwitch">
           <img src="../assets/icons8-charge_battery.png" class="v-button-icon"/>
           <p class="v-button-title">租前充电</p>
-        </div>
-        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
-        <div class="v-button"  >
-        </div>
-        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
-        <div class="v-button"  >
         </div>
       </div>
     </div>
@@ -102,15 +106,19 @@
       </div>
       <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
       <div class="h-buttons-container">
+        <div class="v-button"  @click="undervoltageList">
+          <img src="../assets/icons8-electrical_threshold.png" class="v-button-icon"/>
+          <p class="v-button-title">欠压查询</p>
+        </div>
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <div class="v-button"  @click="offlineList">
+          <img src="../assets/icons8-offline.png" class="v-button-icon"/>
+          <p class="v-button-title">离线查询</p>
+        </div>
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  @click="runModelSwitch">
           <img src="../assets/icons8-charge_battery.png" class="v-button-icon"/>
           <p class="v-button-title">租前充电</p>
-        </div>
-        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
-        <div class="v-button"  >
-        </div>
-        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
-        <div class="v-button"  >
         </div>
       </div>
     </div>
@@ -151,15 +159,19 @@
       </div>
       <div style="width:100%;height:1px;margin:0px ;autopadding:0px;background-color:#E0E0E0;overflow:hidden"></div>
       <div class="h-buttons-container">
+        <div class="v-button"  @click="undervoltageList">
+          <img src="../assets/icons8-electrical_threshold.png" class="v-button-icon"/>
+          <p class="v-button-title">欠压查询</p>
+        </div>
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
+        <div class="v-button"  @click="offlineList">
+          <img src="../assets/icons8-offline.png" class="v-button-icon"/>
+          <p class="v-button-title">离线查询</p>
+        </div>
+        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
         <div class="v-button"  @click="runModelSwitch">
           <img src="../assets/icons8-charge_battery.png" class="v-button-icon"/>
           <p class="v-button-title">租前充电</p>
-        </div>
-        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
-        <div class="v-button"  >
-        </div>
-        <div style="width: 1px; height: 100%;background-color: #e2e2e2"></div>
-        <div class="v-button"  >
         </div>
       </div>
     </div>
@@ -412,6 +424,52 @@
           if (this.user) {
             this.$router.push({
               name: 'OverdueOrderList',
+              query: {
+                token: this.$store.state.token,
+                firm: this.$store.state.firm,
+                storeId: this.user.storeId
+              }
+            })
+          } else {
+            Toast('用户信息未加载成功，请下拉刷新或重新登录！')
+          }
+        }
+      },
+      undervoltageList () {
+        if (this.model === 'newPage') {
+          /* eslint-disable no-undef */
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.startNewPage(this.host + 'undervoltage-list?')
+          } else {
+            window.webkit.messageHandlers.startNewPage.postMessage(this.host + 'undervoltage-list?')
+          }
+        } else {
+          if (this.user) {
+            this.$router.push({
+              name: 'UndervoltageList',
+              query: {
+                token: this.$store.state.token,
+                firm: this.$store.state.firm,
+                storeId: this.user.storeId
+              }
+            })
+          } else {
+            Toast('用户信息未加载成功，请下拉刷新或重新登录！')
+          }
+        }
+      },
+      offlineList () {
+        if (this.model === 'newPage') {
+          /* eslint-disable no-undef */
+          if (window.hasOwnProperty('nativeObj')) {
+            nativeObj.startNewPage(this.host + 'offline-list?')
+          } else {
+            window.webkit.messageHandlers.startNewPage.postMessage(this.host + 'offline-list?')
+          }
+        } else {
+          if (this.user) {
+            this.$router.push({
+              name: 'OfflineList',
               query: {
                 token: this.$store.state.token,
                 firm: this.$store.state.firm,
