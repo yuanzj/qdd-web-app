@@ -100,9 +100,9 @@
           })
       },
       loadStatistics () {
-        // http://cjl3.rokyinfo.net:7200/api-ebike/v3.1/ebikes/list?type=4&categories=1,2&exceptionFlag=1&bmsExceptionReason=0&sort=ebike.report_time,asc&limit=100&page=1
+        // http://cjl3.rokyinfo.net:7200/api-ebike/v3.1/ebikes/list?categories=1,2&exceptionFlag=1&bmsExceptionReason=0&sort=ebike.report_time,asc&limit=100&page=1
         Indicator.open('加载中...')
-        this.axios.get('/api-ebike/v3.1/ebikes/list?type=4&exceptionFlag=1&bmsExceptionReason=0&sort=ebike.report_time,asc&limit=1000&page=1',
+        this.axios.get('/api-ebike/v3.1/ebikes/list?exceptionFlag=1&bmsExceptionReason=0&sort=ebike.report_time,asc&limit=1000&page=1',
           {
             params: {
               dealerId: this.dealerId,

@@ -37,7 +37,7 @@
       },
       searchEquipment () {
         Indicator.open('查询中...')
-        this.axios.get('/api-ebike/v3.1/ebikes/list?sort=ue.status,desc&adminFlag=ss&type=4&storeTypes=0,40&sort=ue.end_time,asc&ccuSn=' + this.ccuSn,
+        this.axios.get('/api-ebike/v3.1/ebikes/list?sort=ue.status,desc&adminFlag=ss&storeTypes=0,40&sort=ue.end_time,asc&ccuSn=' + this.ccuSn,
           {
             params: {
               page: 1,

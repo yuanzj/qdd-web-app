@@ -215,7 +215,7 @@
         this.$refs.loadmore.onBottomLoaded()// 固定方法，查询完要调用一次，用于重新定位
       },
       loadProductList () {
-        this.axios.get('/api-ebike/v3.1/ebikes/list?sort=ue.status,desc&adminFlag=ss&type=4&storeTypes=0,40&sort=ue.end_time,asc',
+        this.axios.get('/api-ebike/v3.1/ebikes/list?sort=ue.status,desc&adminFlag=ss&storeTypes=0,40&sort=ue.end_time,asc',
           {
             params: {
               page: 1,
@@ -226,7 +226,7 @@
           this.$refs.loadmore.onTopLoaded()
           this.tableData = res.data.list
           this.totaltablenum = res.data.totalCount
-          this.url = '/api-ebike/v3.1/ebikes/list?sort=ue.status,desc&adminFlag=ss&type=4&storeTypes=0,40&sort=ue.end_time,asc'
+          this.url = '/api-ebike/v3.1/ebikes/list?sort=ue.status,desc&adminFlag=ss&storeTypes=0,40&sort=ue.end_time,asc'
         })
           .catch(error => {
             this.$refs.loadmore.onTopLoaded()
@@ -251,7 +251,7 @@
           })
       },
       searchCcusn () {
-        this.axios.get('/api-ebike/v3.1/ebikes/list?sort=ue.status,desc&adminFlag=ss&type=4&storeTypes=0,40&sort=ue.end_time,asc&ccuSn=' + this.ccsn,
+        this.axios.get('/api-ebike/v3.1/ebikes/list?sort=ue.status,desc&adminFlag=ss&storeTypes=0,40&sort=ue.end_time,asc&ccuSn=' + this.ccsn,
           {
             params: {
               page: 1,
@@ -283,7 +283,7 @@
       },
       searchgg () {
         if (this.selected2 === '0') {
-          this.axios.get('/api-ebike/v3.1/ebikes/list?sort=ue.status,desc&adminFlag=ss&type=4&storeTypes=0,40&sort=ue.end_time,asc&province=' + this.user.xtrysf + '&city=' + this.user.xtrycs + '&county=' + this.user.xtryq,
+          this.axios.get('/api-ebike/v3.1/ebikes/list?sort=ue.status,desc&adminFlag=ss&storeTypes=0,40&sort=ue.end_time,asc&province=' + this.user.xtrysf + '&city=' + this.user.xtrycs + '&county=' + this.user.xtryq,
             {
               params: {
                 page: 1,
@@ -295,14 +295,14 @@
             this.tableData = res.data.list
             this.pageIndex = 1
             this.totaltablenum = res.data.totalCount
-            this.url = '/api-ebike/v3.1/ebikes/list?sort=ue.status,desc&adminFlag=ss&type=4&storeTypes=0,40&sort=ue.end_time,asc&province=' + this.user.xtrysf + '&city=' + this.user.xtrycs + '&county=' + this.user.xtryq
+            this.url = '/api-ebike/v3.1/ebikes/list?sort=ue.status,desc&adminFlag=ss&storeTypes=0,40&sort=ue.end_time,asc&province=' + this.user.xtrysf + '&city=' + this.user.xtrycs + '&county=' + this.user.xtryq
           })
             .catch(error => {
               this.$refs.loadmore.onTopLoaded()
               console.log(error)
             })
         } else {
-          this.axios.get('/api-ebike/v3.1/ebikes/list?sort=ue.status,desc&adminFlag=ss&type=4&storeTypes=0,40&sort=ue.end_time,asc&province=' + this.user.xtrysf + '&city=' + this.user.xtrycs + '&county=' + this.user.xtryq + '&&productId=' + this.selected2,
+          this.axios.get('/api-ebike/v3.1/ebikes/list?sort=ue.status,desc&adminFlag=ss&storeTypes=0,40&sort=ue.end_time,asc&province=' + this.user.xtrysf + '&city=' + this.user.xtrycs + '&county=' + this.user.xtryq + '&&productId=' + this.selected2,
             {
               params: {
                 page: 1,
@@ -314,7 +314,7 @@
             this.tableData = res.data.list
             this.pageIndex = 1
             this.totaltablenum = res.data.totalCount
-            this.url = '/api-ebike/v3.1/ebikes/list?sort=ue.status,desc&adminFlag=ss&type=4&storeTypes=0,40&sort=ue.end_time,asc&province=' + this.user.xtrysf + '&city=' + this.user.xtrycs + '&county=' + this.user.xtryq + '&&productId=' + this.selected2
+            this.url = '/api-ebike/v3.1/ebikes/list?sort=ue.status,desc&adminFlag=ss&storeTypes=0,40&sort=ue.end_time,asc&province=' + this.user.xtrysf + '&city=' + this.user.xtrycs + '&county=' + this.user.xtryq + '&&productId=' + this.selected2
           })
             .catch(error => {
               this.$refs.loadmore.onTopLoaded()

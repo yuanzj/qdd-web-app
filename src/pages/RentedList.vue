@@ -104,7 +104,7 @@
       },
       loadStatistics () {
         Indicator.open('加载中...')
-        this.axios.get('/api-ebike/v3.1/ebikes/list?type=4&filterType=1&sort=ue.end_time,desc&limit=999&page=1',
+        this.axios.get('/api-ebike/v3.1/ebikes/list?filterType=1&sort=ue.end_time,desc&limit=999&page=1',
           {
             params: {
               dealerId: this.dealerId,
