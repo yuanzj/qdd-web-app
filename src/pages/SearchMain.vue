@@ -25,7 +25,9 @@
       scanCode () {
         // JS 调用本地方法完成扫码
         /* eslint-disable no-undef */
-        if (window.hasOwnProperty('nativeObj')) {
+        if (window.originalPostMessage) {
+          window.postMessage('scan')
+        } else if (window.hasOwnProperty('nativeObj')) {
           nativeObj.scan()
         } else {
           window.webkit.messageHandlers.scan.postMessage('')
@@ -79,11 +81,15 @@
               Toast(error.response.data.error.msg)
             }
           })
+      },
+      handleMessage (event) {
+        this.fillSnFromScan(event.data)
       }
     },
     mounted () {
       window.productDetail = this
       document.title = '查询'
+      document.addEventListener('message', this.handleMessage)
       if (this.$route.query) {
         this.$store.commit('setToken', this.$route.query.token)
         this.$store.commit('setFirm', this.$route.query.firm)

@@ -87,7 +87,9 @@
         }
         // JS 调用本地方法完成扫码
         /* eslint-disable no-undef */
-        if (window.hasOwnProperty('nativeObj')) {
+        if (window.originalPostMessage) {
+          window.postMessage('scan')
+        } else if (window.hasOwnProperty('nativeObj')) {
           nativeObj.scanForVoucher()
         } else {
           window.webkit.messageHandlers.scanForVoucher.postMessage('')
@@ -181,11 +183,15 @@
           .catch(error => {
             console.log(error)
           })
+      },
+      handleMessage (event) {
+        this.fillSnFromScan(event.data)
       }
     },
     mounted () {
       window.productDetail = this
       document.title = '分配'
+      document.addEventListener('message', this.handleMessage)
       if (this.$route.query) {
         this.$store.commit('setToken', this.$route.query.token)
         this.$store.commit('setFirm', this.$route.query.firm)

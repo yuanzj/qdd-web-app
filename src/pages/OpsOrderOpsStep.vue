@@ -367,7 +367,9 @@
         this.scanModel = 1
         // JS 调用本地方法完成扫码
         /* eslint-disable no-undef */
-        if (window.hasOwnProperty('nativeObj')) {
+        if (window.originalPostMessage) {
+          window.postMessage('scan')
+        } else if (window.hasOwnProperty('nativeObj')) {
           nativeObj.scanForVoucher()
         } else {
           window.webkit.messageHandlers.scanForVoucher.postMessage('')
@@ -377,7 +379,9 @@
         this.scanModel = 2
         // JS 调用本地方法完成扫码
         /* eslint-disable no-undef */
-        if (window.hasOwnProperty('nativeObj')) {
+        if (window.originalPostMessage) {
+          window.postMessage('scan')
+        } else if (window.hasOwnProperty('nativeObj')) {
           nativeObj.scan()
         } else {
           window.webkit.messageHandlers.scan.postMessage('')
@@ -497,10 +501,14 @@
       },
       back () {
         this.$router.back(-1)
+      },
+      handleMessage (event) {
+        this.fillSnFromScan(event.data)
       }
     },
     mounted () {
       window.productDetail = this
+      document.addEventListener('message', this.handleMessage)
       if (this.$route.query) {
         this.enterModel = Number(this.$route.query.model)
         this.ccuSn = this.$route.query.ccuSn
