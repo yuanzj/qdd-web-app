@@ -47,10 +47,29 @@
           Indicator.close()
           if (res.data) {
             this.productId = res.data.id
-            this.$router.push({
-              name: 'ProductDetail',
-              params: {id: this.productId},
-              query: {token: this.$store.state.token, firm: this.$store.state.firm, ccuSn: this.ccuSn, pay2: true}
+            this.axios.get('/api-order/v3.1/rent-orders/user-list?rentOrderStatus=1&ccuSn=' + this.ccuSn).then((res) => {
+              if (res) {
+                if (res.data && res.data.list.length > 0) {
+                  this.$router.push({
+                    name: 'OrderDetail',
+                    params: {orderId: res.data.list[0].id},
+                    query: {
+                      token: this.$store.state.token,
+                      firm: this.$store.state.firm
+                    }
+                  })
+                } else {
+                  this.$router.push({
+                    name: 'ProductDetail',
+                    params: {id: this.productId},
+                    query: {token: this.$store.state.token, firm: this.$store.state.firm, ccuSn: this.ccuSn, pay2: true}
+                  })
+                }
+              }
+            }).catch(error => {
+              if (error.response.data && error.response.data.error) {
+                Toast(error.response.data.error.msg)
+              }
             })
           } else {
             Toast(res.data.msg)
