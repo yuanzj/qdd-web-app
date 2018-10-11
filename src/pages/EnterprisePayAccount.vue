@@ -42,6 +42,10 @@
     },
     methods: {
       withdraw () {
+        if (!this.verifyCode) {
+          Toast('请输入验证码！')
+          return false
+        }
         if (this.amount < 0.1) {
           Toast('最低提现金额为0.1元！')
           return false
@@ -51,7 +55,7 @@
           return false
         }
         Indicator.open('提交中...')
-        this.axios.get('/api-user/v3.1/users/withdrawal?amount=' + this.amount).then((res) => {
+        this.axios.get('/api-user/v3.1/users/withdrawal?amount=' + this.amount + '&verifyCode=' + this.verifyCode + '&bindPhone=' + this.bindPhone).then((res) => {
           Indicator.close()
           if (res.status === 200) {
             this.$router.go(-1)
@@ -125,12 +129,8 @@
           Toast('请输入真实姓名！')
           return false
         }
-        if (!this.verifyCode) {
-          Toast('请输入验证码！')
-          return false
-        }
         Indicator.open('提交中...')
-        this.axios.post('/api-user/v3.1/userpayaccounts/add?verifyCode=' + this.verifyCode,
+        this.axios.post('/api-user/v3.1/userpayaccounts/add',
           {
             'account': this.account,
             'realName': this.realName
