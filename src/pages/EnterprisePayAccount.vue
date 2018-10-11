@@ -130,7 +130,7 @@
           return false
         }
         Indicator.open('提交中...')
-        this.axios.post('/api-user/v3.1/userpayaccounts/add/' + this.verifyCode,
+        this.axios.post('/api-user/v3.1/userpayaccounts/add?verifyCode=' + this.verifyCode,
           {
             'account': this.account,
             'realName': this.realName
