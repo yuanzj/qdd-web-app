@@ -115,9 +115,12 @@
       },
       getVerifyCode () {
         this.axios.get('/api-user/v3.1/codes/sms/verify-code?mobile=' + this.bindPhone).then((res) => {
-          console.log(res)
+          Toast('获取成功！')
         }).catch(error => {
           console.log(error)
+          if (error.response.data && error.response.data.error) {
+            Toast(error.response.data.error.msg)
+          }
         })
       },
       postUserPayAccount () {

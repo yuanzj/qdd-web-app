@@ -357,7 +357,9 @@
         this.scanModel = 0
         // JS 调用本地方法完成扫码
         /* eslint-disable no-undef */
-        if (window.hasOwnProperty('nativeObj')) {
+        if (window.originalPostMessage) {
+          window.postMessage('scan')
+        } else if (window.hasOwnProperty('nativeObj')) {
           nativeObj.scan()
         } else {
           window.webkit.messageHandlers.scan.postMessage('')
