@@ -25,6 +25,13 @@
       </div>
     </div>
 
+    <div v-if="showCheckListPanel">
+      <mt-checklist
+        v-model="checkOptionsValue"
+        :options="checkOptions">
+      </mt-checklist>
+    </div>
+
     <div v-if="showBatteryPanel" class="lm-font-default lm-text-text" style="margin-top: 1rem">
 
       <div class="h-container">
@@ -109,6 +116,7 @@
         showFeePanel: false,
         showCodePanel: false,
         showBatteryPanel: false,
+        showCheckListPanel: false,
         showSn: false,
         showNewSn: false,
         showCode: false,
@@ -169,6 +177,33 @@
             label: '转接线(扣除20元)',
             value: '20'
           }
+        ],
+        checkOptionsValue: [],
+        checkOptions: [
+          {
+            label: '离线',
+            value: '离线'
+          },
+          {
+            label: '无法充电/骑行',
+            value: '无法充电/骑行'
+          },
+          {
+            label: '骑行时常断电',
+            value: '骑行时常断电'
+          },
+          {
+            label: '里程严重不足',
+            value: '里程严重不足'
+          },
+          {
+            label: '外观损坏',
+            value: '外观损坏'
+          },
+          {
+            label: '其他（包含未知故障、充电服务等）',
+            value: '其他（包含未知故障、充电服务等）'
+          }
         ]
       }
     },
@@ -191,6 +226,7 @@
               break
           }
         } else if (this.enterModel === 1) {
+          this.showCheckListPanel = true
           // 换电池
           switch (curVal) {
             case 0:
@@ -285,6 +321,10 @@
               break
           }
         } else if (this.enterModel === 1) {
+          if (this.checkOptionsValue.length < 1) {
+            Toast('请至少选择一项换电原因')
+            return
+          }
           // 换电池
           switch (this.index) {
             case 0:
@@ -497,6 +537,18 @@
                 Toast(error.response.data.error.msg)
               }
             })
+          this.axios({
+            method: 'put',
+            url: '/api-ebike/v3.1/ues/update-after-sale-flag?ccuSn=P0031R45W8&afterSaleFlag=1&afterSaleReason=cccc',
+            headers: {'Content-Type': 'text/plain'}
+          })
+            .catch(error => {
+              Indicator.close()
+              console.log(error)
+              if (error.response.data && error.response.data.error) {
+                Toast(error.response.data.error.msg)
+              }
+            })
         }
       },
       back () {
@@ -516,7 +568,6 @@
         if (this.$route.query.token) {
           this.axios.defaults.headers.common['Authorization'] = this.$route.query.token
         }
-
         if (this.enterModel === 0) {
           // 退租
           document.title = '电池退租'
@@ -533,6 +584,7 @@
           ]
           this.nextBtnTitle = '扫描电池二维码'
         } else if (this.enterModel === 1) {
+          this.showCheckListPanel = true
           // 换电池
           document.title = '电池售后'
           this.title1 = '旧电池SN号'
