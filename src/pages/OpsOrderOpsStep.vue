@@ -539,7 +539,7 @@
             })
           this.axios({
             method: 'put',
-            url: '/api-ebike/v3.1/ues/update-after-sale-flag?ccuSn=P0031R45W8&afterSaleFlag=1&afterSaleReason=cccc',
+            url: '/api-ebike/v3.1/ues/update-after-sale-flag?ccuSn=' + this.ccuSn + '&afterSaleFlag=1&afterSaleReason=' + this.checkOptionsValue,
             headers: {'Content-Type': 'text/plain'}
           })
             .catch(error => {
