@@ -49,6 +49,8 @@ import EquipmentDetail from '@/pages/EquipmentDetail'
 import BatteryDistribution from '@/pages/BatteryDistribution'
 // 电池管理-在租查询
 import RentedList from '@/pages/RentedList'
+// 电池管理-待租查询
+import UnrentedList from '@/pages/UnrentedList'
 // 电池管理-逾期列表
 import OverdueOrderList from '@/pages/OverdueOrderList'
 // 电池管理-欠压列表
@@ -217,6 +219,11 @@ export default new Router({
       path: '/rented-list',
       name: 'RentedList',
       component: RentedList
+    },
+    {
+      path: '/unrented-list',
+      name: 'UnrentedList',
+      component: UnrentedList
     },
     {
       path: '/overdue-order-list',
