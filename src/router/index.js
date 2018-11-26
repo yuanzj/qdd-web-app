@@ -89,6 +89,10 @@ import VoltageChart from '@/pages/VoltageChart'
 import MileageChart from '@/pages/MileageChart'
 // 位置详情
 import LocationMap from '@/pages/LocationMap'
+// 铁塔统计
+import TowerBatteryStatistics from '@/pages/TowerBatteryStatistics'
+// 铁塔电池规格统计
+import TowerSpecificationStatistics from '@/pages/TowerSpecificationStatistics'
 
 Vue.use(Router)
 
@@ -163,7 +167,31 @@ export default new Router({
     {
       path: '/store-statistics',
       name: 'StoreStatistics',
-      component: StoreStatistics
+      component: StoreStatistics,
+      beforeEnter: (to, from, next) => {
+        if (typeof (to.query.from) !== 'undefined' && to.query.from === 'tower') {
+          next({
+            name: 'TowerBatteryStatistics',
+            query: {
+              token: to.query.token,
+              firm: to.query.firm,
+              storeId: to.query.storeId
+            }
+          })
+        } else {
+          next()
+        }
+      }
+    },
+    {
+      path: '/tower-battery-statistics',
+      name: 'TowerBatteryStatistics',
+      component: TowerBatteryStatistics
+    },
+    {
+      path: '/tower-battery-specification-statistics',
+      name: 'TowerSpecificationStatistics',
+      component: TowerSpecificationStatistics
     },
     {
       path: '/battery-statistics',
