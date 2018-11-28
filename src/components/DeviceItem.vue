@@ -203,10 +203,9 @@
               this.showKMFlag = false
               return '请充电'
             }
-          } else {
-            this.showKMFlag = true
-            return percentage * Number(this.defaultMileage) / 100.0
           }
+          this.showKMFlag = true
+          return percentage * Number(this.defaultMileage) / 100.0
         } else {
           this.showKMFlag = false
           return '--'
