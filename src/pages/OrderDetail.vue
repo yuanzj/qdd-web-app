@@ -195,6 +195,20 @@
           }
         }
       },
+      loadProductList () {
+        this.axios.get('/api-order/v3.1/products/detail?ccuSn=' + this.ccuSn).then((res) => {
+          if (res.data) {
+            this.productId = res.data.id
+          } else {
+            Toast(res.data.msg)
+          }
+        })
+          .catch(error => {
+            if (error.response.data && error.response.data.error) {
+              Toast(error.response.data.error.msg)
+            }
+          })
+      },
       pay () {
         if (this.orderStatus === 3) {
           Toast('已退租')
@@ -226,7 +240,7 @@
             this.orderStatus = order.status
             this.orderId = order.id
             this.ccuSn = order.ccuSn.toUpperCase()
-            this.productId = order.productId
+            // this.productId = order.productId
             this.startTime = order.startTime
             this.endTime = order.endTime
             this.deposit = order.deposit
@@ -255,6 +269,7 @@
             }
             this.loadDepositConfig()
           }
+          this.loadProductList()
         })
           .catch(error => {
             console.log(error)
