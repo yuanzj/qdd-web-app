@@ -424,6 +424,10 @@
       handleChange () {
         if (this.days >= 0) {
           if (this.modelSwitch) {
+            if (this.ueSn.substring(0, 4) === 'P004') {
+              Toast('P004开头电池暂不支持电池输出关闭，待系统升级后支持。')
+              return
+            }
             Indicator.open('电池输出关闭...')
             this.axios.put('/api-ebike/v3.1/ues/update-use-status?ccuSn=' + this.ueSn + '&useStatus=1').then((res) => {
               console.log(res)
