@@ -93,6 +93,8 @@ import LocationMap from '@/pages/LocationMap'
 import TowerBatteryStatistics from '@/pages/TowerBatteryStatistics'
 // 铁塔电池规格统计
 import TowerSpecificationStatistics from '@/pages/TowerSpecificationStatistics'
+// 发电订单详情
+import DischargeOrderDetail from '@/pages/DischargeOrderDetail'
 
 Vue.use(Router)
 
@@ -342,6 +344,11 @@ export default new Router({
       path: '/orders/location-map/:ccuSn',
       name: 'LocationMap',
       component: LocationMap
+    },
+    {
+      path: '/discharge-orders/:id',
+      name: 'dischargeOrderDetail',
+      component: DischargeOrderDetail
     }
   ]
 })
