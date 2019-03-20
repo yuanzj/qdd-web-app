@@ -177,7 +177,7 @@
         }
         console.log(this.$store.state.token + '' + this.$store.state.firm + '' + this.$store.state.orderId)
         if (this.$store.state.token && this.$store.state.firm) {
-          if (this.orderId) {
+          if (this.orderId && this.productId) {
             this.$router.push({
               name: 'ProductDetail',
               params: {id: this.productId},
@@ -192,6 +192,8 @@
               }
             })
           } else {
+            Toast('正在加载产品信息请等待1~2秒后重试')
+            this.loadProductList()
           }
         }
       },
