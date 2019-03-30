@@ -397,8 +397,8 @@
         this.scanModel = 0
         // JS 调用本地方法完成扫码
         /* eslint-disable no-undef */
-        if (window.originalPostMessage) {
-          window.postMessage('scan')
+        if (window.ReactNativeWebView !== undefined) {
+          window.ReactNativeWebView.postMessage('scan')
         } else if (window.hasOwnProperty('nativeObj')) {
           nativeObj.scan()
         } else {
@@ -409,8 +409,8 @@
         this.scanModel = 1
         // JS 调用本地方法完成扫码
         /* eslint-disable no-undef */
-        if (window.originalPostMessage) {
-          window.postMessage('scan')
+        if (window.ReactNativeWebView !== undefined) {
+          window.ReactNativeWebView.postMessage('scan')
         } else if (window.hasOwnProperty('nativeObj')) {
           nativeObj.scanForVoucher()
         } else {
@@ -421,8 +421,8 @@
         this.scanModel = 2
         // JS 调用本地方法完成扫码
         /* eslint-disable no-undef */
-        if (window.originalPostMessage) {
-          window.postMessage('scan')
+        if (window.ReactNativeWebView !== undefined) {
+          window.ReactNativeWebView.postMessage('scan')
         } else if (window.hasOwnProperty('nativeObj')) {
           nativeObj.scan()
         } else {
