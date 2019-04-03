@@ -2,91 +2,140 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 // 网点列表
-import StoreList from '@/pages/StoreList'
+// import StoreList from '@/pages/StoreList'
+const StoreList = () => import('@/pages/StoreList')
 // 网点详情
-import StoreDetail from '@/pages/StoreDetail'
+// import StoreDetail from '@/pages/StoreDetail'
+const StoreDetail = () => import('@/pages/StoreDetail')
+// 网点详情
+// import StoreDetailPro from '@/pages/StoreDetailPro'
+const StoreDetailPro = () => import('@/pages/StoreDetailPro')
+// 电柜详情
+// import CabinetDetail from '@/pages/CabinetDetail'
+const CabinetDetail = () => import('@/pages/CabinetDetail')
 // 产品列表
-import ProductList from '@/pages/ProductList'
+// import ProductList from '@/pages/ProductList'
+const ProductList = () => import('@/pages/ProductList')
 // 设备列表
-import DeviceList from '@/pages/DeviceList'
+// import DeviceList from '@/pages/DeviceList'
+const DeviceList = () => import('@/pages/DeviceList')
 // 产品详情
-import ProductDetail from '@/pages/ProductDetail'
+// import ProductDetail from '@/pages/ProductDetail'
+const ProductDetail = () => import('@/pages/ProductDetail')
 // 支付完成
-import PayComplete from '@/pages/PayComplete'
+// import PayComplete from '@/pages/PayComplete'
+const PayComplete = () => import('@/pages/PayComplete')
 // 订单详情
-import OrderDetail from '@/pages/OrderDetail'
+// import OrderDetail from '@/pages/OrderDetail'
+const OrderDetail = () => import('@/pages/OrderDetail')
 // 补缴欠款
-import PayArrearage from '@/pages/PayArrearage'
+// import PayArrearage from '@/pages/PayArrearage'
+const PayArrearage = () => import('@/pages/PayArrearage')
 // 优惠券列表
-import CouponList from '@/pages/CouponList'
+// import CouponList from '@/pages/CouponList'
+const CouponList = () => import('@/pages/CouponList')
 // 租赁电池入口
-import RentBattery from '@/pages/RentBattery'
+// import RentBattery from '@/pages/RentBattery'
+const RentBattery = () => import('@/pages/RentBattery')
 // 订单操作
-import OrderOpsQRCode from '@/pages/OrderOpsQRCode'
+// import OrderOpsQRCode from '@/pages/OrderOpsQRCode'
+const OrderOpsQRCode = () => import('@/pages/OrderOpsQRCode')
 // 退款账户设置
-import UserPayAccount from '@/pages/UserPayAccount'
+// import UserPayAccount from '@/pages/UserPayAccount'
+const UserPayAccount = () => import('@/pages/UserPayAccount')
 // 余额
-import Balance from '@/pages/Balance'
+// import Balance from '@/pages/Balance'
+const Balance = () => import('@/pages/Balance')
 // 二维码名片
-import MyQRCode from '@/pages/MyQRCode'
+// import MyQRCode from '@/pages/MyQRCode'
+const MyQRCode = () => import('@/pages/MyQRCode')
 // 升级押金
-import UpgradeDeposit from '@/pages/UpgradeDeposit'
+// import UpgradeDeposit from '@/pages/UpgradeDeposit'
+const UpgradeDeposit = () => import('@/pages/UpgradeDeposit')
 // 运维首页
-import OpsMain from '@/pages/OpsMain'
+// import OpsMain from '@/pages/OpsMain'
+const OpsMain = () => import('@/pages/OpsMain')
 // 运维订单处理页面
-import OpsOrderOps from '@/pages/OpsOrderOps'
+// import OpsOrderOps from '@/pages/OpsOrderOps'
+const OpsOrderOps = () => import('@/pages/OpsOrderOps')
 // 运维订单处理步骤页面
-import OpsOrderOpsStep from '@/pages/OpsOrderOpsStep'
+// import OpsOrderOpsStep from '@/pages/OpsOrderOpsStep'
+const OpsOrderOpsStep = () => import('@/pages/OpsOrderOpsStep')
 // 电池管理-统计
-import BatteryStatistics from '@/pages/BatteryStatistics'
+// import BatteryStatistics from '@/pages/BatteryStatistics'
+const BatteryStatistics = () => import('@/pages/BatteryStatistics')
 // 电池管理-设备列表查询
-import Equipmentlist from '@/pages/Equipmentlist'
+// import Equipmentlist from '@/pages/Equipmentlist'
+const Equipmentlist = () => import('@/pages/Equipmentlist')
 // 电池管理-订货
-import OrderBattery from '@/pages/OrderBattery'
+// import OrderBattery from '@/pages/OrderBattery'
+const OrderBattery = () => import('@/pages/OrderBattery')
 // 电池管理-设备详情页面
-import EquipmentDetail from '@/pages/EquipmentDetail'
+// import EquipmentDetail from '@/pages/EquipmentDetail'
+const EquipmentDetail = () => import('@/pages/EquipmentDetail')
 // 电池管理-分配
-import BatteryDistribution from '@/pages/BatteryDistribution'
+// import BatteryDistribution from '@/pages/BatteryDistribution'
+const BatteryDistribution = () => import('@/pages/BatteryDistribution')
 // 电池管理-在租查询
-import RentedList from '@/pages/RentedList'
+// import RentedList from '@/pages/RentedList'
+const RentedList = () => import('@/pages/RentedList')
 // 电池管理-逾期列表
-import OverdueOrderList from '@/pages/OverdueOrderList'
+// import OverdueOrderList from '@/pages/OverdueOrderList'
+const OverdueOrderList = () => import('@/pages/OverdueOrderList')
 // 电池管理-欠压列表
-import UndervoltageList from '@/pages/UndervoltageList'
+// import UndervoltageList from '@/pages/UndervoltageList'
+const UndervoltageList = () => import('@/pages/UndervoltageList')
 // 电池管理-离线列表
-import OfflineList from '@/pages/OfflineList'
+// import OfflineList from '@/pages/OfflineList'
+const OfflineList = () => import('@/pages/OfflineList')
 // 电池管理-售后列表
-import RepairList from '@/pages/RepairList'
+// import RepairList from '@/pages/RepairList'
+const RepairList = () => import('@/pages/RepairList')
 // 电池管理-租前充电
-import RunModelSwitch from '@/pages/RunModelSwitch'
+// import RunModelSwitch from '@/pages/RunModelSwitch'
+const RunModelSwitch = () => import('@/pages/RunModelSwitch')
 // 财务管理-统计
-import IncomeStatistics from '@/pages/IncomeStatistics'
+// import IncomeStatistics from '@/pages/IncomeStatistics'
+const IncomeStatistics = () => import('@/pages/IncomeStatistics')
 // 财务管理-七天收益列表
-import Incomelist from '@/pages/IncomeList'
+// import Incomelist from '@/pages/IncomeList'
+const Incomelist = () => import('@/pages/IncomeList')
 // 财务管理-订单查询
-import PayOrderList from '@/pages/PayOrderList'
+// import PayOrderList from '@/pages/PayOrderList'
+const PayOrderList = () => import('@/pages/PayOrderList')
 // 财务管理-账户余额
-import OpsBalance from '@/pages/OpsBalance'
+// import OpsBalance from '@/pages/OpsBalance'
+const OpsBalance = () => import('@/pages/OpsBalance')
 // 财务管理-企业账户
-import EnterprisePayAccount from '@/pages/EnterprisePayAccount'
+// import EnterprisePayAccount from '@/pages/EnterprisePayAccount'
+const EnterprisePayAccount = () => import('@/pages/EnterprisePayAccount')
 // 财务管理-收益列表
-import EarningsList from '@/pages/EarningsList'
+// import EarningsList from '@/pages/EarningsList'
+const EarningsList = () => import('@/pages/EarningsList')
 // 用户中心-密码设置
-import OpsUserPsw from '@/pages/OpsUserPsw'
+// import OpsUserPsw from '@/pages/OpsUserPsw'
+const OpsUserPsw = () => import('@/pages/OpsUserPsw')
 // 用户中心-关于
-import OpsAbout from '@/pages/OpsAbout'
+// import OpsAbout from '@/pages/OpsAbout'
+const OpsAbout = () => import('@/pages/OpsAbout')
 // 电池查询-输入
-import SearchMain from '@/pages/SearchMain'
+// import SearchMain from '@/pages/SearchMain'
+const SearchMain = () => import('@/pages/SearchMain')
 // 分站电池统计
-import StoreStatistics from '@/pages/StoreStatistics'
+// import StoreStatistics from '@/pages/StoreStatistics'
+const StoreStatistics = () => import('@/pages/StoreStatistics')
 // 帮助
-import OpsHelp from '@/pages/OpsHelp'
+// import OpsHelp from '@/pages/OpsHelp'
+const OpsHelp = () => import('@/pages/OpsHelp')
 // 电量统计
-import VoltageChart from '@/pages/VoltageChart'
+// import VoltageChart from '@/pages/VoltageChart'
+const VoltageChart = () => import('@/pages/VoltageChart')
 // 里程统计
-import MileageChart from '@/pages/MileageChart'
+// import MileageChart from '@/pages/MileageChart'
+const MileageChart = () => import('@/pages/MileageChart')
 // 位置详情
-import LocationMap from '@/pages/LocationMap'
+// import LocationMap from '@/pages/LocationMap'
+const LocationMap = () => import('@/pages/LocationMap')
 
 Vue.use(Router)
 
@@ -117,6 +166,16 @@ export default new Router({
       path: '/products/:id',
       name: 'StoreDetail',
       component: StoreDetail
+    },
+    {
+      path: '/StoreDetailPro/:id',
+      name: 'StoreDetailPro',
+      component: StoreDetailPro
+    },
+    {
+      path: '/CabinetDetail/:ueSn',
+      name: 'CabinetDetail',
+      component: CabinetDetail
     },
     {
       path: '/pay-complete',
