@@ -37,7 +37,7 @@
       },
       withdraw () {
         this.$router.push({
-          name: 'UserPayAccount',
+          name: 'EnterprisePayAccount',
           query: {
             token: this.$store.state.token,
             firm: this.$store.state.firm,

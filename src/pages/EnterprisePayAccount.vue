@@ -9,6 +9,13 @@
       <mt-field label="支付宝账号" placeholder="如：138********" v-model="account"></mt-field>
       <mt-field label="真实姓名" placeholder="如：张三" v-model="realName"></mt-field>
     </div>
+    <div class="table-head-title">验证码校验</div>
+    <div class="page-part">
+      <mt-field label="绑定手机号" readonly  v-model="bindPhone">
+        <mt-button size="small" type="primary" @click="getVerifyCode">获取验证码</mt-button>
+      </mt-field>
+      <mt-field label="验证码"  placeholder="请输入验证码"  v-model="verifyCode"></mt-field>
+    </div>
     <div class="lm-font-default lm-text-red" style="margin: 1rem">
       提现的金额将转账到此支付宝账户，为了您的财产安全请认真填写确认无误后提交。
     </div>
@@ -28,11 +35,17 @@
         balance: 0,
         account: null,
         realName: null,
+        bindPhone: null,
+        verifyCode: null,
         amount: 0
       }
     },
     methods: {
       withdraw () {
+        if (!this.verifyCode) {
+          Toast('请输入验证码！')
+          return false
+        }
         if (this.amount < 0.1) {
           Toast('最低提现金额为0.1元！')
           return false
@@ -42,7 +55,7 @@
           return false
         }
         Indicator.open('提交中...')
-        this.axios.get('/api-user/v3.1/users/withdrawal?amount=' + this.amount).then((res) => {
+        this.axios.get('/api-user/v3.1/users/withdrawal?amount=' + this.amount + '&verifyCode=' + this.verifyCode + '&bindPhone=' + this.bindPhone).then((res) => {
           Indicator.close()
           if (res.status === 200) {
             this.$router.go(-1)
@@ -68,9 +81,46 @@
             console.log(error)
           })
       },
+      getUserInfo () {
+        this.axios.get('/api-user/v3.1/users/info').then((res) => {
+          if (res.data.roles) {
+            let isUser = false
+            res.data.roles.forEach((e) => {
+              if (e.name === 'USER') {
+                isUser = true
+              }
+            })
+            if (isUser) {
+              this.bindPhone = res.data.phoneNumber
+            } else {
+              this.axios.get('/api-user/v3.1/ebikestores/' + res.data.storeId).then((res) => {
+                console.log(res)
+                if (res.data) {
+                  this.bindPhone = res.data.contact
+                }
+              }).catch(error => {
+                console.log(error)
+              })
+            }
+          }
+          console.log(res)
+        }).catch(error => {
+          console.log(error)
+        })
+      },
       submit () {
         MessageBox.confirm('确定提交提现?').then(action => {
           this.postUserPayAccount()
+        })
+      },
+      getVerifyCode () {
+        this.axios.get('/api-user/v3.1/codes/sms/verify-code?mobile=' + this.bindPhone).then((res) => {
+          Toast('获取成功！')
+        }).catch(error => {
+          console.log(error)
+          if (error.response.data && error.response.data.error) {
+            Toast(error.response.data.error.msg)
+          }
         })
       },
       postUserPayAccount () {
@@ -98,6 +148,9 @@
           .catch(error => {
             Indicator.close()
             console.log(error)
+            if (error.response.data && error.response.data.error) {
+              Toast(error.response.data.error.msg)
+            }
           })
       }
     },
@@ -114,6 +167,7 @@
       }
 
       this.getUserPayAccount()
+      this.getUserInfo()
     }
   }
 </script>

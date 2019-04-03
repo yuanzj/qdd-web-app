@@ -21,6 +21,7 @@
     name: 'ops-balance',
     data () {
       return {
+        role: null,
         showWithdraw: false,
         loginUserId: null,
         loginUserStoreId: null,
@@ -53,13 +54,35 @@
       },
       getCurrentUserInfo () {
         Indicator.open('加载中...')
-        this.axios.get('/api-user/v3.1/users/detail').then((res) => {
+        this.axios.get('/api-user/v3.1/users/info').then((res) => {
           console.log(res)
           let data = res.data
           if (data) {
             this.loginUserId = data.id
             this.loginUserStoreId = data.storeId
-            if (data.storeId != null && Number(data.storeId) === Number(this.storeId)) {
+            for (let i = 0; i < data.roles.length; i++) {
+              let item = data.roles[i]
+              if (item.name === 'ADMIN') {
+                this.role = 'ADMIN'
+              } else if (item.name === 'AGENT') {
+                if (this.role !== 'ADMIN') {
+                  this.role = 'AGENT'
+                }
+              } else if (item.name === 'DEALER') {
+                if (this.role !== 'ADMIN' && this.role !== 'AGENT') {
+                  this.role = 'DEALER'
+                }
+              } else if (item.name === 'STATION') {
+                if (this.role !== 'ADMIN' && this.role !== 'AGENT' && this.role !== 'DEALER') {
+                  this.role = 'STATION'
+                }
+              } else {
+                if (this.role !== 'ADMIN' && this.role !== 'AGENT' && this.role !== 'DEALER' && this.role !== 'STATION') {
+                  this.role = 'USER'
+                }
+              }
+            }
+            if ((data.storeId != null && Number(data.storeId) === Number(this.storeId)) || this.role === 'AGENT') {
               this.showWithdraw = true
               this.getPayAccount(this.loginUserId)
             } else {

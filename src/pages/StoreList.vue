@@ -44,7 +44,9 @@
           }
         ).then((res) => {
           this.$refs.loadmore.onTopLoaded()
-          this.productList = res.data.list
+          this.productList = res.data.list.filter(item => {
+            return item.type !== 80
+          })
           if (this.productList.length === 0) {
             Toast('当前城市暂无网点！')
           }
