@@ -196,13 +196,16 @@
           if (percentage === 0) {
             this.showKMFlag = false
             return '请尽快充电'
-          } else if (percentage <= 10) {
-            this.showKMFlag = false
-            return '请充电'
-          } else {
-            this.showKMFlag = true
-            return percentage * Number(this.defaultMileage) / 100.0
+          } else if (percentage <= 5) {
+            let lowBatteryTimeStamp = this.ebikeReportData.lowBatteryTimeStamp
+            let nowDateTimeStamp = new Date().getTime()
+            if ((nowDateTimeStamp - lowBatteryTimeStamp) / 1000 > 60) {
+              this.showKMFlag = false
+              return '请充电'
+            }
           }
+          this.showKMFlag = true
+          return percentage * Number(this.defaultMileage) / 100.0
         } else {
           this.showKMFlag = false
           return '--'

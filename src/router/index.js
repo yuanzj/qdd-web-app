@@ -136,6 +136,15 @@ const MileageChart = () => import('@/pages/MileageChart')
 // 位置详情
 // import LocationMap from '@/pages/LocationMap'
 const LocationMap = () => import('@/pages/LocationMap')
+// 铁塔统计
+// import TowerBatteryStatistics from '@/pages/TowerBatteryStatistics'
+const TowerBatteryStatistics = () => import('@/pages/TowerBatteryStatistics')
+// 铁塔电池规格统计
+// import TowerSpecificationStatistics from '@/pages/TowerSpecificationStatistics'
+const TowerSpecificationStatistics = () => import('@/pages/TowerSpecificationStatistics')
+// 发电订单详情
+// import DischargeOrderDetail from '@/pages/DischargeOrderDetail'
+const DischargeOrderDetail = () => import('@/pages/DischargeOrderDetail')
 // 我的钱包
 const MyWallet = () => import('@/pages/MyWallet')
 // 套餐列表
@@ -372,6 +381,11 @@ export default new Router({
       path: '/orders/location-map/:ccuSn',
       name: 'LocationMap',
       component: LocationMap
+    },
+    {
+      path: '/discharge-orders/:id',
+      name: 'dischargeOrderDetail',
+      component: DischargeOrderDetail
     },
     {
       path: '/my-wallet',

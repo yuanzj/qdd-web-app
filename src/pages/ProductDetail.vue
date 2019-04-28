@@ -423,7 +423,9 @@
         this.scanModel = 1
         // JS 调用本地方法完成扫码
         /* eslint-disable no-undef */
-        if (window.hasOwnProperty('nativeObj')) {
+        if (window.ReactNativeWebView !== undefined) {
+          window.ReactNativeWebView.postMessage('scan')
+        } else if (window.hasOwnProperty('nativeObj')) {
           nativeObj.scan()
         } else {
           window.webkit.messageHandlers.scan.postMessage('')
@@ -606,7 +608,9 @@
             this.scanModel = 0
             // JS 调用本地方法完成扫码
             /* eslint-disable no-undef */
-            if (window.hasOwnProperty('nativeObj')) {
+            if (window.ReactNativeWebView !== undefined) {
+              window.ReactNativeWebView.postMessage('scan')
+            } else if (window.hasOwnProperty('nativeObj')) {
               nativeObj.scan()
             } else {
               window.webkit.messageHandlers.scan.postMessage('')
@@ -695,17 +699,22 @@
               Toast(error.response.data.error.msg)
             }
           })
+      },
+      handleMessage (event) {
+        this.fillSnFromScan(event.data)
       }
     },
     mounted () {
       window.productDetail = this
-
+      document.addEventListener('message', this.handleMessage)
       if (!this.$route.query.token) {
         MessageBox.alert('您还没有登录，请先登录').then(action => {
           this.$router.go(-1)
           // JS 调用本地方法完成扫码
           /* eslint-disable no-undef */
-          if (window.hasOwnProperty('nativeObj')) {
+          if (window.ReactNativeWebView !== undefined) {
+            window.ReactNativeWebView.postMessage('scan')
+          } else if (window.hasOwnProperty('nativeObj')) {
             nativeObj.refreshToken()
           } else {
             window.webkit.messageHandlers.refreshToken.postMessage('')
