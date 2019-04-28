@@ -136,6 +136,12 @@ const MileageChart = () => import('@/pages/MileageChart')
 // 位置详情
 // import LocationMap from '@/pages/LocationMap'
 const LocationMap = () => import('@/pages/LocationMap')
+// 我的钱包
+const MyWallet = () => import('@/pages/MyWallet')
+// 套餐列表
+const PackageList = () => import('@/pages/PackageList')
+// 未租赁设备提示页面
+const UeNotFound = () => import('@/pages/UeNotFound')
 
 Vue.use(Router)
 
@@ -366,6 +372,21 @@ export default new Router({
       path: '/orders/location-map/:ccuSn',
       name: 'LocationMap',
       component: LocationMap
+    },
+    {
+      path: '/my-wallet',
+      name: 'MyWallet',
+      component: MyWallet
+    },
+    {
+      path: '/package-list',
+      name: 'PackageList',
+      component: PackageList
+    },
+    {
+      path: '/ue-not-found',
+      name: 'UeNotFound',
+      component: UeNotFound
     }
   ]
 })
