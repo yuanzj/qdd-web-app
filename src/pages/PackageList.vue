@@ -51,7 +51,7 @@ export default {
     this.axios.get('/api-order/v3.1/products/list', {
       params: {
         categoryId: 2,
-        storeId: 19965
+        storeId: this.$route.query.storeId
       }
     }).then((res) => {
       console.log(res)
