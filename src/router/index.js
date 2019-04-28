@@ -138,10 +138,10 @@ const MileageChart = () => import('@/pages/MileageChart')
 const LocationMap = () => import('@/pages/LocationMap')
 // 铁塔统计
 // import TowerBatteryStatistics from '@/pages/TowerBatteryStatistics'
-const TowerBatteryStatistics = () => import('@/pages/TowerBatteryStatistics')
+// const TowerBatteryStatistics = () => import('@/pages/TowerBatteryStatistics')
 // 铁塔电池规格统计
 // import TowerSpecificationStatistics from '@/pages/TowerSpecificationStatistics'
-const TowerSpecificationStatistics = () => import('@/pages/TowerSpecificationStatistics')
+// const TowerSpecificationStatistics = () => import('@/pages/TowerSpecificationStatistics')
 // 发电订单详情
 // import DischargeOrderDetail from '@/pages/DischargeOrderDetail'
 const DischargeOrderDetail = () => import('@/pages/DischargeOrderDetail')
