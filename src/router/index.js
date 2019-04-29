@@ -79,6 +79,9 @@ const BatteryDistribution = () => import('@/pages/BatteryDistribution')
 // 电池管理-在租查询
 // import RentedList from '@/pages/RentedList'
 const RentedList = () => import('@/pages/RentedList')
+// 电池管理-待租查询
+// import UnrentedList from '@/pages/UnrentedList'
+const UnrentedList = () => import('@/pages/UnrentedList')
 // 电池管理-逾期列表
 // import OverdueOrderList from '@/pages/OverdueOrderList'
 const OverdueOrderList = () => import('@/pages/OverdueOrderList')
@@ -138,13 +141,15 @@ const MileageChart = () => import('@/pages/MileageChart')
 const LocationMap = () => import('@/pages/LocationMap')
 // 铁塔统计
 // import TowerBatteryStatistics from '@/pages/TowerBatteryStatistics'
-// const TowerBatteryStatistics = () => import('@/pages/TowerBatteryStatistics')
+const TowerBatteryStatistics = () => import('@/pages/TowerBatteryStatistics')
 // 铁塔电池规格统计
 // import TowerSpecificationStatistics from '@/pages/TowerSpecificationStatistics'
-// const TowerSpecificationStatistics = () => import('@/pages/TowerSpecificationStatistics')
+const TowerSpecificationStatistics = () => import('@/pages/TowerSpecificationStatistics')
 // 发电订单详情
 // import DischargeOrderDetail from '@/pages/DischargeOrderDetail'
 const DischargeOrderDetail = () => import('@/pages/DischargeOrderDetail')
+// 扫码换电
+const ChangeBatteryPage = () => import('@/pages/ChangeBatteryPage')
 // 我的钱包
 const MyWallet = () => import('@/pages/MyWallet')
 // 套餐列表
@@ -235,7 +240,31 @@ export default new Router({
     {
       path: '/store-statistics',
       name: 'StoreStatistics',
-      component: StoreStatistics
+      component: StoreStatistics,
+      beforeEnter: (to, from, next) => {
+        if (typeof (to.query.from) !== 'undefined' && to.query.from === 'tower') {
+          next({
+            name: 'TowerBatteryStatistics',
+            query: {
+              token: to.query.token,
+              firm: to.query.firm,
+              storeId: to.query.storeId
+            }
+          })
+        } else {
+          next()
+        }
+      }
+    },
+    {
+      path: '/tower-battery-statistics',
+      name: 'TowerBatteryStatistics',
+      component: TowerBatteryStatistics
+    },
+    {
+      path: '/tower-battery-specification-statistics',
+      name: 'TowerSpecificationStatistics',
+      component: TowerSpecificationStatistics
     },
     {
       path: '/battery-statistics',
@@ -291,6 +320,11 @@ export default new Router({
       path: '/rented-list',
       name: 'RentedList',
       component: RentedList
+    },
+    {
+      path: '/unrented-list',
+      name: 'UnrentedList',
+      component: UnrentedList
     },
     {
       path: '/overdue-order-list',
@@ -386,6 +420,11 @@ export default new Router({
       path: '/discharge-orders/:id',
       name: 'dischargeOrderDetail',
       component: DischargeOrderDetail
+    },
+    {
+      path: '/change-battery',
+      name: 'ChangeBatteryPage',
+      component: ChangeBatteryPage
     },
     {
       path: '/my-wallet',

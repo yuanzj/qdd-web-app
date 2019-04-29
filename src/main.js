@@ -46,8 +46,9 @@ axios.interceptors.response.use(function (response) {
 })
 
 // axios.defaults.baseURL = 'http://cjl3.rokyinfo.net:8010'
+// axios.defaults.baseURL = 'http://www.ttdianbao.com:10666'
 // axios.defaults.baseURL = 'http://localhost:10666'
-axios.defaults.baseURL = 'http://cjl3.rokyinfo.net:7200'
+axios.defaults.baseURL = 'http://lxd.rokyinfo.net:7200'
 
 Vue.config.productionTip = false
 

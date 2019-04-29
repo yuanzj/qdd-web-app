@@ -4,7 +4,7 @@
     <div style="background: white">
 
       <div class="p-head">
-        <img class="p-image" :src="image"/>
+        <img class="p-image" src="/static/images/p-1-1.png"/>
         <span class="p-title" >{{ title }}</span>
       </div>
       <!--<div class="p-desc"  style="margin: 0 1rem 0 1rem">-->
@@ -238,7 +238,7 @@
         orderId: null,
         days: null,
         product: null,
-        image: '../static/images/p-b.png',
+        image: '../static/images/p-1-1.png',
         ccuSn: null,
         count: 1,
         price: null,
